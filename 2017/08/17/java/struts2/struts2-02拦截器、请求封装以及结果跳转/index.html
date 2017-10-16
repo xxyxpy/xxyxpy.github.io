@@ -1,0 +1,1185 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="java,struts2," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="在Struts2框架中使用Servlet的apiJavaWeb中原先使用的是Servlet作为web层框架，换成使用Struts时也提供了Servlet相关api的访问。访问时主要有两种方式： 使用原生的Servlet框架中提供了ServletActionContext，该类中提供了一些静态的方法，如：getPageContext()、getRequest()、getResponse()、getS">
+<meta name="keywords" content="java,struts2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="struts2-02拦截器、请求封装以及结果跳转">
+<meta property="og:url" content="http://xxyxpy.pub/2017/08/17/java/struts2/struts2-02拦截器、请求封装以及结果跳转/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="在Struts2框架中使用Servlet的apiJavaWeb中原先使用的是Servlet作为web层框架，换成使用Struts时也提供了Servlet相关api的访问。访问时主要有两种方式： 使用原生的Servlet框架中提供了ServletActionContext，该类中提供了一些静态的方法，如：getPageContext()、getRequest()、getResponse()、getS">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/java\struts2\001.png">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/java\struts2\002.png">
+<meta property="og:updated_time" content="2017-08-17T08:11:01.335Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="struts2-02拦截器、请求封装以及结果跳转">
+<meta name="twitter:description" content="在Struts2框架中使用Servlet的apiJavaWeb中原先使用的是Servlet作为web层框架，换成使用Struts时也提供了Servlet相关api的访问。访问时主要有两种方式： 使用原生的Servlet框架中提供了ServletActionContext，该类中提供了一些静态的方法，如：getPageContext()、getRequest()、getResponse()、getS">
+<meta name="twitter:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/java\struts2\001.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xxyxpy.pub/2017/08/17/java/struts2/struts2-02拦截器、请求封装以及结果跳转/"/>
+
+
+
+
+
+  <title> struts2-02拦截器、请求封装以及结果跳转 | code dog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">code dog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不停奔跑，不停思考~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xxyxpy.pub/2017/08/17/java/struts2/struts2-02拦截器、请求封装以及结果跳转/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xxyxpy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="code dog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                struts2-02拦截器、请求封装以及结果跳转
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-17T13:43:54+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/ssh/" itemprop="url" rel="index">
+                    <span itemprop="name">ssh</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/ssh/struts2/" itemprop="url" rel="index">
+                    <span itemprop="name">struts2</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/08/17/java/struts2/struts2-02拦截器、请求封装以及结果跳转/" class="leancloud_visitors" data-flag-title="struts2-02拦截器、请求封装以及结果跳转">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="在Struts2框架中使用Servlet的api"><a href="#在Struts2框架中使用Servlet的api" class="headerlink" title="在Struts2框架中使用Servlet的api"></a>在Struts2框架中使用Servlet的api</h3><p>JavaWeb中原先使用的是Servlet作为web层框架，换成使用Struts时也提供了Servlet相关api的访问。访问时主要有两种方式：</p>
+<h4 id="使用原生的Servlet"><a href="#使用原生的Servlet" class="headerlink" title="使用原生的Servlet"></a>使用原生的Servlet</h4><p>框架中提供了ServletActionContext，该类中提供了一些静态的方法，如：<code>getPageContext()</code>、<code>getRequest()</code>、<code>getResponse()</code>、<code>getServletContext()</code></p>
+<p>使用案例： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo4Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// get request</span></div><div class="line">        HttpServletRequest request = ServletActionContext.getRequest();</div><div class="line">        <span class="comment">// 向域中存入其它对象</span></div><div class="line">        <span class="comment">// request</span></div><div class="line">        request.setAttribute(<span class="string">"msg"</span>, <span class="string">"request msg"</span>);</div><div class="line">        <span class="comment">// session</span></div><div class="line">        request.getSession().setAttribute(<span class="string">"msg"</span>, <span class="string">"session msg"</span>);</div><div class="line">        <span class="comment">// application</span></div><div class="line">        request.getServletContext().setAttribute(<span class="string">"msg"</span>, <span class="string">"application msg"</span>);</div><div class="line">        ServletActionContext.getServletContext().setAttribute(<span class="string">"msg"</span>, <span class="string">"new application msg"</span>);</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> SUCCESS;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Title&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">$&#123;sessionScope.msg&#125; &lt;br&gt;</div><div class="line">$&#123;requestScope.msg&#125; &lt;br&gt;</div><div class="line">$&#123;applicationScope.msg&#125; &lt;br&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>访问结果</p>
+<img title="struts" alt="struts" src="http://oo0vldwkt.bkt.clouddn.com/static/images/java\struts2\001.png">
+<h4 id="完全解耦合的方式"><a href="#完全解耦合的方式" class="headerlink" title="完全解耦合的方式"></a>完全解耦合的方式</h4><p>指的是不像上面一样直接操作Request等对象，而是通过框架另外提供的ActionContext类来操作。主要的方法有：</p>
+<ul>
+<li>static ActionContext getContext()                              – 获取ActionContext对象实例</li>
+<li>java.util.Map&lt;java.lang.String,java.lang.Object&gt; getParameters()         – 获取请求参数，相当于request.getParameterMap();</li>
+<li>java.util.Map&lt;java.lang.String,java.lang.Object&gt; getSession()          – 获取的代表session域的Map集合，就相当于操作session域。</li>
+<li>java.util.Map&lt;java.lang.String,java.lang.Object&gt; getApplication()       – 获取代表application域的Map集合</li>
+<li>void put(java.lang.String key, java.lang.Object value)               – 注意：向request域中存入值。</li>
+</ul>
+<p>使用案例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo3Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// get action上下文</span></div><div class="line">        ActionContext context = ActionContext.getContext();</div><div class="line">        <span class="comment">// get parameters</span></div><div class="line">        Map&lt;String, Object&gt; parameters = context.getParameters();</div><div class="line">        <span class="comment">// show parameter</span></div><div class="line">        <span class="keyword">for</span> (Map.Entry&lt;String, Object&gt; entry : parameters.entrySet())&#123;</div><div class="line">            System.out.println(entry.getKey() + <span class="string">"-"</span> + Arrays.toString((String[]) entry.getValue()));</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 向域中存入其它对象</span></div><div class="line">        <span class="comment">// request</span></div><div class="line">        context.put(<span class="string">"msg"</span>, <span class="string">"request msg"</span>);</div><div class="line">        <span class="comment">// session</span></div><div class="line">        context.getSession().put(<span class="string">"msg"</span>, <span class="string">"session msg"</span>);</div><div class="line">        <span class="comment">// application</span></div><div class="line">        context.getApplication().put(<span class="string">"msg"</span>, <span class="string">"application msg"</span>);</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> SUCCESS;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>​</p>
+<p>对于ActionContext和ServletActionContext的区别可以查看<a href="http://blog.csdn.net/u013630349/article/details/52807625" target="_blank" rel="external">深入理解 Action 之 ActionContext 和 ServletActionContext</a></p>
+<hr>
+<h3 id="结果页面的跳转"><a href="#结果页面的跳转" class="headerlink" title="结果页面的跳转"></a>结果页面的跳转</h3><h4 id="两种跳转方式"><a href="#两种跳转方式" class="headerlink" title="两种跳转方式"></a>两种跳转方式</h4><ul>
+<li><p>局部结果页面。指的是一个方法返回对应一个页面，如：<code>&lt;result name=&quot;success&quot;&gt;demo3/suc.jsp&lt;/result&gt;</code></p>
+</li>
+<li><p>全局结果页面。针对当前的package中的action返回相同的name并且都跳转到同一个页面时。当局部和全局配置冲突时优先走局部的配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"demo3"</span> <span class="attr">namespace</span>=<span class="string">"/"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--当前package下面的全局配置,所有的此name应用于此配置--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">global-results</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">result</span> <span class="attr">name</span>=<span class="string">"success"</span>&gt;</span>demo3/suc.jsp<span class="tag">&lt;/<span class="name">result</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">global-results</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"demo3Action2"</span> <span class="attr">class</span>=<span class="string">"com.action3.Demo3Action"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--&lt;result name="success"&gt;demo3/suc.jsp&lt;/result&gt;--&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"demo4Action"</span> <span class="attr">class</span>=<span class="string">"com.action3.Demo4Action"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--&lt;result name="success"&gt;demo3/suc.jsp&lt;/result&gt;--&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">package</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="结果页面类型"><a href="#结果页面类型" class="headerlink" title="结果页面类型"></a>结果页面类型</h4><p>主要是指action标签中的result标签下的type的属性配置，有以下值：</p>
+<ul>
+<li>dispatcher       – 转发.type的默认值.Action—&gt;JSP</li>
+<li>redirect       – 重定向.    Action—&gt;JSP</li>
+<li>chain             – 多个action之间跳转.从一个Action转发到另一个Action. Action—Action</li>
+<li>redirectAction   – 多个action之间跳转.从一个Action重定向到另一个Action.    Action—Action</li>
+<li>stream         – 文件下载时候使用的</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"demo5Action_*"</span> <span class="attr">class</span>=<span class="string">"com.action3.Demo5Action"</span> <span class="attr">method</span>=<span class="string">"&#123;1&#125;"</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--redirectAction 多个action间重定向--&gt;</span></div><div class="line">  <span class="comment">&lt;!--&lt;result name="success" type="redirectAction"&gt;demo5Action_update&lt;/result&gt;--&gt;</span></div><div class="line">  <span class="comment">&lt;!--redirectAction 多个action间请求转发--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">name</span>=<span class="string">"success"</span> <span class="attr">type</span>=<span class="string">"chain"</span>&gt;</span>demo5Action_update<span class="tag">&lt;/<span class="name">result</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">action</span>&gt;</span></div></pre></td></tr></table></figure>
+<hr>
+<h3 id="数据封装"><a href="#数据封装" class="headerlink" title="数据封装"></a>数据封装</h3><p>之前数据的获取是通过request的方法获取，效率比较低。使用框架后可以实现自动封装到对象。并且支持对集合的封装。Struts2提供了两种数据封装的方式：</p>
+<h4 id="属性驱动"><a href="#属性驱动" class="headerlink" title="属性驱动"></a>属性驱动</h4><blockquote>
+<p>提供对应属性的set方法进行数据封装</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Regist1Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> String username;</div><div class="line">    <span class="keyword">private</span> String password;</div><div class="line">    <span class="keyword">private</span> Integer age;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUsername</span><span class="params">(String username)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.username = username;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.password = password;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(username + <span class="string">"-"</span> + password + <span class="string">"-"</span> + age);</div><div class="line">        <span class="keyword">return</span> NONE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;h3&gt;属性驱动&lt;/h3&gt;</div><div class="line">&lt;form action="$&#123; pageContext.request.contextPath &#125;/reg/regist1.action" method="post"&gt;</div><div class="line">    姓名:&lt;input type="text" name="username" /&gt;&lt;br/&gt;</div><div class="line">    密码:&lt;input type="password" name="password" /&gt;&lt;br/&gt;</div><div class="line">    年龄:&lt;input type="text" name="age" /&gt;&lt;br/&gt;</div><div class="line">    &lt;input type="submit" value="注册" /&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>例用ognl表达式封装到JavaBean</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Regist2Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span></span>&#123;</div><div class="line">    <span class="comment">// 不初始化user时会框架会自动的new一个实例出来,并通过setUser方法设置值</span></div><div class="line">    <span class="comment">// 如果初始化好就少调用一次setUser,此时可以不提供setUser方法</span></div><div class="line">    <span class="keyword">private</span> NewUser user = <span class="keyword">new</span> NewUser();</div><div class="line">    </div><div class="line">    <span class="comment">//public NewUser getUser() &#123;</span></div><div class="line">    <span class="comment">//    System.out.println("getUser....");</span></div><div class="line">    <span class="comment">//    return user;</span></div><div class="line">    <span class="comment">//&#125;</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUser</span><span class="params">(NewUser user)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"setUser...."</span>);</div><div class="line">        <span class="keyword">this</span>.user = user;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(user);</div><div class="line">        <span class="keyword">return</span> NONE;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NewUser</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String username;</div><div class="line">    <span class="keyword">private</span> String password;</div><div class="line">    <span class="keyword">private</span> Integer age;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUsername</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> username;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUsername</span><span class="params">(String username)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.username = username;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPassword</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> password;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassword</span><span class="params">(String password)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.password = password;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> age;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"NewUser&#123;"</span> +</div><div class="line">                <span class="string">"username='"</span> + username + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", password='"</span> + password + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", age="</span> + age +</div><div class="line">                <span class="string">'&#125;'</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;h3&gt;属性驱动-封装到javabean对象&lt;/h3&gt;</div><div class="line">&lt;form action="$&#123; pageContext.request.contextPath &#125;/reg/regist2.action" method="post"&gt;</div><div class="line">    姓名:&lt;input type="text" name="user.username" /&gt;&lt;br/&gt;</div><div class="line">    密码:&lt;input type="password" name="user.password" /&gt;&lt;br/&gt;</div><div class="line">    年龄:&lt;input type="text" name="user.age" /&gt;&lt;br/&gt;</div><div class="line">    &lt;input type="submit" value="注册" /&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
+<h4 id="模型驱动"><a href="#模型驱动" class="headerlink" title="模型驱动"></a>模型驱动</h4><p>使用模型驱动时必须要实现ModelDriven接口，实现getModel()的方法，在getModel()方法中返回绑定的JavaBean对象。另外此对象必须手动的实例化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Regist3Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> <span class="keyword">implements</span> <span class="title">ModelDriven</span>&lt;<span class="title">NewUser</span>&gt;</span>&#123;</div><div class="line">    NewUser user = <span class="keyword">new</span> NewUser();</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> NewUser <span class="title">getModel</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> user;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(user);</div><div class="line">        <span class="keyword">return</span> NONE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;h3&gt;模型驱动使用ModelDriven接口-封装到javabean对象&lt;/h3&gt;</div><div class="line">&lt;form action="$&#123; pageContext.request.contextPath &#125;/reg/regist3.action" method="post"&gt;</div><div class="line">    姓名:&lt;input type="text" name="username" /&gt;&lt;br/&gt;</div><div class="line">    密码:&lt;input type="password" name="password" /&gt;&lt;br/&gt;</div><div class="line">    年龄:&lt;input type="text" name="age" /&gt;&lt;br/&gt;</div><div class="line">    &lt;input type="submit" value="注册" /&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
+<h4 id="封装数据到集合"><a href="#封装数据到集合" class="headerlink" title="封装数据到集合"></a>封装数据到集合</h4><ul>
+<li><p>封装到list集合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Regist4Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> </span>&#123;</div><div class="line">    List&lt;NewUser&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;NewUser&gt; <span class="title">getList</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> list;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setList</span><span class="params">(List&lt;NewUser&gt; list)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.list = list;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(Arrays.toString(list.toArray()));</div><div class="line">        <span class="keyword">return</span> NONE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;h3&gt;封装数据到list集合&lt;/h3&gt;</div><div class="line">&lt;form action="$&#123; pageContext.request.contextPath &#125;/reg/regist4.action" method="post"&gt;</div><div class="line">    姓名:&lt;input type="text" name="list[0].username" /&gt;&lt;br/&gt;</div><div class="line">    密码:&lt;input type="password" name="list[0].password" /&gt;&lt;br/&gt;</div><div class="line">    年龄:&lt;input type="text" name="list[0].age" /&gt;&lt;br/&gt;</div><div class="line">    &lt;br&gt;</div><div class="line">    姓名:&lt;input type="text" name="list[1].username" /&gt;&lt;br/&gt;</div><div class="line">    密码:&lt;input type="password" name="list[1].password" /&gt;&lt;br/&gt;</div><div class="line">    年龄:&lt;input type="text" name="list[1].age" /&gt;&lt;br/&gt;</div><div class="line">    &lt;input type="submit" value="注册" /&gt;</div><div class="line">&lt;/form&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>封装数据到map集合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Regist5Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> </span>&#123;</div><div class="line">    Map&lt;String, NewUser&gt; map;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> Map&lt;String, NewUser&gt; <span class="title">getMap</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"getMap ..."</span>);</div><div class="line">        <span class="keyword">return</span> map;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMap</span><span class="params">(Map&lt;String, NewUser&gt; map)</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"setMap ..."</span>);</div><div class="line">        <span class="keyword">this</span>.map = map;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(map);</div><div class="line">        <span class="keyword">return</span> NONE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>封装数据到map集合<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"$&#123; pageContext.request.contextPath &#125;/reg/regist5.action"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></div><div class="line">    姓名:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"map['first'].username"</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></div><div class="line">    密码:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"map['first'].password"</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></div><div class="line">    年龄:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"map['first'].age"</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line">    姓名:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"map['second'].username"</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></div><div class="line">    密码:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"password"</span> <span class="attr">name</span>=<span class="string">"map['second'].password"</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></div><div class="line">    年龄:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"map['second'].age"</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"注册"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h3><h4 id="什么是拦截器"><a href="#什么是拦截器" class="headerlink" title="什么是拦截器"></a>什么是拦截器</h4><p>拦截器是可以在方法或对象被访问前后执行的一些操作。比如要访问action类，通过拦截器可以实现访问前后的一些操作，比较典型的应用如页面访问的权限控制。在struts2框架中提供了各种默认的拦截器，可以在struts2的jar包内的struts-default.xml查看关于默认的拦截器与拦截器链的配置</p>
+<p>拦截器 采用 责任链 模式</p>
+<blockquote>
+<p>在责任链模式里,很多对象由每一个对象对其下家的引用而连接起来形成一条链<br>责任链每一个节点，都可以继续调用下一个节点，也可以阻止流程继续执行</p>
+<p>在struts2 中可以定义很多个拦截器，将多个拦截器按照特定顺序 组成拦截器栈 （顺序调用 栈中的每一个拦截器 ）</p>
+</blockquote>
+<p>更多内容访问<a href="http://blog.csdn.net/qjyong/article/details/1824607" target="_blank" rel="external">Struts2拦截器</a></p>
+<h4 id="拦截器和过滤器的区别"><a href="#拦截器和过滤器的区别" class="headerlink" title="拦截器和过滤器的区别"></a>拦截器和过滤器的区别</h4><ul>
+<li>拦截器是基于JAVA反射机制的，而过滤器是基于函数回调的</li>
+<li>过滤器依赖于Servlet容器，而拦截器不依赖于Servlet容器</li>
+<li>拦截器只能对Action请求起作用（Action中的方法），而过滤器可以对几乎所有的请求起作用（CSS JSP JS）</li>
+</ul>
+<h4 id="自定义拦截器"><a href="#自定义拦截器" class="headerlink" title="自定义拦截器"></a>自定义拦截器</h4><ul>
+<li><p>首先必须要实现Interceptor接口，重写它的intercept方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoInterceptor</span> <span class="keyword">extends</span> <span class="title">AbstractInterceptor</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">intercept</span><span class="params">(ActionInvocation actionInvocation)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(<span class="string">"before action..."</span>);</div><div class="line">        String result = actionInvocation.invoke();</div><div class="line">        System.out.println(<span class="string">"after action..."</span>);</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>然后在struts.xml中进行配置，将拦截器与action进行关联</p>
+<p>支持两种方式的配置，配置时注意必须配置默认栈的拦截器。 因为引入自定义拦截器后默认栈的拦截器就不执行了</p>
+<blockquote>
+<p>配置方式一</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"interceptor"</span> <span class="attr">namespace</span>=<span class="string">"/"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--定义拦截器方式一--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">interceptors</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">interceptor</span> <span class="attr">name</span>=<span class="string">"DemoInterceptor"</span> <span class="attr">class</span>=<span class="string">"com.interceptor.DemoInterceptor"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">interceptors</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"interaction"</span> <span class="attr">class</span>=<span class="string">"com.action.interceptor.InterAction"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">interceptor-ref</span> <span class="attr">name</span>=<span class="string">"DemoInterceptor"</span>/&gt;</span></div><div class="line">    <span class="comment">&lt;!--引入默认栈的拦截器栈--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">interceptor-ref</span> <span class="attr">name</span>=<span class="string">"defaultStack"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">package</span>&gt;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>配置方式二：定义拦截器栈</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"interceptor"</span> <span class="attr">namespace</span>=<span class="string">"/"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--定义拦截器方式二:定义拦截器栈--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">interceptors</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">interceptor</span> <span class="attr">name</span>=<span class="string">"DemoInterceptor"</span> <span class="attr">class</span>=<span class="string">"com.interceptor.DemoInterceptor"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">interceptor-stack</span> <span class="attr">name</span>=<span class="string">"myStack"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">interceptor-ref</span> <span class="attr">name</span>=<span class="string">"DemoInterceptor"</span>/&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">interceptor-ref</span> <span class="attr">name</span>=<span class="string">"defaultStack"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">interceptor-stack</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">interceptors</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"interaction"</span> <span class="attr">class</span>=<span class="string">"com.action.interceptor.InterAction"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--拦截器定义方式二:引入拦截器栈--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">interceptor-ref</span> <span class="attr">name</span>=<span class="string">"myStack"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">package</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>InterAction.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InterAction</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        System.out.println(<span class="string">"action execute ..."</span>);</div><div class="line">        <span class="keyword">return</span> NONE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>访问执行结果为</p>
+<img title="struts" alt="struts" src="http://oo0vldwkt.bkt.clouddn.com/static/images/java\struts2\002.png">
+</li>
+</ul>
+<h4 id="拦截器设置属性值"><a href="#拦截器设置属性值" class="headerlink" title="拦截器设置属性值"></a>拦截器设置属性值</h4><p>拦截器中定义了一些属性可以在配置文件中进行注入，比如在文件上传拦截器中可以定义允许上传的文件的类型，定义如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--引入默认拦截器--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">interceptor-ref</span> <span class="attr">name</span>=<span class="string">"defaultStack"</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!--设置上传文件类型,fileUpload为拦截器名称,allowedExtensions为其属性--&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"fileUpload.allowedExtensions"</span>&gt;</span>.jpg,.png,.txt<span class="tag">&lt;/<span class="name">param</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">interceptor-ref</span>&gt;</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>呵呵！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="xxyxpy Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/struts2/" rel="tag"># struts2</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/23/java/struts2/struts2-03值栈/" rel="next" title="struts2-03值栈">
+                <i class="fa fa-chevron-left"></i> struts2-03值栈
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/16/java/struts2/struts2-01入门/" rel="prev" title="struts2-01入门">
+                struts2-01入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDA2NC82NjE5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="xxyxpy" />
+          <p class="site-author-name" itemprop="name">xxyxpy</p>
+           
+              <p class="site-description motion-element" itemprop="description">什么鬼...</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#在Struts2框架中使用Servlet的api"><span class="nav-text">在Struts2框架中使用Servlet的api</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用原生的Servlet"><span class="nav-text">使用原生的Servlet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全解耦合的方式"><span class="nav-text">完全解耦合的方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果页面的跳转"><span class="nav-text">结果页面的跳转</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#两种跳转方式"><span class="nav-text">两种跳转方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结果页面类型"><span class="nav-text">结果页面类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据封装"><span class="nav-text">数据封装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#属性驱动"><span class="nav-text">属性驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模型驱动"><span class="nav-text">模型驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装数据到集合"><span class="nav-text">封装数据到集合</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拦截器"><span class="nav-text">拦截器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是拦截器"><span class="nav-text">什么是拦截器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拦截器和过滤器的区别"><span class="nav-text">拦截器和过滤器的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义拦截器"><span class="nav-text">自定义拦截器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拦截器设置属性值"><span class="nav-text">拦截器设置属性值</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xxyxpy</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("zUqbqNglA6pfEwKdBrBUrYlH-gzGzoHsz", "PMlOiDVYQRneIOk0dREJvKe4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

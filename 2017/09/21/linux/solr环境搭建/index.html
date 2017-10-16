@@ -1,0 +1,1098 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|consolas:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux,solr," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="solr的运行必须要有jdk环境 单机版 如果发现zookeeper启动不了，可以先删除data目录下的zookeeper_server.pid文件 集群版 为了实现高可用至少需要7台服务器。 使用zookeeper进行分布式管理。由于zookeeper的投票选举机制，所以至少需要有三台zookeeper服务器。 一个collection至少分为两个分片，每个分片至少需要一个主（master）一个">
+<meta name="keywords" content="linux,solr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="solr环境搭建">
+<meta property="og:url" content="http://xxyxpy.pub/2017/09/21/linux/solr环境搭建/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="solr的运行必须要有jdk环境 单机版 如果发现zookeeper启动不了，可以先删除data目录下的zookeeper_server.pid文件 集群版 为了实现高可用至少需要7台服务器。 使用zookeeper进行分布式管理。由于zookeeper的投票选举机制，所以至少需要有三台zookeeper服务器。 一个collection至少分为两个分片，每个分片至少需要一个主（master）一个">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr1.png">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr2.png">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr3.png">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr4.png">
+<meta property="og:updated_time" content="2017-09-28T09:26:48.940Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="solr环境搭建">
+<meta name="twitter:description" content="solr的运行必须要有jdk环境 单机版 如果发现zookeeper启动不了，可以先删除data目录下的zookeeper_server.pid文件 集群版 为了实现高可用至少需要7台服务器。 使用zookeeper进行分布式管理。由于zookeeper的投票选举机制，所以至少需要有三台zookeeper服务器。 一个collection至少分为两个分片，每个分片至少需要一个主（master）一个">
+<meta name="twitter:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xxyxpy.pub/2017/09/21/linux/solr环境搭建/"/>
+
+
+
+
+
+  <title> solr环境搭建 | code dog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">code dog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不停奔跑，不停思考~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xxyxpy.pub/2017/09/21/linux/solr环境搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xxyxpy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="code dog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                solr环境搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T13:41:45+08:00">
+                2017-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/09/21/linux/solr环境搭建/" class="leancloud_visitors" data-flag-title="solr环境搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>solr的运行必须要有jdk环境</p>
+<p>单机版</p>
+<p>如果发现zookeeper启动不了，可以先删除data目录下的zookeeper_server.pid文件</p>
+<p>集群版</p>
+<p>为了实现高可用至少需要7台服务器。</p>
+<p>使用zookeeper进行分布式管理。由于zookeeper的投票选举机制，所以至少需要有三台zookeeper服务器。</p>
+<p>一个collection至少分为两个分片，每个分片至少需要一个主（master）一个从（salve），所以至少需要四台tomcat服务器</p>
+<p>zookeeper 集群搭建</p>
+<p>a. 复制压缩包到服务器</p>
+<p>b. 解压缩</p>
+<p>c. 复制解压之后的目录到安装位置，复制三份（或者仅复制一份处理完之后再根据它进行复制）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tar -zxvf zookeeper-3.4.6.tar.gz </div><div class="line">mkdir /usr/local/application/solr/zookeeper</div><div class="line">mv zookeeper-3.4.6 /usr/local/application/solr/solrcloud/zookeeper01</div></pre></td></tr></table></figure>
+<p>d. 创建data目录，并在目录下面建myid文件，向其中写入实例的id。如1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo 1&gt;myid</div></pre></td></tr></table></figure>
+<p>e. 修改配置文件。把conf目录下面的zoo_sample.cfg重命名为zoo.cfg，并修改data路径，端口号以及添加各个节点的端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mv zoo_sample.cfg zoo.cfg</div><div class="line"># 修改dataDir</div><div class="line">dataDir=/usr/local/application/solr/zookeeper/zookeeper01/data</div><div class="line"># 修改clientport，第一个可以保持2181不变</div><div class="line"># 底部添加各个节点的内部通讯端口和投票选举端口都不能重复</div><div class="line">server.1=192.168.80.128:2881:3881</div><div class="line">server.2=192.168.80.128:2882:3882</div><div class="line">server.3=192.168.80.128:2883:3883</div></pre></td></tr></table></figure>
+<img title="solr1" alt="solr1" src="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr1.png">
+<p>f. 复制zookeeper01为02和03，并按上面的方法修改02和03目录内的信息，主要是data目录和端口号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cp -r zookeeper01/ zookeeper02</div><div class="line">cp -r zookeeper01/ zookeeper03</div></pre></td></tr></table></figure>
+<p>g. 创建启动和关闭的shell脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">vim startup.sh</div><div class="line">chmod u+x startup.sh </div><div class="line">./zookeeper01/bin/zkServer.sh start</div><div class="line">./zookeeper02/bin/zkServer.sh start</div><div class="line">./zookeeper03/bin/zkServer.sh start</div><div class="line">vim shutdown.sh</div><div class="line">chmod u+x shutdown.sh </div><div class="line">./zookeeper01/bin/zkServer.sh stop</div><div class="line">./zookeeper02/bin/zkServer.sh stop</div><div class="line">./zookeeper03/bin/zkServer.sh stop</div></pre></td></tr></table></figure>
+<p>最终启动后的效果是只有一个leader其它都是follower，可以通过zkServer.sh status查看单个节点的状态</p>
+<p>solr集群</p>
+<p>a. 复制单机版本solr的tomcat四份，修改其端口号。四个tomcat的端口号不同</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cp -r tomcat-solr/ solrcloud/tomcat-solr01</div><div class="line">cp -r tomcat-solr/ solrcloud/tomcat-solr02</div><div class="line">cp -r tomcat-solr/ solrcloud/tomcat-solr03</div><div class="line">cp -r tomcat-solr/ solrcloud/tomcat-solr04</div></pre></td></tr></table></figure>
+<p>b. 复制四个solrhome出来，对应到各个solr实例。原始的solrhome以是solr解压后的的solr-4.10.3/example/solr目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">cp -r solr /usr/local/application/solr/solrcloud/solrhome01</div><div class="line">cp -r solr /usr/local/application/solr/solrcloud/solrhome02</div><div class="line">cp -r solr /usr/local/application/solr/solrcloud/solrhome03</div><div class="line">cp -r solr /usr/local/application/solr/solrcloud/solrhome04</div><div class="line"># 修改solr实例对应的solrhome</div><div class="line">vim tomcat-solr01/webapps/solr/WEB-INF/web.xml </div><div class="line">vim tomcat-solr02/webapps/solr/WEB-INF/web.xml </div><div class="line">vim tomcat-solr03/webapps/solr/WEB-INF/web.xml </div><div class="line">vim tomcat-solr04/webapps/solr/WEB-INF/web.xml</div></pre></td></tr></table></figure>
+<p>c. 修改solrhome下面的solr.xml，配置tomcat的ip和端口号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">vim solrhome01/solr.xml</div><div class="line">vim solrhome02/solr.xml</div><div class="line">vim solrhome03/solr.xml</div><div class="line">vim solrhome04/solr.xml</div></pre></td></tr></table></figure>
+<p>d. 让zookeeper统一管理配置文件。需要把solrhome/collection1/conf目录上传到zookeeper。上传任意的solrhome中的配置文件即可。</p>
+<p>使用工具上传配置文件：solr-4.10.3/example/scripts/cloud-scripts/zkcli.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">./zkcli.sh -zkhost 192.168.80.128:2184,192.168.80.128:2182,192.168.80.128:2183 -cmd upconfig -confdir /usr/local/application/solr/solrcloud/solrhome01/collection1/conf -confname myconf</div><div class="line"># 查看上传之后的配置，使用zookeeper目录下面的bin/zkCli.sh命令</div><div class="line"># 如果连接的端口号非2181需要使用 ./zkCli.sh -server 192.168.25.154:2182</div><div class="line">ls /</div><div class="line">ls /configs</div><div class="line">ls /configs/myconf</div></pre></td></tr></table></figure>
+<p>e. 修改每个tomcat/bin目录下的catalina.sh 文件，关联solr和zookeeper。修改JAVA_OPTS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JAVA_OPTS=&quot;-DzkHost=192.168.80.128:2184,192.168.80.128:2182,192.168.80.128:2183&quot;</div></pre></td></tr></table></figure>
+<p>f. 访问solr实例 <a href="http://192.168.80.128:8280/solr/" target="_blank" rel="external">http://192.168.80.128:8280/solr/</a></p>
+<img title="solr2" alt="solr2" src="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr2.png">
+<p>g. 创建新的collection并进行分片处理</p>
+<p><a href="http://192.168.80.128:8180/solr/admin/collections?action=CREATE&amp;name=collection2&amp;numShards=2&amp;replicationFactor=2" target="_blank" rel="external">http://192.168.80.128:8180/solr/admin/collections?action=CREATE&amp;name=collection2&amp;numShards=2&amp;replicationFactor=2</a></p>
+<img title="solr3" alt="solr3" src="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr3.png">
+<p>h. 删除不用的collection</p>
+<p><a href="http://192.168.80.128:8180/solr/admin/collections?action=DELETE&amp;name=collection1" target="_blank" rel="external">http://192.168.80.128:8180/solr/admin/collections?action=DELETE&amp;name=collection1</a></p>
+<img title="solr4" alt="solr4" src="http://oo0vldwkt.bkt.clouddn.com/static/images/linux\solr4.png">
+<p>i. solr配置文件如：schema.xml的更新</p>
+<p>查到的资料说是可以热更新，即不删除原来的文件直接上传即覆盖。试了几次没有成功，一直报文件已经存在。可能是因为版本的原因。所以采用的是先删除原来的文件再上传的策略。</p>
+<p><a href="https://blog.liyang.io/101.html" target="_blank" rel="external">zookeeper常用命令</a>  <a href="http://www.cnblogs.com/freeweb/p/5282823.html" target="_blank" rel="external">Solr集群更新配置的方式</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 连接到zookeeper集群中的任意节点</div><div class="line">./zookeeper01/bin/zkCli.sh -server 192.168.80.128:2184</div><div class="line"># 删除schema.xml文件 myconf为配置文件目录名，可以在solr的cloud-&gt;tree中查看</div><div class="line">delete /configs/myconf/schema.xml</div><div class="line"># 上传新的配置文件，使用的是put命令 使用solr下面的工具 /example/scripts/cloud-scripts/zkcli.sh</div><div class="line"># putfile 后面第一个参数为zookeeper集群中的路径 后一个参数为要上传的文件的路径</div><div class="line">./zkcli.sh -zkhost 192.168.80.128:2184,192.168.80.128:2182,192.168.80.128:2183 -cmd putfile /configs/myconf/schema.xml /usr/local/application/solr/solrcloud/solrhome01/collection2_shard2_replica1/conf/schema.xml</div></pre></td></tr></table></figure>
+<p>上传完成之后可以在ui界面中更新solr的配置文件，按钮在core admin页面。通过reload按钮即可进行更新，这样有一个麻烦的地方是需要一个一个solr打开去reload。另外一种方式是通过命令进行更新</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://192.168.80.128:8380/solr/admin/collections?action=RELOAD&amp;name=collection2</div></pre></td></tr></table></figure>
+<hr>
+<p>使用solrj管理集群</p>
+<p>第一步：把solrJ相关的jar包添加到工程中。</p>
+<p>第二步：创建一个SolrServer对象，需要使用CloudSolrServer子类。构造方法的参数是zookeeper的地址列表。</p>
+<p>第三步：需要设置DefaultCollection属性。</p>
+<p>第四步：创建一SolrInputDocument对象。</p>
+<p>第五步：向文档对象中添加域</p>
+<p>第六步：把文档对象写入索引库。</p>
+<p>第七步：提交。</p>
+<p>junit测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.solr.client.solrj.impl.CloudSolrServer;</div><div class="line"><span class="keyword">import</span> org.apache.solr.common.SolrInputDocument;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Created on 2017/9/22.</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSolrCloud</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSolrCloud</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        CloudSolrServer solrServer = <span class="keyword">new</span> CloudSolrServer(<span class="string">"192.168.80.128:2184,192.168.80.128:2182,192.168.80.128:2183"</span>);</div><div class="line">        solrServer.setDefaultCollection(<span class="string">"collection2"</span>);</div><div class="line">        </div><div class="line">        SolrInputDocument document = <span class="keyword">new</span> SolrInputDocument();</div><div class="line">        document.addField(<span class="string">"id"</span>, <span class="string">"test001"</span>);</div><div class="line">        document.addField(<span class="string">"item_title"</span>, <span class="string">"测试商品"</span>);</div><div class="line">        document.addField(<span class="string">"item_desc"</span>, <span class="string">"很好的东东"</span>);</div><div class="line">    </div><div class="line">        solrServer.add(document);</div><div class="line">        solrServer.commit();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>整合到spring中。在使用时使用接口去自动注入</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>呵呵！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.png" alt="xxyxpy Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/solr/" rel="tag"># solr</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/25/linux/activeMq环境搭建/" rel="next" title="ActiveMq环境搭建">
+                <i class="fa fa-chevron-left"></i> ActiveMq环境搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/20/java/tool/生成二维码和条形码/" rel="prev" title="生成二维码和条形码">
+                生成二维码和条形码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDA2NC82NjE5"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="xxyxpy" />
+          <p class="site-author-name" itemprop="name">xxyxpy</p>
+           
+              <p class="site-description motion-element" itemprop="description">什么鬼...</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xxyxpy</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("zUqbqNglA6pfEwKdBrBUrYlH-gzGzoHsz", "PMlOiDVYQRneIOk0dREJvKe4");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
