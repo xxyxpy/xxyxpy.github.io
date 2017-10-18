@@ -3,9 +3,16 @@
   
     
     <entry>
-      <title><![CDATA[Hello World]]></title>
-      <url>%2F2017%2F10%2F16%2Fcommon%2F%E6%BF%80%E6%B4%BB%E7%A0%81%2F</url>
-      <content type="text"><![CDATA[SQLyog 姓名（Name）：cr173 序列号（Code）：8d8120df-a5c3-4989-8f47-5afc79c56e7c 或者（OR） 姓名（Name）：cr173 序列号（Code）：59adfdfe-bcb0-4762-8267-d7fccf16beda 或者（OR） 姓名（Name）：cr173 序列号（Code）：ec38d297-0543-4679-b098-4baadf91f983 VS 2017 Visual Studio 2017（VS2017） 企业版Enterprise 注册码：NJVYC-BMHX2-G77MM-4XJMR-6Q8QF Visual Studio 2017（VS2017） 专业版Professional 激活码key：KBJFW-NXHK6-W4WJM-CRMQB-G3CDH Sublime 3.x —– BEGIN LICENSE —–TwitterInc200 User LicenseEA7E-8900071D77F72E 390CDD93 4DCBA022 FAF6079061AA12C0 A37081C5 D0316412 4584D13694D7F7D4 95BC8C1C 527DA828 560BB037D1EDDD8C AE7B379F 50C9D69D B35179EF2FE898C4 8E4277A8 555CE714 E1FB0E43D5D52613 C3D12E98 BC49967F 7652EED29D2D2E61 67610860 6D338B72 5CF95C69E36B85CC 84991F19 7575D828 470A92AB—— END LICENSE ——]]></content>
+      <title><![CDATA[ssh整合]]></title>
+      <url>%2F2017%2F10%2F18%2Fjava%2Fidea%E4%BD%BF%E7%94%A8%2F</url>
+      <content type="text"><![CDATA[tomcat热部署 使用maven实现tomcat热部署 修改tomcat的conf/tomcat-users.xml配置文件。添加用户名、密码、权限，配置完成之后需要重启tomcat 123&lt;role rolename="manager-gui" /&gt;&lt;role rolename="manager-script" /&gt;&lt;user username="tomcat" password="tomcat" roles="manager-gui, manager-script"/&gt; 配置tomcat插件，需要修改pom.xml文件 123456789101112131415161718&lt;build&gt; &lt;plugins&gt; &lt;!-- 配置Tomcat插件 --&gt; &lt;plugin&gt; &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt; &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt; &lt;configuration&gt; &lt;port&gt;8081&lt;/port&gt; &lt;!-- / 为webapps下面的root目录 --&gt; &lt;path&gt;/&lt;/path&gt; &lt;!-- tomcat服务地址 --&gt; &lt;url&gt;http://192.168.25.135:8080/manager/text&lt;/url&gt; &lt;username&gt;tomcat&lt;/username&gt; &lt;password&gt;tomcat&lt;/password&gt; &lt;/configuration&gt; &lt;/plugin&gt; &lt;/plugins&gt;&lt;/build&gt; 使用maven命令部署 1234# 首次部署，目录为空时tomcat7:deploy# 重新部署，目录不为空tomcat7:redeploy]]></content>
+    </entry>
+
+    
+    <entry>
+      <title><![CDATA[software key]]></title>
+      <url>%2F2017%2F10%2F17%2Fcommon%2F%E6%BF%80%E6%B4%BB%E7%A0%81%2F</url>
+      <content type="text"><![CDATA[SQLyog 姓名（Name）：cr173 序列号（Code）：8d8120df-a5c3-4989-8f47-5afc79c56e7c 或者（OR） 姓名（Name）：cr173 序列号（Code）：59adfdfe-bcb0-4762-8267-d7fccf16beda 或者（OR） 姓名（Name）：cr173 序列号（Code）：ec38d297-0543-4679-b098-4baadf91f983 VS 2017 Visual Studio 2017（VS2017） 企业版Enterprise 注册码：NJVYC-BMHX2-G77MM-4XJMR-6Q8QF Visual Studio 2017（VS2017） 专业版Professional 激活码key：KBJFW-NXHK6-W4WJM-CRMQB-G3CDH Sublime 3.xafter Build 3133，other version —– BEGIN LICENSE —–TwitterInc200 User LicenseEA7E-8900071D77F72E 390CDD93 4DCBA022 FAF6079061AA12C0 A37081C5 D0316412 4584D13694D7F7D4 95BC8C1C 527DA828 560BB037D1EDDD8C AE7B379F 50C9D69D B35179EF2FE898C4 8E4277A8 555CE714 E1FB0E43D5D52613 C3D12E98 BC49967F 7652EED29D2D2E61 67610860 6D338B72 5CF95C69E36B85CC 84991F19 7575D828 470A92AB—— END LICENSE —— SecureCRT安装及破解 VmWare 5A02H-AU243-TZJ49-GTC7K-3C61NVF5XA-FNDDJ-085GZ-4NXZ9-N20E6UC5MR-8NE16-H81WY-R7QGV-QG2D8ZG1WH-ATY96-H80QP-X7PEX-Y30V4AA3E0-0VDE1-0893Z-KGZ59-QGAVF EditPlus 注册名：host1991​ 序列号：14F50-CD5C8-E13DA-51100-BAFE6 ​ 注册名：360xw​ 注册码：93A52-85B80-A3308-BF130-40412 ​ 注册名：kariryo​ 注册码：5387D-12450-BCZ8B-D6W0B-85TE1 ​ 注册名：crsky​ 注册码：7879E-5BF58-7DR23-DAOB2-7DR30 ​ 注册名：zzidc​ 注册码：11276-E9720-D59E6-BD0E0-2965C ​ 注册名：gainet​ 注册码：74E92-05B20-3D39C-90E5F-A55E8 ​ 注册名：kuaiyun​ 注册码：9152C-84978-1A3E3-64290-992FD]]></content>
     </entry>
 
     
