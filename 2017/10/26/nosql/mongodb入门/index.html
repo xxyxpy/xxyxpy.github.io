@@ -100,7 +100,7 @@
 <meta property="og:url" content="http://xxyxpy.pub/2017/10/26/nosql/mongodb入门/index.html">
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="安装安装64位的环境，因为32位的最大只支持2G存储。可以到官网下载，即将安装的环境为Centos 7.3 123456789101112# 上传到服务器解压文件到指定位置tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgzmv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb# 添加参数到环境变量vi">
-<meta property="og:updated_time" content="2017-10-26T09:52:03.460Z">
+<meta property="og:updated_time" content="2017-10-26T09:53:24.130Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mongodb入门">
 <meta name="twitter:description" content="安装安装64位的环境，因为32位的最大只支持2G存储。可以到官网下载，即将安装的环境为Centos 7.3 123456789101112# 上传到服务器解压文件到指定位置tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgzmv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb# 添加参数到环境变量vi">
@@ -366,7 +366,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T17:51:39+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T17:53:23+08:00">
                 2017-10-26
               </time>
             
@@ -439,6 +439,357 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 上传到服务器解压文件到指定位置</div><div class="line">tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgz</div><div class="line">mv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb</div><div class="line"></div><div class="line"># 添加参数到环境变量</div><div class="line">vim /etc/profile</div><div class="line"># 添加的内容</div><div class="line">export MONGODB_HOME=/usr/local/mongodb</div><div class="line">export PATH=$MONGODB_HOME/bin:$PATH</div><div class="line"></div><div class="line"># 添加完成之后重新加载环境变量</div><div class="line">source /etc/profile</div></pre></td></tr></table></figure>
 <hr>
 <h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"># 创建数据库目录</div><div class="line">mkdir -p /data/mongodb</div><div class="line">mkdir -p /data/mongodb/log</div><div class="line">touch /data/mongodb/log/mongodb.log</div><div class="line"></div><div class="line"># 添加配置文件</div><div class="line">vim /etc/mongodb.conf</div><div class="line"># 配置文件内容</div><div class="line">dbpath=/data/mongodb</div><div class="line">logpath=/data/mongodb/log/mongodb.log</div><div class="line">logappend=true</div><div class="line">port=27017</div><div class="line">fork=true</div><div class="line">#auth = true # 先关闭, 创建好用户在启动</div><div class="line"></div><div class="line"># 通过配置文件启动</div><div class="line">mongod -f /etc/mongodb.conf</div><div class="line"></div><div class="line"># 连接mongodb服务，通过mongo命令，由于已经添加到环境变量可以直接使用</div><div class="line">mongo</div><div class="line"></div><div class="line"># 从Mongodb的admin中关闭系统</div><div class="line">use admin</div><div class="line">db.shutdownServer()</div></pre></td></tr></table></figure>
+<p>配置文件参数说明</p>
+<blockquote>
+<p>mongodb的参数说明：<br>–dbpath 数据库路径(数据文件)<br>–logpath 日志文件路径<br>–master 指定为主机器<br>–slave 指定为从机器<br>–source 指定主机器的IP地址<br>–pologSize 指定日志文件大小不超过64M.因为resync是非常操作量大且耗时，最好通过设置一个足够大的oplogSize来避免resync(默认的 oplog大小是空闲磁盘大小的5%)。<br>–logappend 日志文件末尾添加<br>–port 启用端口号<br>–fork 在后台运行<br>–only 指定只复制哪一个数据库<br>–slavedelay 指从复制检测的时间间隔<br>–auth 是否需要验证权限登录(用户名和密码)</p>
+<p>注：mongodb配置文件里面的参数很多，定制特定的需求，请参考官方文档</p>
+</blockquote>
+<hr>
+<h3 id="通过Robo连接"><a href="#通过Robo连接" class="headerlink" title="通过Robo连接"></a>通过Robo连接</h3><p>因为mongodb是基于json进行操作的，所以在命令行中操作时非常的麻烦。使用可视化工具Robo去访问和操作更方便，提供了linux和windows两种版本。下载地址如下：</p>
+<blockquote>
+<p>链接: <a href="https://pan.baidu.com/s/1c1ZCkBu" target="_blank" rel="external">https://pan.baidu.com/s/1c1ZCkBu</a> 密码: 53n5</p>
+</blockquote>
+<p>在连接之前需要先开放默认的27017端口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 可以关闭防火墙，或者单独添加27017端口</div><div class="line">chkconfig iptables off</div><div class="line"></div><div class="line">/sbin/iptables -I INPUT -p tcp --dport 27017 -j ACCEPT</div><div class="line">/etc/rc.d/init.d/iptables save</div><div class="line">/etc/rc.d/init.d/iptables restart</div></pre></td></tr></table></figure>
+<p>然后安装robo后直接connect即可。</p>
+<hr>
+<h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><ul>
+<li>Object ID：文档ID。每个文档都有一个_id，如果不设置的话会默认生成一个12个字节的16进制数。前4个字节为当前的时间戳，接下来3个字节为机器id，接下来2个字节为MongoDb的服务进程id，最后三个字节是增量值</li>
+<li>String：字符串，最常用，必须是有效的UTF-8</li>
+<li>Boolean：存储一个布尔值，true或false</li>
+<li>Integer：整数可以是32位或64位，这取决于服务器</li>
+<li>Double：存储浮点值</li>
+<li>Arrays：数组或列表，多个值存储到一个键</li>
+<li>Object：用于嵌入式的文档，即一个值为一个文档</li>
+<li>Null：存储Null值</li>
+<li>Timestamp：时间戳</li>
+<li>Date：存储当前日期或时间的UNIX时间格式</li>
+</ul>
+<hr>
+<h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><p>默认连接的是test数据库，如果不创建数据库直接进行操作则操作的数据会存放在test数据库中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 查看当前的数据库</div><div class="line">db</div><div class="line"># 显示所连接服务上面的所有数据库</div><div class="line">show dbs</div><div class="line"># 切换数据库，如果不存在仅指向数据库，不执行创建，只有当插入数据或创建集合时才创建库</div><div class="line">use mydb</div><div class="line"># 删除数据库，执行此操作时删除当前连接的数据库</div><div class="line">db.dropDatebase()</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="集合操作"><a href="#集合操作" class="headerlink" title="集合操作"></a>集合操作</h3><ul>
+<li><p>显示所有集合</p>
+<blockquote>
+<p>show collections</p>
+</blockquote>
+</li>
+<li><p>创建集合 <code>db.createCollection(name, options)</code></p>
+<blockquote>
+<p>db.createCollection(“stu”)</p>
+<p>可选参数options，capped 表示设置上限，size 表示最大字节的大小。max表示最大的文档数量。当capped为true时size必须指定</p>
+<p>db.createCollection(“sub”, { capped : true, size : 10 } )</p>
+</blockquote>
+</li>
+<li><p>删除集合</p>
+<blockquote>
+<p>db.集合名.drop()</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h3><ul>
+<li><p>插入</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 不指定_id参数，mongodb自动分配</div><div class="line">db.stu.insert(&#123;name:'gj',gener:1&#125;)</div><div class="line"># 指定_id参数</div><div class="line">s1=&#123;_id:'20160101',name:'hr'&#125;</div><div class="line">s1.gender=0</div><div class="line">db.stu.insert(s1)</div></pre></td></tr></table></figure>
+</li>
+<li><p>查询全部</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">db.stu.find()</div></pre></td></tr></table></figure>
+</li>
+<li><p>更新</p>
+<p>语法</p>
+<blockquote>
+<p>db.集合.update({queryjson},{updatejson},{multi:true or false})</p>
+<p>queryjson指的是查询条件，类似于update中的where。无条件时也要写{}</p>
+<p>updatejson指的是更新的数据</p>
+<p>multi是可选项，默认值是false表示只更新查找到的第一条记录。值为true时表示更新所有</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 更新所有的文档，可能会造成其它属性的丢失</div><div class="line">db.stu.update(&#123;name:'hr'&#125;,&#123;name:'mnc'&#125;)</div><div class="line"># 指定属性更新，使用$set操作符</div><div class="line">db.stu.update(&#123;name:'gj'&#125;,&#123;$set:&#123;name:'gj1'&#125;&#125;)</div><div class="line"># 修改多条匹配的数据，如果没有gender属性会自动添加</div><div class="line">db.stu.update(&#123;&#125;,&#123;$set:&#123;gender:0&#125;&#125;,&#123;multi:true&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>保存</p>
+<p>语法</p>
+<blockquote>
+<p>db.集合.save({savejson})</p>
+<p>如果文档的_id存在则修改，如果不存在则插入</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 更新</div><div class="line">db.stu.save(&#123;_id:'20160101',name:'haha',gender:1&#125;)</div><div class="line"># 添加</div><div class="line">db.stu.save(&#123;name:'jack',gender:1&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除</p>
+<p>语法</p>
+<blockquote>
+<p>db.集合.remove({queryjson},{justOne:true or false})</p>
+<p>justOne 表示是否只删除一行，默认是false删除多行。</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 只删除一条</div><div class="line">db.stu.remove(&#123;gender:0&#125;,&#123;justOne:true&#125;)</div><div class="line"># 全部删除</div><div class="line">db.stu.remove(&#123;&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>有size限制的集合插入</p>
+<p>当插入的数据超过限制的max大小时，后面插入的数据会覆盖前面插入的</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">db.createCollection('sub',&#123;capped:true,size:3,max:3&#125;)</div><div class="line">db.sub.insert(&#123;name:'zs',age:18&#125;)</div><div class="line">db.sub.insert(&#123;name:'ls',age:19&#125;)</div><div class="line">db.sub.insert(&#123;name:'ww',age:20&#125;)</div><div class="line"># 覆盖第一条数据</div><div class="line">db.sub.insert(&#123;name:'zl',age:21&#125;)</div><div class="line">db.sub.find()</div></pre></td></tr></table></figure>
+<hr>
+</li>
+</ul>
+<h3 id="数据查询"><a href="#数据查询" class="headerlink" title="数据查询"></a>数据查询</h3><ul>
+<li><p>基本查询</p>
+<p>语法</p>
+<blockquote>
+<p>db.集合.find({queryjson})</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 查询全部</div><div class="line">db.sub.find()</div><div class="line"># 带条件查询</div><div class="line">db.sub.find(&#123;age:20&#125;)</div><div class="line"># 只返回符合条件的第一个findOne()</div><div class="line">db.sub.update(&#123;age:19&#125;,&#123;$set:&#123;age:20&#125;&#125;)</div><div class="line">db.sub.finOne(&#123;age:20&#125;)</div><div class="line"># 格式化查询结果pretty()，只在命令行窗口时有效果</div><div class="line">db.sub.find(&#123;age:20&#125;).pretty()</div></pre></td></tr></table></figure>
+</li>
+<li><p>比较运算符</p>
+<blockquote>
+<p> 等于，默认是等于判断，没有运算符</p>
+<p> 小于$lt</p>
+<p> 小于等于$lte</p>
+<p> 大于$gt</p>
+<p> 大于等于$gte</p>
+<p> 不等于$ne</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 查询年龄大于20的记录</div><div class="line">db.sub.find(&#123;age:&#123;$gt:20&#125;&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>逻辑运算符</p>
+<blockquote>
+<p>逻辑运算符指并且或者之类的关系，查询时可以有多个条件</p>
+<p>多个条件之前使用逻辑运算符连接</p>
+<p>逻辑与：默认查询时的json就是逻辑与的关系，用逗号隔开</p>
+<p>逻辑或：使用$or</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 多个逻辑与条件：查询年龄大于等于20并且name为ww的记录</div><div class="line">db.sub.find(&#123;age:&#123;$gte:20&#125;,name:'ww'&#125;)</div><div class="line"># 使用逻辑或$or：查询name为zl或者年龄等于20的记录</div><div class="line">db.sub.find(&#123;$or:[&#123;name:'zl'&#125;,&#123;age:20&#125;]&#125;)</div><div class="line"># 逻辑与和或一起使用：查询name为zl或者年龄大于等于20 并且name为ls的记录</div><div class="line">db.sub.find(&#123;$or:[&#123;name:'zl'&#125;,&#123;age:&#123;$gte:20&#125;&#125;],name:'ls'&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>范围运算符</p>
+<blockquote>
+<p>使用<code>$in</code>和<code>$nin</code>判断是否在某个范围内</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 查询年龄为10或20的记录</div><div class="line">db.sub.find(&#123;age:&#123;$in:[10,20]&#125;&#125;)</div><div class="line"># 查询年龄不为10或20的记录</div><div class="line">db.sub.find(&#123;age:&#123;$nin:[10,20]&#125;&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>正则表达式查询</p>
+<blockquote>
+<p>使用//或$regex编写正则表达式</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 查询name以l开头的记录</div><div class="line">db.sub.find(&#123;name:/^l/&#125;)</div><div class="line">db.sub.find(&#123;name:&#123;$regex:'^l'&#125;&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>自定义函数查询</p>
+<blockquote>
+<p>使用js中的function来进行查询返回，用$where</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 查询年龄大于20的记录</div><div class="line">db.sub.find(&#123;$where:function()&#123;</div><div class="line">	return this.age&gt;20</div><div class="line">&#125;&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用limit和skip分页</p>
+<blockquote>
+<p>limit用于读取指定数量的文档</p>
+<p>db.集合.find({queryjson}).limit(number)</p>
+<p>skip用于跳过指定数量的文档</p>
+<p>db.集合.find({queryjson}).skip(number)</p>
+<p>两者搭配使用可以实现分页查询的功能</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># 向stu中添加测试数据</div><div class="line">db.stu.insert(&#123;name:'zhangsan',gender:1,age:23&#125;</div><div class="line">db.stu.insert(&#123;name:'lisi',gender:1,age:33&#125;</div><div class="line">db.stu.insert(&#123;name:'wangwu',gender:0,age:13&#125;</div><div class="line">db.stu.insert(&#123;name:'zhaoliu',gender:0,age:40&#125;</div><div class="line">db.stu.insert(&#123;name:'wangerma',gender:1,age:30&#125;</div><div class="line"># 查询gender为0，只取前两条</div><div class="line">db.stu.find(&#123;gender:0&#125;).limit(2)</div><div class="line"># 查询age大于20记录，跳过前两条</div><div class="line">db.stu.find(&#123;age:&#123;$gt:20&#125;&#125;).skip(2)</div><div class="line"></div><div class="line"># 生成分页测试数据</div><div class="line">for(i=0;i&lt;15;i++)&#123;</div><div class="line">	db.t1.insert(&#123;name:'name' + i, age:i&#125;)</div><div class="line">&#125;</div><div class="line"># 每页3条，查询第3页数据</div><div class="line">db.t1.find().skip(6).limit(3)</div></pre></td></tr></table></figure>
+</li>
+<li><p>投影查询</p>
+<blockquote>
+<p>指定需要输出的文档字段，防止输出不必要的字段造成性能的下降</p>
+<p>db.集合.find({queryjson},{col1:1,col2:0,col3:1…})</p>
+<p>对于需要显示的字段，设置值为1。不设置不显示</p>
+<p>对于_id默认显示，如果不显示需要显示的设置为0</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 只展示name和_id</div><div class="line">db.stu.find(&#123;&#125;,&#123;name:1&#125;)</div><div class="line"># 只展示name</div><div class="line">db.stu.find(&#123;&#125;,&#123;name:1,_id:0&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<blockquote>
+<p>使用sort()对结果集进行排序</p>
+<p>db.集合.find({queryjson}).sort({col1:1,col2:-1,…})</p>
+<p>参数1为升序，-1为降序</p>
+<p>多个条件时逗号分隔</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 查询age大于0的数据，按性别降序再按age升序</div><div class="line">db.stu.find(&#123;age:&#123;$gt:0&#125;&#125;).sort(&#123;gender:-1,age:1&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>统计个数</p>
+<blockquote>
+<p>使用count()进行文档数的统计，提供两种语法</p>
+<p>db.集合.find({queryjson}).count()</p>
+<p>db.集合.cont({queryjson})</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 统计age大于0的文档数</div><div class="line">db.stu.find(&#123;age:&#123;$gt:0&#125;&#125;).count()</div><div class="line">db.stu.count(&#123;age:&#123;$gt:0&#125;&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>消除重复</p>
+<blockquote>
+<p>方法distinct()对数据进行去重</p>
+<p>db.集合.distinct(‘column’,{conditionjson})</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 查找age大于18的性别，去重</div><div class="line">db.stu.distinct('gender',&#123;age:&#123;$gt:18&#125;&#125;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><ul>
+<li><p>生成测试数据100W条</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">use test3</div><div class="line"><span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;<span class="number">1000000</span>;i++)&#123;db.t1.insert(&#123;<span class="attr">name</span>:<span class="string">'name'</span>+i&#125;)&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>查看查询的执行计划</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">db.t1.find(&#123;name:'name500000'&#125;).explain('executionStats')</div><div class="line"># 显示内容中主要关注时间</div><div class="line">...</div><div class="line">"executionTimeMillis" : 303,</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建索引</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 1指为按升序创建索引，-1表示降序</div><div class="line">db.t1.ensureIndex(&#123;"name":1&#125;)</div><div class="line"># 也支持同时为多个字段创建索引，即关系型数据库中的复合索引。如</div><div class="line">db.collectionName.ensureIndex(&#123;'col1':1,'col2':-1&#125;)</div><div class="line"># 在后台创建索引</div><div class="line">db.collectionName.ensureIndex(&#123;'col1':1,'col2':-1&#125;,&#123;background:true&#125;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>索引创建完成之后再次查看执行计划</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">db.t1.find(&#123;name:'name500000'&#125;).explain('executionStats')</div><div class="line"># 显示内容中主要关注时间,变化为86ms，说明索引的效果还是比较明显的</div><div class="line">...</div><div class="line">"executionTimeMillis" : 86,</div><div class="line">...</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h3><blockquote>
+<p>聚合主要用于计算数据，类似sql中的sum()、avg()</p>
+<p>语法：</p>
+<p>db.集合.aggregate([{管道:{表达式}},{管道:{表达式}},…])</p>
+<p>常用管道</p>
+<p>文档处理完毕后，通过管道进行下一次处理</p>
+<ul>
+<li>$group：将集合中的文档分组，可用于统计结果</li>
+<li>$match：过滤数据，只输出符合条件的文档</li>
+<li>$project：修改输入文档的结构，如重命名、增加、删除字段、创建计算结果</li>
+<li>$sort：将输入文档排序后输出</li>
+<li>$limit：限制聚合管道返回的文档数</li>
+<li>$skip：跳过指定数量的文档，并返回余下的文档</li>
+<li>$unwind：将数组类型的字段进行拆分</li>
+</ul>
+<p>表达式</p>
+<p>处理输入文档并输出</p>
+<p>语法：’$列名’</p>
+<p>常用表达式：</p>
+<ul>
+<li><code>$sum</code>：计算总和， <code>$sum</code>:1同count表示计数</li>
+<li>$avg：计算平均值</li>
+<li>$min：获取最小值</li>
+<li>$max：获取最大值</li>
+<li>$push：在结果文档中插入值到一个数组中</li>
+<li>$first：根据资源文档的排序获取第一个文档数据</li>
+<li>$last：根据资源文档的排序获取最后一个文档数据</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>$group</p>
+<blockquote>
+<p>将集合中的文档分组，可用于统计结果</p>
+<p>_id表示分组的依据，使用某个字段时格式为：$字段</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"># 统计gender的总人数 使用$sum表达式</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$group:&#123;</div><div class="line">			_id:'$gender',</div><div class="line">			counter:&#123;$sum:1&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div><div class="line"># 将集合中所有的文档分成一组_id:null。统计学生总人数，平均年龄</div><div class="line"># 使用$avg表达式</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$group:&#123;</div><div class="line">			_id:null,</div><div class="line">			counter:&#123;$sum:1&#125;,</div><div class="line">			avgAge:&#123;$avg:'$age'&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div><div class="line"></div><div class="line"># 透视数据。统计学生的性别及对应的学生姓名</div><div class="line"># 使用$push表达式，将结果推到数组中</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$group:&#123;</div><div class="line">			_id:'$gender',</div><div class="line">			name:&#123;$push:'$name'&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div><div class="line"># 使用$$ROOT可以将文档内容整个加入到结果集的数组中</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$group:&#123;</div><div class="line">			_id:'$gender',</div><div class="line">			name:&#123;$push:'$$ROOT'&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div></pre></td></tr></table></figure>
+</li>
+<li><p>$match</p>
+<blockquote>
+<p>用于过滤数据，只输出符合条件的文档</p>
+<p>使用标准的查询操作</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"># 查询年龄大于20的学生</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$match:&#123;</div><div class="line">			age:&#123;$gt:20&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div><div class="line"># 统计年龄大于20的男女生人数</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$match:&#123;</div><div class="line">			age:&#123;$gt:20&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		$group:&#123;</div><div class="line">			_id:'$gender',</div><div class="line">			counter:&#123;</div><div class="line">				$sum:1</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div></pre></td></tr></table></figure>
+</li>
+<li><p>$project</p>
+<blockquote>
+<p>修改输入文档的结构，如重命名、增加、删除字段、创建计算结果</p>
+<p>类似于投影查询的实现</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"># 查询学生的姓名及年龄</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$project:&#123;</div><div class="line">			_id:0,</div><div class="line">			name:1,</div><div class="line">			age:1</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">])</div><div class="line"># 统计男女生人数，返回指定的字段</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;</div><div class="line">		$group:&#123;_id:'$gender',counter:&#123;$sum:1&#125;&#125;</div><div class="line">	&#125;,</div><div class="line">	&#123;</div><div class="line">		$project:&#123;_id:0,counter:1&#125;</div><div class="line">	&#125;</div><div class="line">])</div></pre></td></tr></table></figure>
+</li>
+<li><p>$sort</p>
+<blockquote>
+<p>将输入文档排序后输出</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 查询学生信息，按年龄升序</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;$sort:&#123;$age:1&#125;&#125;</div><div class="line">])</div><div class="line"># 统计男女生人数，按总人数降序</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;$group:&#123;_id:'$gender',counter:&#123;$sum:1&#125;&#125;&#125;,</div><div class="line">	&#123;$sort:&#123;counter:-1&#125;&#125;</div><div class="line">])</div></pre></td></tr></table></figure>
+</li>
+<li><p>$limit 、\$skip</p>
+<blockquote>
+<p>$limit用于限制管道返回的文档数</p>
+<p>$skip用于跳过指定数量的文档，并返回余下的文档</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">db.stu.aggregate([</div><div class="line">	&#123;$limit:2&#125;</div><div class="line">])</div><div class="line"></div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;$skip:2&#125;</div><div class="line">])</div><div class="line"># 统计男生、女生人数，按人数升序，取第二条数据</div><div class="line">db.stu.aggregate([</div><div class="line">	&#123;$group:&#123;_id:'$gender',counter:&#123;$sum:1&#125;&#125;&#125;,</div><div class="line">	&#123;$sort:&#123;counter:1&#125;&#125;,</div><div class="line">	&#123;$skip:1&#125;,</div><div class="line">	&#123;$limit:1&#125;</div><div class="line">])</div></pre></td></tr></table></figure>
+</li>
+<li><p>$unwind</p>
+<blockquote>
+<p>将文档中的某一个数组类型字段拆分成多条，每条包含数组中的一个值</p>
+<p>正常数据处理语法</p>
+<p>db.集合.aggregate([{$unwind:’\$字段名称’}])</p>
+<p>处理空数组、非数组、null、无此字段的情况</p>
+<p>db.集合.aggregate([{$unwind:{</p>
+<p>​    path:’$字段名称’,</p>
+<p>​    preserveNullAndEmptyArrays:true or false</p>
+<p>}}])</p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"># 正常数据</div><div class="line">db.t2.insert(&#123;_id:1,item:'t-shirt',size:['s','m','l']&#125;)</div><div class="line">db.t2.aggregate([</div><div class="line">	&#123;$unwind:'$size'&#125;</div><div class="line">])</div><div class="line"></div><div class="line"># 空数组，非数组，null，无数据的情况</div><div class="line">db.t3.insert([</div><div class="line">	&#123;_id:1,item:'a',size:['s','m','l']&#125;,</div><div class="line">	&#123;_id:2,item:'b',size:[]&#125;,</div><div class="line">	&#123;_id:3,item:'c',size:['m']&#125;,</div><div class="line">	&#123;_id:4,item:'d'&#125;,</div><div class="line">	&#123;_id:5,item:'e',size:null&#125;</div><div class="line">])</div><div class="line"># 使用此语法时数据会丢失</div><div class="line">db.t3.aggregate([</div><div class="line">	&#123;$unwind:'$size'&#125;</div><div class="line">])</div><div class="line"></div><div class="line">db.t3.aggregate([</div><div class="line">	&#123;$unwind:&#123;</div><div class="line">		path:'$size',</div><div class="line">		preserveNullAndEmptyArrays:true</div><div class="line">	&#125;&#125;</div><div class="line">])</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="用户权限"><a href="#用户权限" class="headerlink" title="用户权限"></a>用户权限</h3><p>mongodb默认不开启用户认证，直接通过ip和端口号即可完成连接。如果需要开启权限管理需要修改配置文件<code>mongodb.conf</code></p>
+<p>采用用户-角色-数据库的安全管理方式。一个用户可以对应多个角色</p>
+<blockquote>
+<p>角色说明：<br>Read：允许用户读取指定数据库<br>readWrite：允许用户读写指定数据库<br>dbAdmin：允许用户在指定数据库中执行管理函数，如索引创建、删除，查看统计或访问system.profile<br>userAdmin：允许用户向system.users集合写入，可以找指定数据库里创建、删除和管理用户<br>clusterAdmin：只在admin数据库中可用，赋予用户所有分片和复制集相关函数的管理权限。<br>readAnyDatabase：只在admin数据库中可用，赋予用户所有数据库的读权限<br>readWriteAnyDatabase：只在admin数据库中可用，赋予用户所有数据库的读写权限<br>userAdminAnyDatabase：只在admin数据库中可用，赋予用户所有数据库的userAdmin权限<br>dbAdminAnyDatabase：只在admin数据库中可用，赋予用户所有数据库的dbAdmin权限。<br>root：只在admin数据库中可用。超级账号，超级权限</p>
+</blockquote>
+<p>修改之前需要先创建一个超级管理员帐户，否则无法完成登录。如果遇到服务无法停止的情况下可以kill掉服务的进程</p>
+<blockquote>
+<p>查询mongodb的服务的pid</p>
+<p>ps aux | grep mongo</p>
+<p>找到pid杀掉，比如pid为100</p>
+<p>kill 100</p>
+</blockquote>
+<ul>
+<li><p>创建管理员帐户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># 连接到mongo</div><div class="line">mongo</div><div class="line"># 进入到admin库</div><div class="line">use admin</div><div class="line"># 添加用户</div><div class="line">db.createUser(</div><div class="line">   &#123;</div><div class="line">     user: &quot;admin&quot;,</div><div class="line">     pwd: &quot;mongodb:passok&quot;,</div><div class="line">     roles: [ &#123; role: &quot;userAdminAnyDatabase&quot;, db: &quot;admin&quot; &#125; ]</div><div class="line">   &#125;</div><div class="line">)</div><div class="line"># 查看用户</div><div class="line">show users</div><div class="line">db.system.users.find()</div><div class="line"># 停止服务</div><div class="line">db.shutdownServer()</div></pre></td></tr></table></figure>
+</li>
+<li><p>开启权限认证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 添加内容到配置文件</div><div class="line">echo &quot;auth = true&quot; &gt;&gt; /etc/mongodb.conf</div><div class="line"># 启动服务</div><div class="line">mongod -f /etc/mongodb.conf</div></pre></td></tr></table></figure>
+</li>
+<li><p>登录验证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">mongod</div><div class="line"># 无权限查看所有的库</div><div class="line">show dbs</div><div class="line">use admin</div><div class="line"># 登录</div><div class="line">db.auth(&apos;admin&apos;,&apos;mongodb:passok&apos;)</div><div class="line"># 登录成功</div><div class="line">show dbs</div><div class="line"></div><div class="line"># 也可以使用以下方式进行登录</div><div class="line">mongo -u &apos;admin&apos; -p &apos;mongodb:passok&apos; --authenticationDatabase &apos;admin&apos;</div></pre></td></tr></table></figure>
+</li>
+<li><p>创建修改用户</p>
+<p>使用超级管理员登录之后可以创建普通用户，使用户只有特定的数据库的访问权限</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">db.createUser(&#123;</div><div class="line">    user:'t1',</div><div class="line">    pwd:'123',</div><div class="line">    roles:[&#123;role:'readWrite',db:'test1'&#125;]</div><div class="line">&#125;)</div><div class="line"># 连接</div><div class="line">mongo -u t1 -p 123 --authenticationDatabase test1</div><div class="line"># 添加数据</div><div class="line">db.t1.insert(&#123;name:'ls'&#125;)</div><div class="line"># 修改用户，必须使用admin帐户操作</div><div class="line">use test1</div><div class="line">db.updateUser('t1',&#123;pwd:'456'&#125;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><p>为了保证服务的持续可用，可以设置多台服务器进行数据同步。在主服务器出现故障时可以自动切换到从节点，此时从节点自动变成为主节点。要搭建此套服务至少需要两台服务器，实现的机制是每隔一段时间自动拷贝所有的改动到从节点。</p>
+<ul>
+<li><p>创建两个数据库目录t1、t2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir t1</div><div class="line">mkdir t2</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动两个mongod服务，replSet的名称相同</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 主</div><div class="line">mongod --bind_ip 192.168.80.129 --port 27018 --dbpath /root/t1 --replSet rs0</div><div class="line"># 从</div><div class="line">mongod --bind_ip 192.168.80.129 --port 27019 --dbpath /root/t2 --replSet rs0</div></pre></td></tr></table></figure>
+</li>
+<li><p>操作主节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">mongo --host 192.168.80.129 --port 27018</div><div class="line"># 初始化</div><div class="line">rs.initiate() # rs是mongodb的内置对象</div><div class="line"># 查看当前状态，members中只有一个服务</div><div class="line">rs.status()</div><div class="line"># 添加从节点，可以添加多个</div><div class="line">rs.add(&apos;192.168.80.129:27019&apos;)</div><div class="line"># 查看当前状态，members中有两个服务。并且此时提示符变为：rs0:PRIMARY</div><div class="line">rs.status()</div><div class="line"># 向主节点中插入数据</div><div class="line">use test1</div><div class="line">for(i=0;i&lt;10;i++)&#123;db.t1.insert(&#123;_id:i&#125;)&#125;</div><div class="line">db.t1.find()</div></pre></td></tr></table></figure>
+</li>
+<li><p>操作从节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 连接，提示符为：rs0:SECONDARY</div><div class="line">mongo --host 192.168.80.129 --port 27019</div><div class="line"># 设置slave，否则无法查询数据</div><div class="line">rs.slaveOk()</div><div class="line">use test1</div><div class="line">db.t1.find()</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除从节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rs.remove(&apos;192.168.80.129:27019&apos;)</div></pre></td></tr></table></figure>
+</li>
+<li><p>主从切换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 关闭主节点重新启动，发现从节点自动变化为主节点</div><div class="line"># Member 192.168.80.129:27019 is now in state PRIMARY</div><div class="line"># 连接原来的主节点提示符为：rs0:SECONDARY&gt;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="备份恢复"><a href="#备份恢复" class="headerlink" title="备份恢复"></a>备份恢复</h3><ul>
+<li><p>备份</p>
+<blockquote>
+<p>语法</p>
+<p>mongodump -h dbhost -d dbname -o dbdirectory</p>
+<p>-h：服务器地址，也可以指定端口号</p>
+<p>-d：需要备份的数据库名称</p>
+<p>-o：备份的数据存放位置，此目录中存放着备份出来的数据</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mkdir test1bak</div><div class="line">mongodump -h 192.168.80.129:27019 -d test1 -o ~/test1bak</div></pre></td></tr></table></figure>
+</li>
+<li><p>恢复</p>
+<blockquote>
+<p>语法</p>
+<p>mongorestore -h dbhost -d dbname –dir dbdirectory</p>
+<p>-h：服务器地址</p>
+<p>-d：需要恢复的数据库实例</p>
+<p>–dir：备份数据所在位置</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mongorestore -h 192.168.80.129:27018 -d test2 --dir ~/test1bak/test1</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<p>参考：</p>
+<p><a href="https://itjh.net/2016/07/11/centos-install-mongodb/" target="_blank" rel="external">CentOS下安装mongodb</a></p>
+<p><a href="http://www.jianshu.com/p/a4e94bb8a052" target="_blank" rel="external">Mongodb用户权限管理</a></p>
+<p><a href="http://www.runoob.com/mongodb/mongodb-indexing.html" target="_blank" rel="external">Mongodb索引</a></p>
 
       
     </div>
@@ -636,7 +987,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动"><span class="nav-text">启动</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动"><span class="nav-text">启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过Robo连接"><span class="nav-text">通过Robo连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据类型"><span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库操作"><span class="nav-text">数据库操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集合操作"><span class="nav-text">集合操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据操作"><span class="nav-text">数据操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据查询"><span class="nav-text">数据查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#索引"><span class="nav-text">索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚合"><span class="nav-text">聚合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户权限"><span class="nav-text">用户权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制"><span class="nav-text">主从复制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备份恢复"><span class="nav-text">备份恢复</span></a></li></ol></div>
             
 
           </div>
