@@ -5,7 +5,7 @@
     <entry>
       <title><![CDATA[mongodb入门]]></title>
       <url>%2F2017%2F10%2F26%2Fnosql%2Fmongodb%E5%85%A5%E9%97%A8%2F</url>
-      <content type="text"></content>
+      <content type="text"><![CDATA[安装安装64位的环境，因为32位的最大只支持2G存储。可以到官网下载，即将安装的环境为Centos 7.3 123456789101112# 上传到服务器解压文件到指定位置tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgzmv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb# 添加参数到环境变量vim /etc/profile# 添加的内容export MONGODB_HOME=/usr/local/mongodbexport PATH=$MONGODB_HOME/bin:$PATH# 添加完成之后重新加载环境变量source /etc/profile 启动123456789101112131415161718192021222324# 创建数据库目录mkdir -p /data/mongodbmkdir -p /data/mongodb/logtouch /data/mongodb/log/mongodb.log# 添加配置文件vim /etc/mongodb.conf# 配置文件内容dbpath=/data/mongodblogpath=/data/mongodb/log/mongodb.loglogappend=trueport=27017fork=true#auth = true # 先关闭, 创建好用户在启动# 通过配置文件启动mongod -f /etc/mongodb.conf# 连接mongodb服务，通过mongo命令，由于已经添加到环境变量可以直接使用mongo# 从Mongodb的admin中关闭系统use admindb.shutdownServer()]]></content>
     </entry>
 
     

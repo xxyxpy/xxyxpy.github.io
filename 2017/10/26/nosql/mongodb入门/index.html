@@ -93,17 +93,17 @@
 
 
 
-<meta name="description" content="什么鬼...">
+<meta name="description" content="安装安装64位的环境，因为32位的最大只支持2G存储。可以到官网下载，即将安装的环境为Centos 7.3 123456789101112# 上传到服务器解压文件到指定位置tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgzmv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb# 添加参数到环境变量vi">
 <meta name="keywords" content="mongodb">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mongodb入门">
 <meta property="og:url" content="http://xxyxpy.pub/2017/10/26/nosql/mongodb入门/index.html">
 <meta property="og:site_name" content="code dog">
-<meta property="og:description" content="什么鬼...">
-<meta property="og:updated_time" content="2017-10-26T09:49:49.966Z">
+<meta property="og:description" content="安装安装64位的环境，因为32位的最大只支持2G存储。可以到官网下载，即将安装的环境为Centos 7.3 123456789101112# 上传到服务器解压文件到指定位置tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgzmv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb# 添加参数到环境变量vi">
+<meta property="og:updated_time" content="2017-10-26T09:52:03.460Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mongodb入门">
-<meta name="twitter:description" content="什么鬼...">
+<meta name="twitter:description" content="安装安装64位的环境，因为32位的最大只支持2G存储。可以到官网下载，即将安装的环境为Centos 7.3 123456789101112# 上传到服务器解压文件到指定位置tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgzmv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb# 添加参数到环境变量vi">
 
 
 
@@ -366,7 +366,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T17:49:49+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T17:51:39+08:00">
                 2017-10-26
               </time>
             
@@ -435,7 +435,11 @@
       
 
       
-        
+        <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装64位的环境，因为32位的最大只支持2G存储。可以到<a href="https://www.mongodb.com" target="_blank" rel="external">官网</a>下载，即将安装的环境为Centos 7.3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 上传到服务器解压文件到指定位置</div><div class="line">tar -zxf mongodb-linux-x86_64-rhel70-3.4.9.tgz</div><div class="line">mv mongodb-linux-x86_64-rhel70-3.4.9 /usr/local/mongodb</div><div class="line"></div><div class="line"># 添加参数到环境变量</div><div class="line">vim /etc/profile</div><div class="line"># 添加的内容</div><div class="line">export MONGODB_HOME=/usr/local/mongodb</div><div class="line">export PATH=$MONGODB_HOME/bin:$PATH</div><div class="line"></div><div class="line"># 添加完成之后重新加载环境变量</div><div class="line">source /etc/profile</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"># 创建数据库目录</div><div class="line">mkdir -p /data/mongodb</div><div class="line">mkdir -p /data/mongodb/log</div><div class="line">touch /data/mongodb/log/mongodb.log</div><div class="line"></div><div class="line"># 添加配置文件</div><div class="line">vim /etc/mongodb.conf</div><div class="line"># 配置文件内容</div><div class="line">dbpath=/data/mongodb</div><div class="line">logpath=/data/mongodb/log/mongodb.log</div><div class="line">logappend=true</div><div class="line">port=27017</div><div class="line">fork=true</div><div class="line">#auth = true # 先关闭, 创建好用户在启动</div><div class="line"></div><div class="line"># 通过配置文件启动</div><div class="line">mongod -f /etc/mongodb.conf</div><div class="line"></div><div class="line"># 连接mongodb服务，通过mongo命令，由于已经添加到环境变量可以直接使用</div><div class="line">mongo</div><div class="line"></div><div class="line"># 从Mongodb的admin中关闭系统</div><div class="line">use admin</div><div class="line">db.shutdownServer()</div></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -550,8 +554,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -613,6 +626,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动"><span class="nav-text">启动</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
