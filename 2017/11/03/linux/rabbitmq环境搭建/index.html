@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="linux,jdk,mysql," />
+  <meta name="keywords" content="rabbitmq," />
 
 
 
@@ -93,17 +93,17 @@
 
 
 
-<meta name="description" content="jdk a 卸载原来的openjdk 123rpm -qa |grep java# 如果有openjdk相关的包，全部删除掉。使用如下的命令rpm -e --nodeps 具体的包名 b 解压jdk到指定的目录 123cd /usr/localmkdir javatar -zxf jdk1.8.0_131.tar.gz c 设置环境变量 12345678vim /etc/profile# 添加如下">
-<meta name="keywords" content="linux,jdk,mysql">
+<meta name="description" content="安装123456789101112131415# 首先需要安装erlang环境# 在线安装，在线安装较慢也可以下载下来手动安装rpm -Uvh http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm# 手动安装rpm -i  erlang-19.0.4-1.el7.centos.x86_64.rpm">
+<meta name="keywords" content="rabbitmq">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jdk mysql环境搭建">
-<meta property="og:url" content="http://xxyxpy.pub/2017/09/29/linux/jdk mysql tomcat环境搭建/index.html">
+<meta property="og:title" content="docker">
+<meta property="og:url" content="http://xxyxpy.pub/2017/11/03/linux/rabbitmq环境搭建/index.html">
 <meta property="og:site_name" content="code dog">
-<meta property="og:description" content="jdk a 卸载原来的openjdk 123rpm -qa |grep java# 如果有openjdk相关的包，全部删除掉。使用如下的命令rpm -e --nodeps 具体的包名 b 解压jdk到指定的目录 123cd /usr/localmkdir javatar -zxf jdk1.8.0_131.tar.gz c 设置环境变量 12345678vim /etc/profile# 添加如下">
-<meta property="og:updated_time" content="2017-09-29T08:56:44.636Z">
+<meta property="og:description" content="安装123456789101112131415# 首先需要安装erlang环境# 在线安装，在线安装较慢也可以下载下来手动安装rpm -Uvh http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm# 手动安装rpm -i  erlang-19.0.4-1.el7.centos.x86_64.rpm">
+<meta property="og:updated_time" content="2017-11-03T01:32:41.186Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jdk mysql环境搭建">
-<meta name="twitter:description" content="jdk a 卸载原来的openjdk 123rpm -qa |grep java# 如果有openjdk相关的包，全部删除掉。使用如下的命令rpm -e --nodeps 具体的包名 b 解压jdk到指定的目录 123cd /usr/localmkdir javatar -zxf jdk1.8.0_131.tar.gz c 设置环境变量 12345678vim /etc/profile# 添加如下">
+<meta name="twitter:title" content="docker">
+<meta name="twitter:description" content="安装123456789101112131415# 首先需要安装erlang环境# 在线安装，在线安装较慢也可以下载下来手动安装rpm -Uvh http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm# 手动安装rpm -i  erlang-19.0.4-1.el7.centos.x86_64.rpm">
 
 
 
@@ -131,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://xxyxpy.pub/2017/09/29/linux/jdk mysql tomcat环境搭建/"/>
+  <link rel="canonical" href="http://xxyxpy.pub/2017/11/03/linux/rabbitmq环境搭建/"/>
 
 
 
 
 
-  <title> jdk mysql环境搭建 | code dog </title>
+  <title> docker | code dog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -330,7 +330,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://xxyxpy.pub/2017/09/29/linux/jdk mysql tomcat环境搭建/">
+    <link itemprop="mainEntityOfPage" href="http://xxyxpy.pub/2017/11/03/linux/rabbitmq环境搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xxyxpy">
@@ -351,7 +351,7 @@
             
             
               
-                jdk mysql环境搭建
+                docker
               
             
           </h1>
@@ -366,8 +366,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-29T15:27:47+08:00">
-                2017-09-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-03T09:32:35+08:00">
+                2017-11-03
               </time>
             
 
@@ -406,7 +406,7 @@
 
           
           
-             <span id="/2017/09/29/linux/jdk mysql tomcat环境搭建/" class="leancloud_visitors" data-flag-title="jdk mysql环境搭建">
+             <span id="/2017/11/03/linux/rabbitmq环境搭建/" class="leancloud_visitors" data-flag-title="docker">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -435,36 +435,23 @@
       
 
       
-        <p>jdk</p>
-<p>a 卸载原来的openjdk</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rpm -qa |grep java</div><div class="line"># 如果有openjdk相关的包，全部删除掉。使用如下的命令</div><div class="line">rpm -e --nodeps 具体的包名</div></pre></td></tr></table></figure>
-<p>b 解压jdk到指定的目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /usr/local</div><div class="line">mkdir java</div><div class="line">tar -zxf jdk1.8.0_131.tar.gz</div></pre></td></tr></table></figure>
-<p>c 设置环境变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">vim /etc/profile</div><div class="line"># 添加如下的信息</div><div class="line"></div><div class="line"># set java environment</div><div class="line">export JAVA_HOME=/usr/local/java/jdk1.8.0_131</div><div class="line">export JRE_HOME=$&#123;JAVA_HOME&#125;/jre</div><div class="line">export CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/lib</div><div class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:$&#123;PATH&#125;</div></pre></td></tr></table></figure>
+        <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"># 首先需要安装erlang环境</div><div class="line"># 在线安装，在线安装较慢也可以下载下来手动安装</div><div class="line">rpm -Uvh http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm</div><div class="line"># 手动安装</div><div class="line">rpm -i  erlang-19.0.4-1.el7.centos.x86_64.rpm</div><div class="line"># 查看安装是否成功</div><div class="line">rpm -qa|grep erlang</div><div class="line"></div><div class="line"># 安装rabbitmq</div><div class="line">rpm -Uvh http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.12/rabbitmq-server-3.6.12-1.el7.noarch.rpm</div><div class="line"># 提示需要socat，安装一下后重新安装rabbitmq</div><div class="line">yun install socat</div><div class="line"># 手动安装rabbitmq</div><div class="line">rpm -i  rabbitmq-server-3.6.12-1.el7.noarch.rpm </div><div class="line">rpm -qa|grep rabbitmq</div></pre></td></tr></table></figure>
 <hr>
-<p>mysql</p>
-<p>a 卸载自带的mysql</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rpm -qa |grep mysql</div><div class="line"># 如果有mysql相关的包，全部删除掉。使用如下的命令</div><div class="line">rpm -e --nodeps 具体的包名</div></pre></td></tr></table></figure>
-<p>b 解压mysql到指定的目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd /usr/local</div><div class="line">mkdir mysql</div><div class="line">tar -xvf MySQL-5.6.22-1.el6.i686.rpm-bundle.tar -C /usr/local/mysql</div></pre></td></tr></table></figure>
-<p>c 安装依赖项</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum -y install libaio.so.1 libgcc_s.so.1 libstdc++.so.6</div><div class="line">yum  update libstdc++-4.4.7-4.el6.x86_64</div></pre></td></tr></table></figure>
-<p>d 安装服务端</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rpm -ivh MySQL-server-5.6.22-1.el6.i686.rpm</div></pre></td></tr></table></figure>
-<p>e 安装客户端</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rpm -ivh MySQL-client-5.6.22-1.el6.i686.rpm</div></pre></td></tr></table></figure>
-<p>f 启动mysql服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">service mysql status</div><div class="line">service mysql start</div></pre></td></tr></table></figure>
-<p>g 登录</p>
-<p>服务启动时生成了一个随机密码在<code>/root/.mysql_secret</code>可以进行修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">msyql –u root -p</div><div class="line"># 登录成功之后修改密码</div><div class="line">mysql&gt; use mysql;</div><div class="line">mysql&gt; UPDATE user SET Password = PASSWORD(&apos;newpass&apos;) WHERE user = &apos;root&apos;;</div><div class="line">mysql&gt; FLUSH PRIVILEGES;</div></pre></td></tr></table></figure>
-<p>h 设置开机自启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 加入到系统服务：</div><div class="line">chkconfig --add mysql</div><div class="line"># 自动启动：</div><div class="line">chkconfig mysql on</div></pre></td></tr></table></figure>
-<p>i 开启远程服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 默认root是不支持远程登录的</div><div class="line">grant all privileges on *.* to &apos;root&apos; @&apos;%&apos; identified by &apos;123456&apos;;</div><div class="line">flush privileges;</div></pre></td></tr></table></figure>
-<p>j 设置防火墙</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 设置对3306端口进行放行，否则本机外无法进行连接</div><div class="line">/sbin/iptables -I INPUT -p tcp --dport 3306 -j ACCEPT</div><div class="line">/etc/rc.d/init.d/iptables save</div><div class="line">/etc/rc.d/init.d/iptables restart #重启服务 </div><div class="line"># 查看端口是否已经开放 </div><div class="line">/etc/init.d/iptables status</div></pre></td></tr></table></figure>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 开启</div><div class="line">service rabbitmq-server start</div><div class="line"># 关闭</div><div class="line">service rabbitmq-server stop</div><div class="line"># 查看状态</div><div class="line">rabbitmqctl status</div><div class="line"># 重启</div><div class="line">service rabbitmq-server restart</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>默认在15672端口上开启web访问服务，直接访问时无法连接。需要安装维护插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">rabbitmq-plugins enable rabbitmq_management</div><div class="line"># reboot</div><div class="line">service rabbitmq-server restart</div></pre></td></tr></table></figure>
+<p>再次打开<code>http://192.168.80.129:15672</code>即可打开登录界面，用户名和密码都是guest</p>
+<hr>
+<h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><p>直接用guest是无法完成登录的，<a href="http://www.rabbitmq.com/access-control.html" target="_blank" rel="external">官网</a>介绍的是默认不允许guest在非localhost的机器上面登录。需要修改配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">vim /etc/rabbitmq/rabbitmq.config</div><div class="line"># 添加如下内容，注意最后一个.是必须的</div><div class="line">[&#123;rabbit, [&#123;loopback_users, []&#125;]&#125;].</div><div class="line"># reboot 即可访问登录</div><div class="line">service rabbitmq-server restart</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>在集成spring boot时报<code>Failed to declare queue</code>，原因是没有这个queue，需要在管理页面添加这个queue。</p>
+<p>另外如果要启用新的用户，也可以在管理界面进行添加</p>
+<p>参考：</p>
+<p><a href="http://blog.csdn.net/zheng911209/article/details/49945677" target="_blank" rel="external">centos7安装rabbitmq</a></p>
+<p><a href="http://blog.csdn.net/a286352250/article/details/53158667" target="_blank" rel="external">spring boot 集成rabbitmq</a></p>
+<p><a href="http://blog.didispace.com/spring-boot-rabbitmq/" target="_blank" rel="external">spring boot中使用rabbitmq</a></p>
 
       
     </div>
@@ -510,11 +497,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag"># linux</a>
-          
-            <a href="/tags/jdk/" rel="tag"># jdk</a>
-          
-            <a href="/tags/mysql/" rel="tag"># mysql</a>
+            <a href="/tags/rabbitmq/" rel="tag"># rabbitmq</a>
           
         </div>
       
@@ -527,18 +510,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/13/linux/docker/" rel="next" title="docker">
-                <i class="fa fa-chevron-left"></i> docker
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/28/linux/nginx环境搭建/" rel="prev" title="nginx环境搭建">
-                nginx环境搭建 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/02/linux/redis环境搭建/" rel="prev" title="redis环境搭建">
+                redis环境搭建 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -588,8 +567,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -604,7 +592,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -626,7 +614,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -651,6 +639,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行"><span class="nav-text">运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问"><span class="nav-text">访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登录"><span class="nav-text">登录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误处理"><span class="nav-text">错误处理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
