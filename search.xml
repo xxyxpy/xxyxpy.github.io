@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title><![CDATA[docker]]></title>
+      <title><![CDATA[rabbitmq环境搭建]]></title>
       <url>%2F2017%2F11%2F03%2Flinux%2Frabbitmq%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%2F</url>
       <content type="text"><![CDATA[安装123456789101112131415# 首先需要安装erlang环境# 在线安装，在线安装较慢也可以下载下来手动安装rpm -Uvh http://www.rabbitmq.com/releases/erlang/erlang-19.0.4-1.el7.centos.x86_64.rpm# 手动安装rpm -i erlang-19.0.4-1.el7.centos.x86_64.rpm# 查看安装是否成功rpm -qa|grep erlang# 安装rabbitmqrpm -Uvh http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.12/rabbitmq-server-3.6.12-1.el7.noarch.rpm# 提示需要socat，安装一下后重新安装rabbitmqyun install socat# 手动安装rabbitmqrpm -i rabbitmq-server-3.6.12-1.el7.noarch.rpm rpm -qa|grep rabbitmq 运行12345678# 开启service rabbitmq-server start# 关闭service rabbitmq-server stop# 查看状态rabbitmqctl status# 重启service rabbitmq-server restart 访问默认在15672端口上开启web访问服务，直接访问时无法连接。需要安装维护插件 123rabbitmq-plugins enable rabbitmq_management# rebootservice rabbitmq-server restart 再次打开http://192.168.80.129:15672即可打开登录界面，用户名和密码都是guest 登录直接用guest是无法完成登录的，官网介绍的是默认不允许guest在非localhost的机器上面登录。需要修改配置 12345vim /etc/rabbitmq/rabbitmq.config# 添加如下内容，注意最后一个.是必须的[&#123;rabbit, [&#123;loopback_users, []&#125;]&#125;].# reboot 即可访问登录service rabbitmq-server restart 错误处理在集成spring boot时报Failed to declare queue，原因是没有这个queue，需要在管理页面添加这个queue。 另外如果要启用新的用户，也可以在管理界面进行添加 参考： centos7安装rabbitmq spring boot 集成rabbitmq spring boot中使用rabbitmq]]></content>
     </entry>
