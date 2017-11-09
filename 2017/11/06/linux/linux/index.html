@@ -97,10 +97,10 @@
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux">
-<meta property="og:url" content="http://xxyxpy.pub/2017/10/31/linux/linux/index.html">
+<meta property="og:url" content="http://xxyxpy.pub/2017/11/06/linux/linux/index.html">
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="关闭防火墙12345678910111213# 查看防火墙状态service iptables status# 查看已经开启的端口/etc/init.d/iptables status # 开启chkconfig iptables on# 关闭chkconfig iptables off# centos 7防火墙关闭，默认使用的是firewall作为防火墙，使用iptables必须重新设置一下sy">
-<meta property="og:updated_time" content="2017-10-31T07:07:04.297Z">
+<meta property="og:updated_time" content="2017-11-06T06:03:31.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux">
 <meta name="twitter:description" content="关闭防火墙12345678910111213# 查看防火墙状态service iptables status# 查看已经开启的端口/etc/init.d/iptables status # 开启chkconfig iptables on# 关闭chkconfig iptables off# centos 7防火墙关闭，默认使用的是firewall作为防火墙，使用iptables必须重新设置一下sy">
@@ -131,7 +131,7 @@
 
 
 
-  <link rel="canonical" href="http://xxyxpy.pub/2017/10/31/linux/linux/"/>
+  <link rel="canonical" href="http://xxyxpy.pub/2017/11/06/linux/linux/"/>
 
 
 
@@ -330,7 +330,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://xxyxpy.pub/2017/10/31/linux/linux/">
+    <link itemprop="mainEntityOfPage" href="http://xxyxpy.pub/2017/11/06/linux/linux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xxyxpy">
@@ -366,8 +366,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-31T15:07:03+08:00">
-                2017-10-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-06T14:03:22+08:00">
+                2017-11-06
               </time>
             
 
@@ -406,7 +406,7 @@
 
           
           
-             <span id="/2017/10/31/linux/linux/" class="leancloud_visitors" data-flag-title="linux">
+             <span id="/2017/11/06/linux/linux/" class="leancloud_visitors" data-flag-title="linux">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -535,7 +535,7 @@
 <p>function 函数名() {<br>command<br>}</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#! /bin/bash</div><div class="line">function sum()&#123;</div><div class="line">  sum=$[$1+$2]</div><div class="line">  echo $sum</div><div class="line">&#125;</div><div class="line"></div><div class="line">sum $1 $2</div></pre></td></tr></table></figure>
 <hr>
-<h4 id="日常管理"><a href="#日常管理" class="headerlink" title="日常管理"></a>日常管理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">w  查看当前系统的负载</div><div class="line">vmstat  监控系统的状态</div><div class="line">top 显示进程所占系统资源</div><div class="line">sar -n DEV 查看网卡流量 </div><div class="line">sar -q 查看历史负载 </div><div class="line">free 查看内存使用状况</div><div class="line">ps aux 查看系统进程 进程id可以用 kill pid杀掉。杀不掉的可以使用 kill -9 pid</div><div class="line">	可以用ps aux |grep redis进行筛选</div><div class="line">netstat  查看网络状况 netstat -lnp（打印当前系统启动哪些端口）以及netstat -an （打印网络连接状况）</div><div class="line">tcpdump  抓包工具 yum install -y tcpdump 命令去安装一下</div><div class="line">ifconfig  查看网卡ip 设置IP非常简单修改配置文件/etc/sysconfig/networ</div><div class="line">k-scripts/ifcfg-eth0了，如果是eth1那么配置文件是/etc/sysconfig/network-scripts/ifcfg-eth1.如果你的linux是通过dhcp服务器自动获得的IP，BOOTPROTO那里会是’dhcp’，如果你要配置成静</div><div class="line">	态IP的话，这里就需要写成’none’当修改完IP后需要重启网络服务新IP才能生效，重</div><div class="line">	启命令为’ service network restart’</div><div class="line"></div><div class="line">mii-tool 查看网卡连接状态,虚拟网卡不支持</div><div class="line">hostname 显示主机名。hostname abc 即修改主机名为abc 不过这样修改只是保存在内存中，</div><div class="line">	下次重启还会变成未改之前的主机名，</div><div class="line">	所以需要你还要去更改相关的配置文件’/etc/sysconfig/network’</div><div class="line"></div><div class="line">vim /etc/resolv.conf 设置DNS 文件/etc/hosts也能解析域名，</div><div class="line">	不过是需要我们手动在里面添加IP 域名这些内容，它的作用是临时解析某个域名</div><div class="line"></div><div class="line">防火墙 将selinux关闭， vim /etc/selinux/config 将 SELINUX 修改为 disabled</div><div class="line">	iptables</div></pre></td></tr></table></figure>
+<h4 id="日常管理"><a href="#日常管理" class="headerlink" title="日常管理"></a>日常管理</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">w  查看当前系统的负载</div><div class="line">vmstat  监控系统的状态</div><div class="line">top 显示进程所占系统资源</div><div class="line">sar -n DEV 查看网卡流量 </div><div class="line">sar -q 查看历史负载 </div><div class="line">free 查看内存使用状况</div><div class="line">ps aux 查看系统进程 进程id可以用 kill pid杀掉。杀不掉的可以使用 kill -9 pid</div><div class="line">	可以用ps aux |grep redis进行筛选</div><div class="line">netstat  查看网络状况 netstat -lnp（打印当前系统启动哪些端口）以及netstat -an （打印网络连接状况）</div><div class="line">tcpdump  抓包工具 yum install -y tcpdump 命令去安装一下</div><div class="line">ifconfig  查看网卡ip 设置IP非常简单修改配置文件/etc/sysconfig/networ</div><div class="line">k-scripts/ifcfg-eth0了，如果是eth1那么配置文件是/etc/sysconfig/network-scripts/ifcfg-eth1.如果你的linux是通过dhcp服务器自动获得的IP，BOOTPROTO那里会是’dhcp’，如果你要配置成静</div><div class="line">	态IP的话，这里就需要写成’none’当修改完IP后需要重启网络服务新IP才能生效，重</div><div class="line">	启命令为’ service network restart’</div><div class="line"></div><div class="line">mii-tool 查看网卡连接状态,虚拟网卡不支持</div><div class="line">hostname 显示主机名。hostname abc 即修改主机名为abc 不过这样修改只是保存在内存中，</div><div class="line">	下次重启还会变成未改之前的主机名，</div><div class="line">	所以需要你还要去更改相关的配置文件’/etc/sysconfig/network’</div><div class="line"></div><div class="line">vim /etc/resolv.conf 设置DNS 文件/etc/hosts也能解析域名，</div><div class="line">	不过是需要我们手动在里面添加IP 域名这些内容，它的作用是临时解析某个域名</div><div class="line"></div><div class="line">防火墙 将selinux关闭， vim /etc/selinux/config 将 SELINUX 修改为 disabled</div><div class="line">	iptables</div><div class="line">who -b 查看最后一次系统启动的时间。</div><div class="line">who -r 查看当前系统运行时间</div><div class="line">last reboot 系统历史启动的时间</div></pre></td></tr></table></figure>
 <h4 id="gitlab相关"><a href="#gitlab相关" class="headerlink" title="gitlab相关"></a>gitlab相关</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">启动所有gitlab组件：</div><div class="line">gitlab-ctl start</div><div class="line"></div><div class="line">停止所有gitlab组件：</div><div class="line">gitlab-ctl stop</div><div class="line"></div><div class="line">重启所有gitlab组件：</div><div class="line">gitlab-ctl restart</div><div class="line"></div><div class="line">备份GitLab repositories and GitLab metadata</div><div class="line">加入计划任务：</div><div class="line">0 2 * * * /opt/gitlab/bin/gitlab-rake gitlab:backup:create</div><div class="line"></div><div class="line">恢复</div><div class="line">a.进入备份gitlab的目录</div><div class="line">[root@puppet backups]# pwd</div><div class="line">/var/opt/gitlab/backups</div><div class="line">[root@puppet backups]# ls</div><div class="line">1406691018_gitlab_backup.tar</div><div class="line"></div><div class="line">b.停止unicorn和sidekiq，保证数据库没有新的连接，不会有写数据情况</div><div class="line">[root@puppet backups]# gitlab-ctl stop unicorn</div><div class="line">ok: down: unicorn: 0s, normally up</div><div class="line">You have new mail in /var/spool/mail/root</div><div class="line">[root@puppet backups]# gitlab-ctl stop sidekiq</div><div class="line">ok: down: sidekiq: 0s, normally up</div><div class="line"></div><div class="line">c.恢复数据，1406691018为备份文件的时间戳</div><div class="line">[root@puppet backups]# gitlab-rake gitlab:backup:restore BACKUP=1406691018</div></pre></td></tr></table></figure>
 <hr>
 <h4 id="生成git需要的ssh-key"><a href="#生成git需要的ssh-key" class="headerlink" title="生成git需要的ssh key"></a>生成git需要的ssh key</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh-keygen -t rsa -C &quot;youremail@example.com&quot;</div></pre></td></tr></table></figure>
@@ -544,8 +544,7 @@
 <hr>
 <h4 id="服务器每天定时重启"><a href="#服务器每天定时重启" class="headerlink" title="服务器每天定时重启"></a>服务器每天定时重启</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># 安装 crontab</div><div class="line">yum install vixie-cron crontabs</div><div class="line">chkconfig crond on</div><div class="line">service crond start</div><div class="line"># 编辑定时脚本</div><div class="line">crontab -e</div><div class="line"># 每天5点定时重启</div><div class="line">0 5 * * * /sbin/reboot</div><div class="line"># 保存退出重启生效</div><div class="line">/etc/rc.d/init.d/crond stop</div><div class="line">/etc/rc.d/init.d/crond start</div></pre></td></tr></table></figure>
 <hr>
-<p>查看SS的网络连接情况</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netstat -anp |grep &apos;ESTABLISHED&apos; |grep &apos;1213&apos;</div></pre></td></tr></table></figure>
+<h4 id="查看SS的网络连接情况"><a href="#查看SS的网络连接情况" class="headerlink" title="查看SS的网络连接情况"></a>查看SS的网络连接情况</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netstat -anp |grep &apos;ESTABLISHED&apos; |grep &apos;1213&apos;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -604,7 +603,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/01/linux/jdk mysql tomcat环境搭建/" rel="next" title="jdk mysql环境搭建">
+              <a href="/2017/11/07/linux/jdk mysql tomcat环境搭建/" rel="next" title="jdk mysql环境搭建">
                 <i class="fa fa-chevron-left"></i> jdk mysql环境搭建
               </a>
             
@@ -614,8 +613,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/27/ide/Intellij IDEA/" rel="prev" title="Intellij IDEA">
-                Intellij IDEA <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/03/linux/rabbitmq环境搭建/" rel="prev" title="rabbitmq环境搭建">
+                rabbitmq环境搭建 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -690,7 +689,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">45</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -747,7 +746,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#关闭防火墙"><span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目录操作"><span class="nav-text">目录操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拷贝"><span class="nav-text">拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移动文件或目录"><span class="nav-text">移动文件或目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#权限操作"><span class="nav-text">权限操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件查找-find"><span class="nav-text">文件查找 find</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#切换用户"><span class="nav-text">切换用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改密码"><span class="nav-text">修改密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#磁盘管理"><span class="nav-text">磁盘管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开启关闭指定端口"><span class="nav-text">开启关闭指定端口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看tomcat的启动信息"><span class="nav-text">查看tomcat的启动信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编辑工具vim使用"><span class="nav-text">编辑工具vim使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩与打包"><span class="nav-text">压缩与打包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yum配置"><span class="nav-text">yum配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装源码包"><span class="nav-text">安装源码包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell"><span class="nav-text">shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统环境变量与个人环境变量的配置文件"><span class="nav-text">系统环境变量与个人环境变量的配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中的特殊符号"><span class="nav-text">shell中的特殊符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中管道命令"><span class="nav-text">shell中管道命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则表达式"><span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看程序的端口占用情况"><span class="nav-text">查看程序的端口占用情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell脚本"><span class="nav-text">shell脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日常管理"><span class="nav-text">日常管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gitlab相关"><span class="nav-text">gitlab相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成git需要的ssh-key"><span class="nav-text">生成git需要的ssh key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idea授权服务器自启动"><span class="nav-text">idea授权服务器自启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器每天定时重启"><span class="nav-text">服务器每天定时重启</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#关闭防火墙"><span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目录操作"><span class="nav-text">目录操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拷贝"><span class="nav-text">拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移动文件或目录"><span class="nav-text">移动文件或目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#权限操作"><span class="nav-text">权限操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件查找-find"><span class="nav-text">文件查找 find</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#切换用户"><span class="nav-text">切换用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改密码"><span class="nav-text">修改密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#磁盘管理"><span class="nav-text">磁盘管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开启关闭指定端口"><span class="nav-text">开启关闭指定端口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看tomcat的启动信息"><span class="nav-text">查看tomcat的启动信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编辑工具vim使用"><span class="nav-text">编辑工具vim使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩与打包"><span class="nav-text">压缩与打包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yum配置"><span class="nav-text">yum配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装源码包"><span class="nav-text">安装源码包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell"><span class="nav-text">shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统环境变量与个人环境变量的配置文件"><span class="nav-text">系统环境变量与个人环境变量的配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中的特殊符号"><span class="nav-text">shell中的特殊符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中管道命令"><span class="nav-text">shell中管道命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正则表达式"><span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看程序的端口占用情况"><span class="nav-text">查看程序的端口占用情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell脚本"><span class="nav-text">shell脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日常管理"><span class="nav-text">日常管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gitlab相关"><span class="nav-text">gitlab相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成git需要的ssh-key"><span class="nav-text">生成git需要的ssh key</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idea授权服务器自启动"><span class="nav-text">idea授权服务器自启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务器每天定时重启"><span class="nav-text">服务器每天定时重启</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看SS的网络连接情况"><span class="nav-text">查看SS的网络连接情况</span></a></li></ol></div>
             
 
           </div>
