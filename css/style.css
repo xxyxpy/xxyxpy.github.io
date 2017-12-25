@@ -170,7 +170,7 @@ code {
   width: 40px;
   height: 40px;
   background-repeat: no-repeat;
-  background-image: url("images/logo.png");
+  background-image: url("images/log.jpg");
   -webkit-background-size: 40px 40px;
   -moz-background-size: 40px 40px;
   background-size: 40px 40px;
@@ -925,8 +925,12 @@ a.article-title:hover {
 .article-entry video {
   max-width: 100%;
   height: auto;
-  display: block;
   margin: auto;
+  vertical-align: text-bottom;
+}
+.article-entry video,
+.article-entry a img {
+  display: block;
 }
 .article-entry iframe {
   border: none;
