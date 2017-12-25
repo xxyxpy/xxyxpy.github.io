@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>hibernate-01入门和单表使用 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="hibernate框架概述Hibernate是一个开放源代码的对象关系映射（ORM）框架，它对JDBC进行了非常轻量级的对象封装，使得Java程序员可以随心所欲的使用对象编程思维来操纵数据库。可以应用在任何使用JDBC的场合，既可以在Java的客户端程序使用，也可以在Servlet/JSP的Web应用中使用。 Hibernate能使程序员通过操作对象来操作数据库表记录。 什么是ORMORM即对象关">
+<meta name="keywords" content="java,hiberante">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hibernate-01入门和单表使用">
+<meta property="og:url" content="http://xxyxpy.pub/2017/12/25/java/hibernate/hibernate-01入门和单表使用/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="hibernate框架概述Hibernate是一个开放源代码的对象关系映射（ORM）框架，它对JDBC进行了非常轻量级的对象封装，使得Java程序员可以随心所欲的使用对象编程思维来操纵数据库。可以应用在任何使用JDBC的场合，既可以在Java的客户端程序使用，也可以在Servlet/JSP的Web应用中使用。 Hibernate能使程序员通过操作对象来操作数据库表记录。 什么是ORMORM即对象关">
+<meta property="og:updated_time" content="2017-12-25T07:47:51.668Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hibernate-01入门和单表使用">
+<meta name="twitter:description" content="hibernate框架概述Hibernate是一个开放源代码的对象关系映射（ORM）框架，它对JDBC进行了非常轻量级的对象封装，使得Java程序员可以随心所欲的使用对象编程思维来操纵数据库。可以应用在任何使用JDBC的场合，既可以在Java的客户端程序使用，也可以在Servlet/JSP的Web应用中使用。 Hibernate能使程序员通过操作对象来操作数据库表记录。 什么是ORMORM即对象关">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                41
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/hibernate/hibernate-01入门和单表使用" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            hibernate-01入门和单表使用
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/12/25/java/hibernate/hibernate-01入门和单表使用/">
+            <time datetime="2017-12-25T07:47:51.642Z" itemprop="datePublished">2017-12-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/">ssh</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/hibernate/">hibernate</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/hiberante/">hiberante</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="hibernate框架概述"><a href="#hibernate框架概述" class="headerlink" title="hibernate框架概述"></a>hibernate框架概述</h3><p>Hibernate是一个开放源代码的对象关系映射（ORM）框架，它对JDBC进行了非常轻量级的对象封装，使得Java程序员可以随心所欲的使用对象编程思维来操纵数据库。可以应用在任何使用JDBC的场合，既可以在Java的客户端程序使用，也可以在Servlet/JSP的Web应用中使用。</p>
+<p>Hibernate能使程序员通过操作对象来操作数据库表记录。</p>
+<h4 id="什么是ORM"><a href="#什么是ORM" class="headerlink" title="什么是ORM"></a>什么是ORM</h4><p>ORM即对象关系映射（Object Relational Mapping）</p>
+<ul>
+<li>O：面向对象领域的Object（JavaBean对象）</li>
+<li>R：关系数据库领域的Relational（表结构）</li>
+<li>M：映射Mapping（xml的配置文件）</li>
+</ul>
+<h4 id="Hibernate的优点"><a href="#Hibernate的优点" class="headerlink" title="Hibernate的优点"></a>Hibernate的优点</h4><ul>
+<li>对jdbc访问数据库的代码做了封装，大大简化了数据访问层繁琐的重复性代码</li>
+<li>是基于jdbc的主流持久化框架，是一个优秀的orm实现，它很大程度简化了dao层编码工作</li>
+<li>轻量级框架并且性能好。映射的灵活性很出色。支持多种数据库和多种（一对多，多对多）映射关系。</li>
+</ul>
+<a id="more"></a>
+<h3 id="入门案例"><a href="#入门案例" class="headerlink" title="入门案例"></a>入门案例</h3><h4 id="下载hibernate5运行环境"><a href="#下载hibernate5运行环境" class="headerlink" title="下载hibernate5运行环境"></a>下载hibernate5运行环境</h4><p><a href="https://sourceforge.net/projects/hibernate/files/hibernate-orm/5.0.7.Final/hibernate-release-5.0.7.Final.zip/download" target="_blank" rel="external">hibernate5-5.0.7final</a></p>
+<p>度盘（链接: <a href="http://pan.baidu.com/s/1slHg2Ep" target="_blank" rel="external">http://pan.baidu.com/s/1slHg2Ep</a> 密码: nuj1）</p>
+<h4 id="建cst-customer表"><a href="#建cst-customer表" class="headerlink" title="建cst_customer表"></a>建cst_customer表</h4><p>基于mysql数据库创建的表，可以自己创建相应的数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">CREATE TABLE `cst_customer` (</div><div class="line">  `cust_id` bigint(32) NOT NULL AUTO_INCREMENT COMMENT &apos;客户编号(主键)&apos;,</div><div class="line">  `cust_name` varchar(32) NOT NULL COMMENT &apos;客户名称(公司名称)&apos;,</div><div class="line">  `cust_user_id` bigint(32) DEFAULT NULL COMMENT &apos;负责人id&apos;,</div><div class="line">  `cust_create_id` bigint(32) DEFAULT NULL COMMENT &apos;创建人id&apos;,</div><div class="line">  `cust_source` varchar(32) DEFAULT NULL COMMENT &apos;客户信息来源&apos;,</div><div class="line">  `cust_industry` varchar(32) DEFAULT NULL COMMENT &apos;客户所属行业&apos;,</div><div class="line">  `cust_level` varchar(32) DEFAULT NULL COMMENT &apos;客户级别&apos;,</div><div class="line">  `cust_linkman` varchar(64) DEFAULT NULL COMMENT &apos;联系人&apos;,</div><div class="line">  `cust_phone` varchar(64) DEFAULT NULL COMMENT &apos;固定电话&apos;,</div><div class="line">  `cust_mobile` varchar(16) DEFAULT NULL COMMENT &apos;移动电话&apos;,</div><div class="line">  PRIMARY KEY (`cust_id`)</div><div class="line">) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;</div></pre></td></tr></table></figure>
+<h4 id="搭建hibernate开发环境"><a href="#搭建hibernate开发环境" class="headerlink" title="搭建hibernate开发环境"></a>搭建hibernate开发环境</h4><ul>
+<li>创建web工程</li>
+<li>引入mysql的驱动包jar（链接: <a href="http://pan.baidu.com/s/1nuEW3Rb" target="_blank" rel="external">http://pan.baidu.com/s/1nuEW3Rb</a> 密码: 8tp8）</li>
+<li>引入hibernate开发需要的jar（hibernate-release-5.0.7.Final/lib/required目录下所有jar包）</li>
+<li>日志jar包（链接: <a href="http://pan.baidu.com/s/1jI65xpc" target="_blank" rel="external">http://pan.baidu.com/s/1jI65xpc</a> 密码: msvk）</li>
+</ul>
+<h4 id="编写JavaBean类"><a href="#编写JavaBean类" class="headerlink" title="编写JavaBean类"></a>编写JavaBean类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.util.HashSet;</div><div class="line"><span class="keyword">import</span> java.util.Set;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Customer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Long cust_id;</div><div class="line">    <span class="keyword">private</span> String cust_name;</div><div class="line">    <span class="keyword">private</span> Long cust_user_id;</div><div class="line">    <span class="keyword">private</span> Long cust_create_id;</div><div class="line">    <span class="keyword">private</span> String cust_source;</div><div class="line">    <span class="keyword">private</span> String cust_industry;</div><div class="line">    <span class="keyword">private</span> String cust_level;</div><div class="line">    <span class="keyword">private</span> String cust_linkman;</div><div class="line">    <span class="keyword">private</span> String cust_phone;</div><div class="line">    <span class="keyword">private</span> String cust_mobile;</div><div class="line">    </div><div class="line">    生成get，set方法。省略此部分代码</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"Customer&#123;"</span> +</div><div class="line">                <span class="string">"cust_id="</span> + cust_id +</div><div class="line">                <span class="string">", cust_name='"</span> + cust_name + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", cust_user_id="</span> + cust_user_id +</div><div class="line">                <span class="string">", cust_create_id="</span> + cust_create_id +</div><div class="line">                <span class="string">", cust_source='"</span> + cust_source + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", cust_industry='"</span> + cust_industry + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", cust_level='"</span> + cust_level + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", cust_linkman='"</span> + cust_linkman + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", cust_phone='"</span> + cust_phone + <span class="string">'\''</span> +</div><div class="line">                <span class="string">", cust_mobile='"</span> + cust_mobile + <span class="string">'\''</span> +</div><div class="line">                <span class="string">'&#125;'</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="创建映射文件"><a href="#创建映射文件" class="headerlink" title="创建映射文件"></a>创建映射文件</h4><p>一般映射文件的命名为<code>实体名.hbm.xml</code>，并且放在JavaBean的包下面。</p>
+<ul>
+<li>&lt;class&gt; 标签 用来将类与数据库表建立映射关系<ul>
+<li>name 类的全路径</li>
+<li>table 表名（如果类名与表名相同可以省略不配置）</li>
+<li>catalog 数据库名称，因为在连接字符串中已经配置所以一般都省略不写</li>
+<li>可选配置dynamic-insert和dynamic-update，动态插入和更新，默认值是false。表示在执行插入和更新时对于null值的字段是否执行插入或更新操作</li>
+</ul>
+</li>
+<li><p>&lt;id&gt;标签 用来将类中的属性与表中的主键建立映射      </p>
+<ul>
+<li>name 类中的属性名</li>
+<li>column 表中的字段名（如果属性名和字段名相同可以省略不配置）</li>
+<li>length字段的长度。如果表已存在可不指定，如果表不存在需要由hibernate生成表结构，最好指定，否则使用hibernate默认值 </li>
+<li>generator指主键的<a href="http://blog.csdn.net/itmyhome1990/article/details/54863822" target="_blank" rel="external">生成策略</a>  <a href="http://www.cnblogs.com/flyoung2008/articles/2165759.html" target="_blank" rel="external">生成策略2</a><blockquote>
+<ul>
+<li>assigned 由程序员负责生成，在save之前必须设置值</li>
+<li>sequence 采用数据库提供的sequence机制生成主键，比如oracle数据库</li>
+<li>identity由数据库自己生成的自增主键，比如sqlserver、mysql等数据库</li>
+<li>native 框架根据数据库自动判断支持的策略，从identity、sequence和hilo中选择一个</li>
+<li>uuid 使用guid作为主建</li>
+<li>increment 由hibernate在内存中生成主键，每次增量为1。由于是hibernate生成所以只能有一个hibernate应用进程访问数据库，否则就产生主建冲突，不能在集群情况下使用</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>&lt;property&gt;标签 用来将类中的普通属性与表中的字段建立映射</p>
+<ul>
+<li>name 类中的属性名</li>
+<li>column 表中的字段名（同样的如果属性名与字段名相同可以省略不配置）</li>
+<li>length 数据的长度，一般不配置</li>
+<li>type 数据类型，不般不配置</li>
+</ul>
+</li>
+</ul>
+   <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version='1.0' encoding='UTF-8'?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE hibernate-mapping PUBLIC</span></div><div class="line">        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"</div><div class="line">        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"&gt;</div><div class="line"><span class="tag">&lt;<span class="name">hibernate-mapping</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 配置类和表结构的映射 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">class</span> <span class="attr">name</span>=<span class="string">"com.domain.Customer"</span> <span class="attr">table</span>=<span class="string">"cst_customer"</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 配置id </span></div><div class="line">			见到name属性，JavaBean的属性</div><div class="line">			见到column属性，是表结构的字段</div><div class="line">		--&gt;</div><div class="line">        <span class="tag">&lt;<span class="name">id</span> <span class="attr">name</span>=<span class="string">"cust_id"</span> <span class="attr">column</span>=<span class="string">"cust_id"</span>&gt;</span></div><div class="line">            <span class="comment">&lt;!-- 主键的生成策略 --&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">generator</span> <span class="attr">class</span>=<span class="string">"native"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 配置其他的属性 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_name"</span> <span class="attr">column</span>=<span class="string">"cust_name"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_user_id"</span> <span class="attr">column</span>=<span class="string">"cust_user_id"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_create_id"</span> <span class="attr">column</span>=<span class="string">"cust_create_id"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_source"</span> <span class="attr">column</span>=<span class="string">"cust_source"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_industry"</span> <span class="attr">column</span>=<span class="string">"cust_industry"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_level"</span> <span class="attr">column</span>=<span class="string">"cust_level"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_linkman"</span> <span class="attr">column</span>=<span class="string">"cust_linkman"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_phone"</span> <span class="attr">column</span>=<span class="string">"cust_phone"</span>/&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"cust_mobile"</span> <span class="attr">column</span>=<span class="string">"cust_mobile"</span>/&gt;</span></div><div class="line">        </div><div class="line">    <span class="tag">&lt;/<span class="name">class</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">hibernate-mapping</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="hibernate核心配置文件"><a href="#hibernate核心配置文件" class="headerlink" title="hibernate核心配置文件"></a>hibernate核心配置文件</h4><p>需要在src目录下面进行创建。</p>
+<p>有两种方式去实现配置，一种是通过properties文件配置。这种方式下需要手动加载映射配置文件，然后读取其中的内容。比较麻烦。一般使用另外一种即xml文件的方式，此种方式下可以自动加载映射的配置文件。</p>
+<ul>
+<li>数据库连接（必须配置）</li>
+<li>数据库方言，指定哪种数据库（必须配置）</li>
+<li>是否显示语句，是否格式化语句，是否自动更新等（可选配置）</li>
+<li>引入映射配置文件</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version='1.0' encoding='UTF-8'?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE hibernate-configuration PUBLIC</span></div><div class="line">        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"</div><div class="line">        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd"&gt;</div><div class="line"><span class="tag">&lt;<span class="name">hibernate-configuration</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- 先配置SessionFactory标签，一个数据库对应一个SessionFactory标签 --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">session-factory</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.connection.driver_class"</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.connection.url"</span>&gt;</span>jdbc:mysql://localhost:3306/mytest?useUnicode=true&amp;amp;characterEncoding=UTF-8&amp;amp;useSSL=false<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.connection.username"</span>&gt;</span>root<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.connection.password"</span>&gt;</span>root<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"></div><div class="line">        <span class="comment">&lt;!-- 数据库的方言 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.dialect"</span>&gt;</span>org.hibernate.dialect.MySQLDialect<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"></div><div class="line">        <span class="comment">&lt;!-- 可选配置 --&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 显示SQL语句，在控制台显示 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.show_sql"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!-- 格式化SQL语句 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.format_sql"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="comment">&lt;!--生成表结构--&gt;</span></div><div class="line">        <span class="comment">&lt;!--&lt;property name="hibernate.hbm2ddl.auto"&gt;create&lt;/property&gt;--&gt;</span></div><div class="line">        <span class="comment">&lt;!--更新表结构--&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hibernate.hbm2ddl.auto"</span>&gt;</span>update<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        </div><div class="line">        <span class="comment">&lt;!-- 映射配置文件，需要引入映射的配置文件 --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">mapping</span> <span class="attr">resource</span>=<span class="string">"com/domain/Customer.hbm.xml"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">session-factory</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">hibernate-configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="测试代码"><a href="#测试代码" class="headerlink" title="测试代码"></a>测试代码</h4><p>这里使用junit进行测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test1</span> </span>&#123;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSave</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//读取hibernate.cfg.xml文件</span></div><div class="line">        Configuration cfg = <span class="keyword">new</span> Configuration();</div><div class="line">        cfg.configure();</div><div class="line">        </div><div class="line">        <span class="comment">//如果cfg文件中没配置mapping需要自己手动加载配置文件</span></div><div class="line">        <span class="comment">//cfg.addResource("com/domain/Customer.hbm.xml")</span></div><div class="line">        <span class="comment">//创建sessionFactory</span></div><div class="line">        SessionFactory factory = cfg.buildSessionFactory();</div><div class="line">        <span class="comment">//取得session</span></div><div class="line">        Session session = <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="comment">//开启session</span></div><div class="line">            session = factory.openSession();</div><div class="line">            <span class="comment">//开启事务</span></div><div class="line">            Transaction tr = session.beginTransaction();</div><div class="line">            Customer c = <span class="keyword">new</span> Customer();</div><div class="line">            c.setCust_name(<span class="string">"测试"</span>);</div><div class="line">            c.setCust_level(<span class="string">"1"</span>);</div><div class="line">            c.setCust_phone(<span class="string">"110"</span>);</div><div class="line">            <span class="comment">//保存数据</span></div><div class="line">            session.save(c);</div><div class="line">            <span class="comment">//提交事务</span></div><div class="line">            tr.commit();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="comment">//释放资源</span></div><div class="line">            <span class="keyword">if</span> (session != <span class="keyword">null</span>) &#123;</div><div class="line">                session.close();</div><div class="line">            &#125;</div><div class="line">            factory.close();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="hibernate常用的接口和类"><a href="#hibernate常用的接口和类" class="headerlink" title="hibernate常用的接口和类"></a>hibernate常用的接口和类</h3><h4 id="Configuration类"><a href="#Configuration类" class="headerlink" title="Configuration类"></a>Configuration类</h4><p>用于配置并启动Hibernate，hibernate通过该对象来获得对象-关系映射文件中的元数据以及动态配置的hibernate属性，然后创建SessionFactory对象。</p>
+<p>加载映射文件的方式根据核心配置文件配置的格式不同而不同，这里只说最常用的使用xml配置核心配置文件时的加载方式。使用<code>Configuration configuration = new Configuration().configure();</code>即可完成配置的加载。调用configure()方法时要求核心</p>
+<h4 id="SessionFactory类"><a href="#SessionFactory类" class="headerlink" title="SessionFactory类"></a>SessionFactory类</h4><p>是一个工厂类，用于生成Session对象。一般在应用启动时初始化完成。</p>
+<h5 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h5><ul>
+<li><p>由Configuration通过加载配置文件创建该对象</p>
+</li>
+<li><p>SessionFactory对象中保存了当前的数据库配置信息和所有的映射关系以及预定义的sql语句。同时还负责维护Hibernate的二级缓存</p>
+<blockquote>
+<p>关于预定义的sql语句</p>
+<ul>
+<li>使用Configuration类创建SessionFactory对象时已经在此对象中缓存了一些sql语句</li>
+<li>常见的缓存语句有通过主键执行的crud操作</li>
+<li>这样实现的目的是为了效率更高</li>
+</ul>
+</blockquote>
+</li>
+<li><p>一个SessionFactory即对应一个数据库，应该用从该对象中获得Session实例</p>
+</li>
+<li><p>SessionFactory是线程安全的，它的一个实现可以被应用的多线程共享</p>
+</li>
+<li><p>SessionFactory重量级的，不能随意的创建或销毁它的实例</p>
+</li>
+<li><p>SessionFactory需要一个较大的缓存，用来存放预定义的sql语句及实体的映射信息。另外可以配置一个缓存插件，这个插件被称之为hibernate的二级缓存，被多线程所共享</p>
+</li>
+</ul>
+<h5 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h5><p>由于SessionFactory如此的重，所以不能每次调用都创建一次。抽取一个工具类<code>HibernateUtils</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.hibernate.Session;</div><div class="line"><span class="keyword">import</span> org.hibernate.SessionFactory;</div><div class="line"><span class="keyword">import</span> org.hibernate.cfg.Configuration;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HibernateUtils</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Configuration CONFIG;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> SessionFactory FACTORY;</div><div class="line">    <span class="keyword">static</span> &#123;</div><div class="line">        CONFIG = <span class="keyword">new</span> Configuration().configure();</div><div class="line">        FACTORY = CONFIG.buildSessionFactory();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Session <span class="title">openSession</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> FACTORY.openSession();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 从ThreadLocal实例中获取当前线程的session</div><div class="line">     * <span class="doctag">@return</span></div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Session <span class="title">getCurrentSession</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> FACTORY.getCurrentSession();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试一下调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSave2</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Transaction transaction = session.beginTransaction();</div><div class="line">  Customer c = <span class="keyword">new</span> Customer();</div><div class="line">  c.setCust_name(<span class="string">"aaaa"</span>);</div><div class="line">  session.save(c);</div><div class="line">  transaction.commit();</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Session接口"><a href="#Session接口" class="headerlink" title="Session接口"></a>Session接口</h4><h5 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h5><ul>
+<li>是在hibernate中最常用的接口，也被称为持久化管理器。它提供了和持久化相关的操作。比如crud，加载和查询实例对象</li>
+<li>Session是应用程序与数据库之间交互操作的一个单线程对象。是hibernate的运作中心</li>
+<li>Session不是线程安全的，避免多个线程使用同一个Session</li>
+<li>所有的持久化对象必须在session的管理下才可以进行持久化操作</li>
+<li>Session对象有一个一级缓存，显示的执行flush之前所有的持久化操作的数据都缓存在Session对象中。每个实例都有自己的一级缓存</li>
+<li>轻量级，创建和销毁不消耗资源，每次请求都分配独立的Session实例</li>
+<li>持久化类与Session关联起来后就具有了持久化的能力</li>
+</ul>
+<h5 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h5><ul>
+<li>save(obj)</li>
+<li>delete(obj)</li>
+<li>get(class,id)</li>
+<li>update(obj)</li>
+<li>saveOrUpdate(obj)</li>
+<li>createQuery()</li>
+</ul>
+<h4 id="Transaction接口"><a href="#Transaction接口" class="headerlink" title="Transaction接口"></a>Transaction接口</h4><p>事务的接口。常用的方法有commit和rollback</p>
+<h5 id="特点-2"><a href="#特点-2" class="headerlink" title="特点"></a>特点</h5><ul>
+<li>hibernate默认情况下事务不自动提交，需要自己手动提交</li>
+<li>如果没有开启事务，那么每一个Session操作都是独立的一个事务</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://xxyxpy.pub/2017/12/25/java/hibernate/hibernate-01入门和单表使用/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/12/25/python/python小技巧/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Python小技巧
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/12/25/java/hibernate/hibernate-02缓存和事务/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">hibernate-02缓存和事务</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-06Listener,Filter/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-06Listener,Filter/" class="title">web-06Listener,Filter</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:44.644Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-05事务/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-05事务/" class="title">web-05事务</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:35.875Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="title">web-04Jsp,El,Jstl</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:29.429Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-03Cookie,Session/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-03Cookie,Session/" class="title">web-03Cookie,Session</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:14.922Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-02Request,Response/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-02Request,Response/" class="title">web-02Request，Response</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:10.249Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

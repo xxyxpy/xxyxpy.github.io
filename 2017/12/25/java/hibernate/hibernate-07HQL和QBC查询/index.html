@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>hibernate-07HQL和QBC查询 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Hibernate框架的查询方式 唯一标识OID查询。session.get(对象.class,OID) 对象导航方式，由一方加载另一方时 HQL检索方式 QBC检索方式 SQL检索方式（不常用）">
+<meta name="keywords" content="java,hiberante">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hibernate-07HQL和QBC查询">
+<meta property="og:url" content="http://xxyxpy.pub/2017/12/25/java/hibernate/hibernate-07HQL和QBC查询/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="Hibernate框架的查询方式 唯一标识OID查询。session.get(对象.class,OID) 对象导航方式，由一方加载另一方时 HQL检索方式 QBC检索方式 SQL检索方式（不常用）">
+<meta property="og:updated_time" content="2017-12-25T07:48:34.508Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hibernate-07HQL和QBC查询">
+<meta name="twitter:description" content="Hibernate框架的查询方式 唯一标识OID查询。session.get(对象.class,OID) 对象导航方式，由一方加载另一方时 HQL检索方式 QBC检索方式 SQL检索方式（不常用）">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                41
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/hibernate/hibernate-07HQL和QBC查询" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            hibernate-07HQL和QBC查询
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/12/25/java/hibernate/hibernate-07HQL和QBC查询/">
+            <time datetime="2017-12-25T07:48:34.465Z" itemprop="datePublished">2017-12-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/">ssh</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/hibernate/">hibernate</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/hiberante/">hiberante</a>, <a class="tag-link" href="/tags/java/">java</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="Hibernate框架的查询方式"><a href="#Hibernate框架的查询方式" class="headerlink" title="Hibernate框架的查询方式"></a>Hibernate框架的查询方式</h3><ol>
+<li>唯一标识OID查询。session.get(对象.class,OID)</li>
+<li>对象导航方式，由一方加载另一方时</li>
+<li>HQL检索方式</li>
+<li>QBC检索方式</li>
+<li>SQL检索方式（不常用）</li>
+</ol>
+<a id="more"></a>
+<hr>
+<h3 id="HQL查询"><a href="#HQL查询" class="headerlink" title="HQL查询"></a>HQL查询</h3><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>HQL(Hibernate Query Language) 是面向对象的查询语言, 它和 SQL 查询语言有些相似。在hibernate的各种查询方式中hql查询使用的最为广泛。</p>
+<p>HQL与SQL的关系</p>
+<ul>
+<li>HQL 查询语句是面向对象的,Hibernate负责解析HQL查询语句, 然后根据对象-关系映射文件中的映射信息, 把 HQL 查询语句翻译成相应的 SQL 语句. </li>
+<li>HQL 查询语句中的主体是域模型中的类及类的属性</li>
+<li>SQL 查询语句是与关系数据库绑定在一起的. SQL查询语句中的主体是数据库表及表的字段</li>
+</ul>
+<h4 id="HQL查询演示"><a href="#HQL查询演示" class="headerlink" title="HQL查询演示"></a>HQL查询演示</h4><ul>
+<li><p>基本查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run1</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Query query = session.createQuery(<span class="string">"from Customer "</span>);</div><div class="line">  List&lt;Customer&gt; list = query.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list) &#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也可以直接链式编程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">List&lt;Customer&gt; list = session.createQuery(<span class="string">"from Customer "</span>).list();</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用别名查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">session.createQuery(<span class="string">"from Customer c"</span>).list();</div><div class="line">session.createQuery(<span class="string">"select c from Customer c"</span>).list();</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">session.createQuery(<span class="string">"from Customer order by cust_id"</span>).list();<span class="comment">// 升序</span></div><div class="line">session.createQuery(<span class="string">"from Customer order by cust_id desc"</span>).list();<span class="comment">// 降序</span></div><div class="line">session.createQuery(<span class="string">"select c from Customer c order by c.cust_name desc"</span>).list();</div></pre></td></tr></table></figure>
+</li>
+<li><p>分页查询</p>
+<p>不同数据库的分页查询可以自动判断</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run5</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Query query = session.createQuery(<span class="string">"from Customer c order by c.cust_name asc"</span>);</div><div class="line">  query.setFirstResult(<span class="number">1</span>);    <span class="comment">// 第0条开始</span></div><div class="line">  query.setMaxResults(<span class="number">3</span>);     <span class="comment">// 获取3条数据</span></div><div class="line">  List&lt;Customer&gt; list = query.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list) &#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>带条件查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run6</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Query query = session.createQuery(<span class="string">"from Customer c where c.cust_name like ? and id &gt; ?"</span>);</div><div class="line">  <span class="comment">//query.setString(0, "%e%");      // 索引从0开始</span></div><div class="line">  <span class="comment">//query.setLong(1, 5);            // 索引从0开始</span></div><div class="line">  <span class="comment">//通用的设置值方法</span></div><div class="line">  query.setParameter(<span class="number">0</span>, <span class="string">"%e%"</span>);</div><div class="line">  query.setParameter(<span class="number">1</span>, <span class="number">5L</span>);</div><div class="line">  List&lt;Customer&gt; list = query.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list) &#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>投影查询,只查询几个字段,返回object数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run7</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Query query = session.createQuery(<span class="string">"select c.cust_name,c.cust_id from Customer c "</span>);</div><div class="line">  <span class="comment">//List&lt;Customer&gt; list = query.list(); // 使用customer类型接收会报错</span></div><div class="line">  List&lt;Object[]&gt; list = query.list();</div><div class="line">  <span class="keyword">for</span> (Object[] objects : list) &#123;</div><div class="line">    System.out.println(Arrays.toString(objects));</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>投影查询，只查询几个字段。</p>
+<p>用JavaBean接收，没有查询出来的列在封装的对象中都是null</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run8</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Query query = session.createQuery(<span class="string">"select new Customer(c.cust_name,c.cust_level) from Customer c "</span>);</div><div class="line">  List&lt;Customer&gt; list = query.list(); <span class="comment">// 此时可以使用customer类型接收</span></div><div class="line">  <span class="keyword">for</span> (Customer c : list) &#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>聚合函数查询</p>
+<p>主要有：count(),sum(),avg(),max(),min()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run9</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Query query = session.createQuery(<span class="string">"select count(*) from Customer c "</span>);</div><div class="line">  <span class="comment">//Query query = session.createQuery("select count(c) from Customer c ");</span></div><div class="line">  Long l = (Long) query.uniqueResult();</div><div class="line">  System.out.println(<span class="string">"total:"</span> + l);</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="QBC查询"><a href="#QBC查询" class="headerlink" title="QBC查询"></a>QBC查询</h3><p>Query By Criteria  按条件进行查询</p>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
+<li><p>简单查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run1</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Criteria criteria = session.createCriteria(Customer.class);</div><div class="line">  List&lt;Customer&gt; list = criteria.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run2</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Criteria criteria = session.createCriteria(Customer.class);</div><div class="line">  criteria.addOrder(Order.desc(<span class="string">"cust_id"</span>));</div><div class="line">  List&lt;Customer&gt; list = criteria.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>分页查询，与HQL分页设置相同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run3</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Criteria criteria = session.createCriteria(Customer.class);</div><div class="line">  criteria.setFirstResult(<span class="number">1</span>);</div><div class="line">  criteria.setMaxResults(<span class="number">3</span>);</div><div class="line">  List&lt;Customer&gt; list = criteria.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>其它各种条件查询</p>
+<blockquote>
+<p>Restrictions.eq         – 相等</p>
+<p>Restrictions.gt        – 大于号</p>
+<p>Restrictions.ge        – 大于等于</p>
+<p>Restrictions.lt        – 小于</p>
+<p>Restrictions.le        – 小于等于</p>
+<p>Restrictions.between    – 在之间</p>
+<p>Restrictions.like          – 模糊查询</p>
+<p>Restrictions.in        – 范围</p>
+<p>Restrictions.and       – 并且</p>
+<p>Restrictions.or        – 或者</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run4</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Criteria criteria = session.createCriteria(Customer.class);</div><div class="line">  criteria.add(Restrictions.like(<span class="string">"cust_name"</span>, <span class="string">"%e%"</span>));</div><div class="line">  criteria.add(Restrictions.ge(<span class="string">"cust_id"</span>, <span class="number">5L</span>));</div><div class="line">  List&lt;Customer&gt; list = criteria.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">  **以下为伪代码**</div><div class="line">  <span class="comment">// in</span></div><div class="line">  List&lt;Long&gt; params = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">  params.add(<span class="number">1L</span>);</div><div class="line">  params.add(<span class="number">3L</span>);</div><div class="line">  params.add(<span class="number">5L</span>);</div><div class="line">  criteria.add(Restrictions.in(<span class="string">"cust_id"</span>, params));</div><div class="line">  <span class="comment">// or</span></div><div class="line">  criteria.add(Restrictions.or(Restrictions.eq(<span class="string">"cust_id"</span>, <span class="number">1L</span>), </div><div class="line">                Restrictions.eq(<span class="string">"cust_id"</span>, <span class="number">3L</span>)));</div><div class="line">  <span class="comment">// null判断</span></div><div class="line">  criteria.add(Restrictions.isNull(<span class="string">"cust_level"</span>));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>聚合查询</p>
+<p>使用<code>criteria.setProjection()</code>方法实现聚合查询，传入Projection接口。</p>
+<p><code>Projections</code>类封装了各种取合方式的接口实现类的构造，使用时直接使用<code>Projections</code>类调用方法返回相应的实现类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run9</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  Criteria criteria = session.createCriteria(Customer.class);</div><div class="line">  criteria.setProjection(Projections.count(<span class="string">"cust_id"</span>));</div><div class="line">  Long l = (Long) criteria.uniqueResult();</div><div class="line">  System.out.println(l);</div><div class="line">  <span class="comment">// 使用count*后又做明细查询前需要先清除掉projection</span></div><div class="line">  criteria.setProjection(<span class="keyword">null</span>);</div><div class="line">  List&lt;Customer&gt; list = criteria.list();</div><div class="line">  <span class="keyword">for</span>(Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="离线条件查询"><a href="#离线条件查询" class="headerlink" title="离线条件查询"></a>离线条件查询</h4><p>离线条件查询使用的是DetachedCriteria接口进行查询，离线条件查询对象在创建的时候，不需要使用Session对象，只是在查询的时候使用Session对象即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run10</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="comment">// 创建离线查询对象</span></div><div class="line">  DetachedCriteria criteria = DetachedCriteria.forClass(Customer.class);</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  criteria.add(Restrictions.between(<span class="string">"cust_id"</span>, <span class="number">1L</span>, <span class="number">5000L</span>));</div><div class="line">  List&lt;Customer&gt; list = criteria.getExecutableCriteria(session).list();</div><div class="line">  <span class="keyword">for</span>(Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="SQL查询"><a href="#SQL查询" class="headerlink" title="SQL查询"></a>SQL查询</h3><p>在Hibernate中使用sql方式进行查询应用场景较少。Sql查询时可以将结果绑定到实体或Object数组。</p>
+<p>封装到对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run2</span><span class="params">()</span></span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  <span class="comment">//创建sql查询接口</span></div><div class="line">  SQLQuery sqlQuery = session.createSQLQuery(<span class="string">"select * from cst_customer"</span>);</div><div class="line">  sqlQuery.addEntity(Customer.class);</div><div class="line">  List&lt;Customer&gt; list = sqlQuery.list();</div><div class="line">  <span class="keyword">for</span> (Customer c : list)&#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>封装到Object数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run1</span><span class="params">()</span></span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  <span class="comment">//创建sql查询接口</span></div><div class="line">  SQLQuery sqlQuery = session.createSQLQuery(<span class="string">"select * from cst_customer"</span>);</div><div class="line">  List&lt;Object[]&gt; list = sqlQuery.list();</div><div class="line">  <span class="keyword">for</span> (Object[] objs : list)&#123;</div><div class="line">    System.out.println(Arrays.toString(objs));</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="HQL多表查询"><a href="#HQL多表查询" class="headerlink" title="HQL多表查询"></a>HQL多表查询</h3><ol>
+<li><p>多表的查询进来使用HQL语句进行查询，HQL语句和SQL语句的查询语法比较类似。</p>
+<ul>
+<li><p>内连接查询</p>
+<ul>
+<li><p>显式内连接</p>
+<p> select * from customers c inner join orders o on c.cid = o.cno;</p>
+</li>
+<li><p>隐式内连接</p>
+<p> select * from customers c,orders o where c.cid = o.cno;</p>
+</li>
+</ul>
+</li>
+<li><p>外连接查询</p>
+<ul>
+<li><p>左外连接</p>
+<p> select * from customers c left join orders o on c.cid = o.cno;</p>
+</li>
+<li><p>右外连接</p>
+<p> select * from customers c right join orders o on c.cid = o.cno;</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>HQL的多表查询</p>
+<p>非迫切返回结果是Object[]</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run1</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  <span class="comment">// 客户和联系人的关联方式</span></div><div class="line">  Query query = session.createQuery(<span class="string">"from Customer c join c.linkmans"</span>);</div><div class="line">  <span class="comment">// 默认返回的是数组</span></div><div class="line">  List&lt;Object[]&gt; list = query.list();</div><div class="line">  <span class="keyword">for</span> (Object[] objs : list) &#123;</div><div class="line">    System.out.println(Arrays.toString(objs));</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>迫切连接返回的结果是对象，把客户的信息封装到客户的对象中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run2</span><span class="params">()</span> </span>&#123;</div><div class="line">  Session session = HibernateUtils.openSession();</div><div class="line">  <span class="comment">// 客户和联系人的关联方式</span></div><div class="line">  <span class="comment">// 使用fetch 迫切连接</span></div><div class="line">  Query query = session.createQuery(<span class="string">"from Customer c join fetch c.linkmans"</span>);</div><div class="line">  List&lt;Customer&gt; list = query.list();</div><div class="line">  <span class="comment">//手动解决数据重复问题,使用set集合</span></div><div class="line">  Set&lt;Customer&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;(list);</div><div class="line">  <span class="keyword">for</span> (Customer c : list) &#123;</div><div class="line">    System.out.println(c);</div><div class="line">  &#125;</div><div class="line">  session.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>内连接查询</p>
+<p>内连接使用 inner join ，默认返回的是Object数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Session session = HibernateUtils.getCurrentSession();</div><div class="line">Transaction tr = session.beginTransaction();</div><div class="line">List&lt;Object[]&gt; list = session.createQuery(<span class="string">"from Customer c inner join c.linkmans"</span>).list();</div><div class="line"><span class="keyword">for</span> (Object[] objects : list) &#123;</div><div class="line">   System.out.println(Arrays.toString(objects));</div><div class="line">&#125;</div><div class="line">tr.commit();</div></pre></td></tr></table></figure>
+<p>迫切内连接:inner join fetch ，返回的是实体对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Session session = HibernateUtils.getCurrentSession();</div><div class="line">Transaction tr = session.beginTransaction();</div><div class="line">List&lt;Customer&gt; list = session.createQuery(<span class="string">"from Customer c inner join fetch c.linkmans"</span>).list();</div><div class="line">Set&lt;Customer&gt; set = <span class="keyword">new</span> HashSet&lt;Customer&gt;(list);</div><div class="line"><span class="keyword">for</span> (Customer customer : set) &#123;</div><div class="line">   System.out.println(customer);</div><div class="line">&#125;</div><div class="line">tr.commit();</div></pre></td></tr></table></figure>
+</li>
+<li><p>左外连接查询</p>
+<p>左外连接:    封装成Object数组，和内连接相同</p>
+<p>迫切左外连接 <code>left join fetch</code>，封装成对象，和内连接相同。<br>​</p>
+</li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://xxyxpy.pub/2017/12/25/java/hibernate/hibernate-07HQL和QBC查询/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/12/25/java/hibernate/hibernate-06映射关系之多对多/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    hibernate-06映射关系之多对多
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/12/25/java/jdbc/Jdbc-01基础/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Jdbc-01基础</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-06Listener,Filter/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-06Listener,Filter/" class="title">web-06Listener,Filter</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:44.644Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-05事务/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-05事务/" class="title">web-05事务</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:35.875Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="title">web-04Jsp,El,Jstl</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:29.429Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-03Cookie,Session/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-03Cookie,Session/" class="title">web-03Cookie,Session</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:14.922Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-02Request,Response/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-02Request,Response/" class="title">web-02Request，Response</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:10.249Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

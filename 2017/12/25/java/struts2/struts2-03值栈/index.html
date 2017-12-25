@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>struts2-03值栈 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="OGNL表达式OGNL是Object Graphic Navigation Language（对象图导航语言）的缩写  所谓对象图，即以任意一个对象为根，通过OGNL可以访问与这个对象关联的其它对象 通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性  OGNL表达式在Struts2中的应用  Str">
+<meta name="keywords" content="java,struts2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="struts2-03值栈">
+<meta property="og:url" content="http://xxyxpy.pub/2017/12/25/java/struts2/struts2-03值栈/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="OGNL表达式OGNL是Object Graphic Navigation Language（对象图导航语言）的缩写  所谓对象图，即以任意一个对象为根，通过OGNL可以访问与这个对象关联的其它对象 通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性  OGNL表达式在Struts2中的应用  Str">
+<meta property="og:updated_time" content="2017-12-25T07:49:30.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="struts2-03值栈">
+<meta name="twitter:description" content="OGNL表达式OGNL是Object Graphic Navigation Language（对象图导航语言）的缩写  所谓对象图，即以任意一个对象为根，通过OGNL可以访问与这个对象关联的其它对象 通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性  OGNL表达式在Struts2中的应用  Str">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                41
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/struts2/struts2-03值栈" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            struts2-03值栈
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/12/25/java/struts2/struts2-03值栈/">
+            <time datetime="2017-12-25T07:49:30.427Z" itemprop="datePublished">2017-12-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/">ssh</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/struts2/">struts2</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/struts2/">struts2</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="OGNL表达式"><a href="#OGNL表达式" class="headerlink" title="OGNL表达式"></a>OGNL表达式</h3><p>OGNL是Object Graphic Navigation Language（对象图导航语言）的缩写</p>
+<ul>
+<li>所谓对象图，即以任意一个对象为根，通过OGNL可以访问与这个对象关联的其它对象</li>
+<li>通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性</li>
+</ul>
+<p>OGNL表达式在Struts2中的应用</p>
+<ul>
+<li><p>Struts2引入OGNL表达式，主要是在jsp页面中获取值栈中的值</p>
+</li>
+<li><p>使用方法</p>
+<blockquote>
+<p>先引入Struts2的标签库</p>
+<p>&lt;%@ taglib prefix=”s” uri=”/struts-tags” %&gt;</p>
+<p>再使用Struts2提供的标签中的标签</p>
+<p>&lt;s:property value=”OGNL表达式”/&gt;</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="值栈（ValueStack）"><a href="#值栈（ValueStack）" class="headerlink" title="值栈（ValueStack）"></a>值栈（ValueStack）</h3><p>值栈就相当天Struts2框架的数据中转站，向值栈存放一些数据，然后在页面中从值栈获取到数据。具有如下特点：</p>
+<a id="more"></a>
+<ul>
+<li>ValueStack是Struts2提供的一个接口，实现类为OgnlValueStack</li>
+<li>Action是多例的，一个请求就会创建一个Action实例ActionContext对象，此对象代表的是Action的上下文，同时还会创建一个ValueStack对象</li>
+<li>创建的ValueStack对象中保存了Action对象和其它相关的对象</li>
+<li>Struts2框架把ValueStack对象保存在Request中，属性名为：struts.valueStack 可以通过<code>ValueStack vs = (ValueStack)request.getAttribute(&quot;struts.valueStack&quot;)</code>获取</li>
+</ul>
+<hr>
+<h3 id="值栈的内部结构"><a href="#值栈的内部结构" class="headerlink" title="值栈的内部结构"></a>值栈的内部结构</h3><p>参考：<a href="http://www.cnblogs.com/hlhdidi/p/6185836.html" target="_blank" rel="external">内部数据结构</a></p>
+<p>OgnlValueStack对象为值栈的实现类，内部由两部分组成：</p>
+<ul>
+<li><p>root栈（CompoundRoot，继承list接口） 内部是一个List结构，存储动作相关对象。访问时不需要加#</p>
+</li>
+<li><p>context栈（OgnlContext，实现 Map接口） 内部一个Map结构，存储各种映射关系（k-v）。访问时需要加#</p>
+<blockquote>
+<p>context栈中有ValueStack的引用以及root栈的引用，并且context栈被ActionContext持有</p>
+<p>默认会将request，session，application，parameters压入context栈中，另外会压入一个key为attr的集合，对此集合进行查找时会顺序检索request、session、application、parameters</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="获取值栈对象的三种方法"><a href="#获取值栈对象的三种方法" class="headerlink" title="获取值栈对象的三种方法"></a>获取值栈对象的三种方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ValueStack vs1 = (ValueStack) ServletActionContext.getRequest().getAttribute(<span class="string">"struts.valueStack"</span>);</div><div class="line"></div><div class="line">ValueStack vs2 =(ValueStack)ServletActionContext.getRequest().getAttribute(ServletActionContext.STRUTS_VALUESTACK_KEY);</div><div class="line"></div><div class="line">ValueStack vs3 = ActionContext.getContext().getValueStack();</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="值栈数据的设置和获取"><a href="#值栈数据的设置和获取" class="headerlink" title="值栈数据的设置和获取"></a>值栈数据的设置和获取</h3><p>设置值时主要是使用针对root栈的push和set方法，首先最后操作的数据肯定是会被放在栈顶的。默认框架是将当前访问的Action对象放在了栈顶，在jsp中可以通过<code>&lt;s:debug/&gt;</code>查看值栈的内容</p>
+<ul>
+<li><p>push方法 <code>valueStack.push(Object obj);</code></p>
+<p>此方法底层调用了root对象的push方法，将元素放在了栈顶</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(Object o)</span> </span>&#123;</div><div class="line">        root.push(o);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>set方法 <code>valueStack.set(String key, Object obj);</code></p>
+<p>调用此方法会将k-v值放在map集合中并且放到栈顶，如果存入时map集合不存在会新创建集合。如果已经存在map集合则添加到集合中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(String key, Object o)</span> </span>&#123;</div><div class="line">  Map setMap = retrieveSetMap();</div><div class="line">  setMap.put(key, o);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> Map <span class="title">retrieveSetMap</span><span class="params">()</span> </span>&#123;</div><div class="line">  Map setMap;</div><div class="line">  Object topObj = peek();</div><div class="line">  <span class="comment">// 先查看栈顶的是不是一个map集合如果是返回此集合，如果不是则创建map集合并返回</span></div><div class="line">  <span class="keyword">if</span> (shouldUseOldMap(topObj)) &#123;</div><div class="line">    setMap = (Map) topObj;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    setMap = <span class="keyword">new</span> HashMap();</div><div class="line">    setMap.put(MAP_IDENTIFIER_KEY, <span class="string">""</span>);</div><div class="line">    <span class="comment">// 创建并push到栈顶</span></div><div class="line">    push(setMap);</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> setMap;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">shouldUseOldMap</span><span class="params">(Object topObj)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> topObj <span class="keyword">instanceof</span> Map &amp;&amp; ((Map) topObj).get(MAP_IDENTIFIER_KEY) != <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>值栈的获取值根据从不同的地方（root栈、context栈）或者值的类型不同获取方法不同</p>
+<p>另可参考<a href="http://www.jianshu.com/p/237dcb11770e" target="_blank" rel="external">值栈与ognl</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueStack2Action</span> <span class="keyword">extends</span> <span class="title">ActionSupport</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPp</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> pp;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPp</span><span class="params">(String pp)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.pp = pp;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> String pp;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">save</span><span class="params">()</span> </span>&#123;</div><div class="line">        ValueStack vs3 = ActionContext.getContext().getValueStack();</div><div class="line">        pp = <span class="string">"pppp"</span>;</div><div class="line">        <span class="comment">// 向栈顶push值</span></div><div class="line">        vs3.push(<span class="string">"tom"</span>);</div><div class="line">        <span class="comment">// 向栈顶set k-v值</span></div><div class="line">        <span class="comment">// 如果原来顶部是map直接使用添加,如不是则new一个放在顶部</span></div><div class="line">        vs3.set(<span class="string">"name1"</span>, <span class="string">"jack"</span>);</div><div class="line">        MyUser user = <span class="keyword">new</span> MyUser();</div><div class="line">        user.setUname(<span class="string">"hello_name"</span>);</div><div class="line">        vs3.set(<span class="string">"user"</span>, user);</div><div class="line">        <span class="comment">// 存入list集合</span></div><div class="line">        List&lt;MyUser&gt; ulist = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">        ulist.add(<span class="keyword">new</span> MyUser(<span class="string">"ua"</span>));</div><div class="line">        ulist.add(<span class="keyword">new</span> MyUser(<span class="string">"ub"</span>));</div><div class="line">        ulist.add(<span class="keyword">new</span> MyUser(<span class="string">"uc"</span>));</div><div class="line">        vs3.set(<span class="string">"ulist"</span>, ulist);</div><div class="line">        </div><div class="line">        <span class="comment">// 设置值到context中</span></div><div class="line">        HttpServletRequest request = ServletActionContext.getRequest();</div><div class="line">        request.setAttribute(<span class="string">"msg"</span>, <span class="string">"request_msg"</span>);</div><div class="line">        request.getSession().setAttribute(<span class="string">"msg"</span>, <span class="string">"session_msg"</span>);</div><div class="line">        <span class="keyword">return</span> SUCCESS;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>jsp页面</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;</div><div class="line">&lt;%@ taglib prefix="s" uri="/struts-tags" %&gt;</div><div class="line">&lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Title&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">&lt;%--访问action中的数据,需要提供set和get方法--%&gt;</div><div class="line">&lt;s:property value="pp"/&gt; &lt;br&gt;</div><div class="line">&lt;%--访问字符串--%&gt;</div><div class="line">&lt;s:property value="[1].top"/&gt; &lt;br&gt;</div><div class="line">&lt;hr&gt;</div><div class="line">&lt;%--访问map中的数据--%&gt;</div><div class="line">&lt;s:property value="[0].top.user.uname"/&gt; &lt;br&gt;</div><div class="line">&lt;s:property value="name1"/&gt; &lt;br&gt;</div><div class="line">&lt;s:property value="user.uname"/&gt; &lt;br&gt;</div><div class="line">&lt;hr&gt;</div><div class="line">&lt;%--处理集合数据--%&gt;</div><div class="line">    &lt;%--单索引--%&gt;</div><div class="line">&lt;s:property value="ulist[0].uname"/&gt; &lt;br&gt;&lt;br&gt;</div><div class="line">    &lt;%--遍历</div><div class="line">        * var编写上，把迭代产生的对象默认压入到context栈中，从context栈取值，加#号</div><div class="line">        * var不编写，默认把迭代产生的对象压入到root栈中</div><div class="line">    --%&gt;</div><div class="line">&lt;s:iterator value="ulist"&gt;</div><div class="line">    &lt;s:property value="uname"/&gt; &lt;br&gt;</div><div class="line">&lt;/s:iterator&gt;</div><div class="line">&lt;br&gt;</div><div class="line">&lt;s:iterator value="ulist" var="u"&gt;</div><div class="line">    &lt;s:property value="#u.uname"/&gt; &lt;br&gt;</div><div class="line">&lt;/s:iterator&gt;</div><div class="line">&lt;hr&gt;</div><div class="line">&lt;%--获取context栈中的内容 使用#--%&gt;</div><div class="line">request.msg:&lt;s:property value="#request.msg"/&gt; &lt;br&gt;</div><div class="line">session.msg:&lt;s:property value="#session.msg"/&gt; &lt;br&gt;</div><div class="line">attr.msg:&lt;s:property value="#attr.msg"/&gt; &lt;br&gt;</div><div class="line">parameter.id:&lt;s:property value="#parameters.id"/&gt;</div><div class="line"></div><div class="line">&lt;hr&gt;</div><div class="line">&lt;%--使用el和jstl--%&gt;</div><div class="line">&lt;c:forEach items="$&#123;ulist&#125;" var="u"&gt;</div><div class="line">    jsp - $&#123;u.uname&#125; &lt;br&gt;</div><div class="line">&lt;/c:forEach&gt;</div><div class="line">&lt;s:debug/&gt;</div><div class="line">&lt;hr&gt;</div><div class="line">N语法[0]：&lt;s:property value="[0]"/&gt;&lt;br&gt;</div><div class="line">N语法[1]：&lt;s:property value="[1]"/&gt;&lt;br&gt;</div><div class="line">N语法[0].top：&lt;s:property value="[0].top"/&gt;&lt;br&gt;</div><div class="line">N语法[1].top：&lt;s:property value="[1].top"/&gt;&lt;br&gt;</div><div class="line">N语法top：&lt;s:property value="top"/&gt;&lt;br&gt;</div><div class="line">N语法取值[0].user.uname：&lt;s:property value="[0].user.uname"/&gt;&lt;br&gt;</div><div class="line">N语法取值top.user.uname：&lt;s:property value="top.user.uname"/&gt;&lt;br&gt;</div><div class="line">N语法取值top.name1：&lt;s:property value="top.name1"/&gt;&lt;br&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>注意点：</p>
+<blockquote>
+<p>1.访问context栈时需要加#号，比如request.msg</p>
+<p>2.遍历列表时是否使用临时变量影响遍历时的对象的存储，如果不使用var是存储在root栈，使用时存储在context栈，进而会影响其取值</p>
+<p>3.使用el表达式也可以获取到值栈中的数据，为什么？</p>
+<p>因为在StrutsPrepareAndExecuteFilter类的doFilter方法中有<code>request = prepare.wrapRequest(request);</code>对原来的request作了包装处理，包装类为：StrutsRequestWrapper。</p>
+<p>此类增强了request中的getAttribute方法，主要代码片断为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">if</span> (!alreadyIn &amp;&amp; !key.contains(<span class="string">"#"</span>)) &#123;</div><div class="line">&gt;   <span class="keyword">try</span> &#123;</div><div class="line">&gt;     <span class="comment">// If not found, then try the ValueStack</span></div><div class="line">&gt;     ctx.put(REQUEST_WRAPPER_GET_ATTRIBUTE, Boolean.TRUE);</div><div class="line">&gt;     ValueStack stack = ctx.getValueStack();</div><div class="line">&gt;     <span class="keyword">if</span> (stack != <span class="keyword">null</span>) &#123;</div><div class="line">&gt;       attribute = stack.findValue(key);</div><div class="line">&gt;     &#125;</div><div class="line">&gt;   &#125; <span class="keyword">finally</span> &#123;</div><div class="line">&gt;     ctx.put(REQUEST_WRAPPER_GET_ATTRIBUTE, Boolean.FALSE);</div><div class="line">&gt;   &#125;</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+<p>4.N语法和top语法</p>
+<ul>
+<li>规定栈顶的对象为[0]，所以[0]表示从值栈的第0个对象开始取到最后一个对象。同理[N]表示从第N个开始取到最后一个</li>
+<li>如果要访问第N个对象使用[N].top,top的意思是取第一个</li>
+<li>如果直接使用top则拿到的是栈顶对象效果和[0].top一样</li>
+<li>N语法和top语法后面带属性查找时都是从当前符合条件的对象开始向下查找，找到即返回</li>
+<li><strong>当N语法和top语法省略时直接调用的是OgnlValueStack中的findValue方法</strong></li>
+</ul>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt; N语法[<span class="number">0</span>]：&lt;s:property value=<span class="string">"[0]"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法[<span class="number">1</span>]：&lt;s:property value=<span class="string">"[1]"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法[<span class="number">0</span>].top：&lt;s:property value=<span class="string">"[0].top"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法[<span class="number">1</span>].top：&lt;s:property value=<span class="string">"[1].top"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法top：&lt;s:property value=<span class="string">"top"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法取值[<span class="number">0</span>].user.uname：&lt;s:property value=<span class="string">"[0].user.uname"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法取值top.user.uname：&lt;s:property value=<span class="string">"top.user.uname"</span>/&gt;&lt;br&gt;</div><div class="line">&gt; N语法取值top.name1：&lt;s:property value=<span class="string">"top.name1"</span>/&gt;&lt;br&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<hr>
+<h3 id="OGNL表达式的特殊符号"><a href="#OGNL表达式的特殊符号" class="headerlink" title="OGNL表达式的特殊符号#$%"></a>OGNL表达式的特殊符号#$%</h3><ul>
+<li><p>#符号</p>
+<p>首先是可以用来取context栈中的值。另外可用来构建map集合</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;</div><div class="line">&lt;%@taglib prefix="s" uri="/struts-tags" %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Title&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">&lt;h3&gt;编写表单&lt;/h3&gt;</div><div class="line">&lt;s:form action="" method="POST"&gt;</div><div class="line">    &lt;s:radio name="sex" list="&#123;'男','女'&#125;"&gt;&lt;/s:radio&gt;</div><div class="line">    &lt;s:radio name="sex" list="#&#123;'0':'男','1':'女'&#125;"&gt;&lt;/s:radio&gt;</div><div class="line">&lt;/s:form&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>%符号</p>
+<p>强制字符串解析成ognl表达式，假设#request.msg是从文本框中取的值。</p>
+<blockquote>
+<p>​</p>
+</blockquote>
+<p>在使用%时如果表达式中的值用’’引起来则不起作用，当作字符串处理。如：</p>
+<blockquote>
+<p>%{‘#request.msg’}</p>
+</blockquote>
+</li>
+<li><p>$符号</p>
+<p>在配置文件中使用ognl表达式，如下载的配置文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"download1"</span> <span class="attr">class</span>=<span class="string">"cn.demo2.DownloadAction"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">result</span> <span class="attr">name</span>=<span class="string">"success"</span> <span class="attr">type</span>=<span class="string">"stream"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"contentType"</span>&gt;</span>$&#123;contentType&#125;<span class="tag">&lt;/<span class="name">param</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">"contentDisposition"</span>&gt;</span>attachment;filename=$&#123;downFilename&#125;<span class="tag">&lt;/<span class="name">param</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">result</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">action</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>​</p>
+<p>​</p>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://xxyxpy.pub/2017/12/25/java/struts2/struts2-03值栈/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/12/25/java/struts2/struts2-02拦截器、请求封装以及结果跳转/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    struts2-02拦截器、请求封装以及结果跳转
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/12/25/java/spring/spring boot点滴/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">spring boot点滴</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-06Listener,Filter/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-06Listener,Filter/" class="title">web-06Listener,Filter</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:44.644Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-05事务/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-05事务/" class="title">web-05事务</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:35.875Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="title">web-04Jsp,El,Jstl</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:29.429Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-03Cookie,Session/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-03Cookie,Session/" class="title">web-03Cookie,Session</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:14.922Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-02Request,Response/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-02Request,Response/" class="title">web-02Request，Response</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:10.249Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

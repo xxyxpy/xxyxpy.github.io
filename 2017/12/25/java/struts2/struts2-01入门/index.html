@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>struts2-01入门 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="框架概述 Struts2是一个基于MVC设计模式的Web层框架，通过前端控制器（过滤器）进行请求拦截过滤 Struts2是Struts1的下一代产品，是在 struts1和WebWork的技术基础上进行了合并的全新的Struts2框架 Struts 2以WebWork为核心，采用拦截器的机制来处理用户的请求，这样的设计也使得业务逻辑控制器能够与ServletAPI完全脱离开，所以Struts 2可">
+<meta name="keywords" content="java,struts2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="struts2-01入门">
+<meta property="og:url" content="http://xxyxpy.pub/2017/12/25/java/struts2/struts2-01入门/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="框架概述 Struts2是一个基于MVC设计模式的Web层框架，通过前端控制器（过滤器）进行请求拦截过滤 Struts2是Struts1的下一代产品，是在 struts1和WebWork的技术基础上进行了合并的全新的Struts2框架 Struts 2以WebWork为核心，采用拦截器的机制来处理用户的请求，这样的设计也使得业务逻辑控制器能够与ServletAPI完全脱离开，所以Struts 2可">
+<meta property="og:updated_time" content="2017-12-25T07:49:10.392Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="struts2-01入门">
+<meta name="twitter:description" content="框架概述 Struts2是一个基于MVC设计模式的Web层框架，通过前端控制器（过滤器）进行请求拦截过滤 Struts2是Struts1的下一代产品，是在 struts1和WebWork的技术基础上进行了合并的全新的Struts2框架 Struts 2以WebWork为核心，采用拦截器的机制来处理用户的请求，这样的设计也使得业务逻辑控制器能够与ServletAPI完全脱离开，所以Struts 2可">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                48
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                41
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/struts2/struts2-01入门" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            struts2-01入门
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/12/25/java/struts2/struts2-01入门/">
+            <time datetime="2017-12-25T07:49:10.377Z" itemprop="datePublished">2017-12-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/">ssh</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/ssh/struts2/">struts2</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/java/">java</a>, <a class="tag-link" href="/tags/struts2/">struts2</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="框架概述"><a href="#框架概述" class="headerlink" title="框架概述"></a>框架概述</h3><ul>
+<li>Struts2是一个基于MVC设计模式的Web层框架，通过前端控制器（过滤器）进行请求拦截过滤</li>
+<li>Struts2是Struts1的下一代产品，是在 struts1和WebWork的技术基础上进行了合并的全新的Struts2框架</li>
+<li>Struts 2以WebWork为核心，采用拦截器的机制来处理用户的请求，这样的设计也使得业务逻辑控制器能够与ServletAPI完全脱离开，所以Struts 2可以理解为WebWork的更新产品</li>
+</ul>
+<hr>
+<h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><ul>
+<li><p>下载开发包</p>
+<p>到<a href="https://struts.apache.org/" target="_blank" rel="external">官网</a>去下载，或度盘（<a href="http://pan.baidu.com/s/1dFb8mm1" target="_blank" rel="external">http://pan.baidu.com/s/1dFb8mm1</a> 密码: m3y4）</p>
+<a id="more"></a>
+</li>
+<li><p>解压struts-2.3.24-all.zip包，解压后文件如下</p>
+<blockquote>
+<p>apps    框架提供的一些应用</p>
+<p>libs        框架开发的jar包</p>
+<p>docs    框架开发文档</p>
+<p>src        框架源码</p>
+</blockquote>
+</li>
+<li><p>引入开发的jar包</p>
+<p>发布产品中的jar包非常多，但并不是所有的都必须引入，必须引用的jar可以在apps中找到。找到apps目录下面的struts2-blank.war应用，解压后复制WEB-INF/lib目录下所有的jar包</p>
+</li>
+</ul>
+<p>Hello World</p>
+<ul>
+<li><p>新建Action类</p>
+<p>传统web中浏览器发起请求后进入servlet，在struts框架中先被拦截器拦截，然后进行相应的Action类处理。所以Action类是Struts处理请求， 封装数据的核心类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloAction</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span></span>&#123;</div><div class="line">        System.out.println(<span class="string">"hello..."</span>);</div><div class="line">        <span class="keyword">return</span> <span class="string">"ok"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置struts.xml</p>
+<p>配置文件名必须是struts.xml,并且位于src目录下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE struts PUBLIC</span></div><div class="line">	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"</div><div class="line">	"http://struts.apache.org/dtds/struts-2.3.dtd"&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">struts</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"default"</span> <span class="attr">namespace</span>=<span class="string">"/"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"hello"</span> <span class="attr">class</span>=<span class="string">"com.action.HelloAction"</span> <span class="attr">method</span>=<span class="string">"sayHello"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">result</span> <span class="attr">name</span>=<span class="string">"ok"</span>&gt;</span>/demo1/suc.jsp<span class="tag">&lt;/<span class="name">result</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">package</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">struts</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>suc.jsp</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;%@ page contentType="text/html;charset=UTF-8" language="java" %&gt;</div><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;title&gt;Title&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">jump ok..</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>配置web.xml</p>
+<p>必须要在web.xml中配置Struts2的前端控制器，只有经过前端控制器的拦截才能进入到Action类中执行。</p>
+<p>注意：struts2的不同版本过滤器类可能不同</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns</span>=<span class="string">"http://xmlns.jcp.org/xml/ns/javaee"</span></span></div><div class="line">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></div><div class="line">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"</span></div><div class="line">         <span class="attr">version</span>=<span class="string">"3.1"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">filter</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>struts2<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">filter</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>struts2<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>访问</p>
+<p>部署好之后访问<a href="http://localhost:端口号/应用名/hello.action" target="_blank" rel="external">http://localhost:端口号/应用名/hello.action</a></p>
+</li>
+</ul>
+<hr>
+<h3 id="Struts2的执行流程"><a href="#Struts2的执行流程" class="headerlink" title="Struts2的执行流程"></a>Struts2的执行流程</h3><ol>
+<li>在浏览器中访问相应的链接，发送请求到服务器端</li>
+<li>请求经过Struts2的核心过滤器（StrutsPrepareAndExecuteFilter）</li>
+<li>过滤器拦截完成之后，会根据struts.xml的配置文件找到请求的路径，定位到具体的Action类，通过反射的方式调用相应的方法</li>
+<li>方法调用完成之后根据返回值再到struts.xml的配置文件找到跳转或重定向的页面</li>
+</ol>
+<p>总结：页面–&gt;StrutsPrepereAndExecuteFilter过滤器–&gt;执行一系列拦截器（完成了部分代码）–&gt;执行到目标Action–&gt;返回字符串–&gt;结果页面（result）–&gt;页面跳转</p>
+<p>Struts2框架配置文件的加载顺序</p>
+<ol>
+<li><p>Struts2框架的核心是StrutsPrepareAndExecuteFilter过滤器。查看该类的<code>doFilter</code>方法就能发现该过滤器有两个功能：</p>
+<ul>
+<li>Prepare        – 预处理，加载核心的配置文件</li>
+<li>Execute         –  执行，让部分拦截器执行</li>
+</ul>
+</li>
+<li><p>加载哪些配置文件以及加载顺序</p>
+<p>查看Dispatcher类中的init方法会发现如下代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">init_FileManager();</div><div class="line">init_DefaultProperties(); <span class="comment">// [1]</span></div><div class="line">init_TraditionalXmlConfigurations(); <span class="comment">// [2]</span></div><div class="line">init_LegacyStrutsProperties(); <span class="comment">// [3]</span></div><div class="line">init_CustomConfigurationProviders(); <span class="comment">// [5]</span></div><div class="line">init_FilterInitParameters() ; <span class="comment">// [6]</span></div><div class="line">init_AliasStandardObjects() ; <span class="comment">// [7]</span></div></pre></td></tr></table></figure>
+<p>init_DefaultProperties();加载org/apache/struts2/default.properties</p>
+<p>init_TraditionalXmlConfigurations();加载struts-default.xml,struts-plugin.xml,struts.xml</p>
+<p>init_LegacyStrutsProperties();加载自定义的struts.properties.</p>
+<p>init_CustomConfigurationProviders();加载用户自定义配置提供者</p>
+<p>init_FilterInitParameters();加载web.xml</p>
+</li>
+<li><p>需要重点关注的配置文件</p>
+<p>default.properties 在org/apache/struts2/目录下，代表的是配置的是Struts2的常量的值</p>
+<p>struts-default.xml 在Struts2的核心包下，代表的是Struts2核心功能的配置（Bean、拦截器、结果类型等）</p>
+<p>struts.xml 重点中的重点配置，代表WEB应用的默认配置，在工作中，基本就配置它就可以了！！（可以配置常量，达到对默认值覆盖的目的）</p>
+<p>web.xml 配置前端控制器（可以配置常量）</p>
+<p>注意：</p>
+<ul>
+<li>default.properties、struts-default.xml以及struts-plugin.xml是框架的默认配置，不用修改。</li>
+<li>struts-default.xml、struts.xml以及web.xml这三个配置文件可以自己修改struts2的常量。但是有一个特点：后加载的配置文件修改的常量的值，会覆盖掉前面修改的常量的值</li>
+</ul>
+</li>
+<li><p>总结</p>
+<ul>
+<li>先加载default.properties文件，在org/apache/struts2/default.properties文件，都是常量。</li>
+<li>又加载struts-default.xml配置文件，在核心的jar包最下方，struts2框架的核心功能都是在该配置文件中配置的。</li>
+<li>再加载struts.xml的配置文件，在src的目录下，代表用户自己配置的配置文件</li>
+<li><p>最后加载web.xml的配置文件</p>
+</li>
+<li><p>后加载的配置文件会覆盖掉之前加载的配置文件（在这些配置文件中可以配置常量）</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="struts-xml配置文件配置说明"><a href="#struts-xml配置文件配置说明" class="headerlink" title="struts.xml配置文件配置说明"></a>struts.xml配置文件配置说明</h3><ol>
+<li>&lt;package&gt;标签，如果要配置&lt;action&gt;的标签，必须要先配置&lt;package&gt;标签，代表包的概念<ul>
+<li>name 包的名称，要求是唯一的，管理action配置</li>
+<li>extends 继承，可以继承其他的包，只要继承了，那么该包就包含了其他包的功能，一般都是继承struts-default。比如在Apackage中定义了包级错误页跳转，B包想也走这个配置的话需要在extends中写上A包的name</li>
+<li>namespace 名称空间，一般与&lt;action&gt;标签中的name属性共同决定访问路径（通俗话：怎么来访问action），常见的配置有：namespace=”/“，根名称空间；namespace=”/aaa”，带有名称的名称空间；abstract 抽象的。这个属性基本很少使用，值如果是true，那么编写的包是被继承的</li>
+</ul>
+</li>
+<li>&lt;action&gt;标签，代表配置action类包含的属性<ul>
+<li>name 和package标签的namespace属性一起来决定访问路径的</li>
+<li>class   配置Action类的全路径（默认值是ActionSupport类）</li>
+<li>method Action类中执行的方法，如果不指定，默认值是execute</li>
+</ul>
+</li>
+<li>&lt;result&gt;标签，action类中方法执行，返回的结果跳转的页面。<a href="http://www.cnblogs.com/apem/p/3502447.html" target="_blank" rel="external">result参数详解</a><ul>
+<li>name   结果页面逻辑视图名称</li>
+<li>type   结果类型（默认值是转发，也可以设置其他的值如重定向）</li>
+</ul>
+</li>
+</ol>
+<p>Struts2常量配置</p>
+<ol>
+<li><p>可以配置常量的页面</p>
+<ul>
+<li>struts.xml 一般在此页面配置，在根节点struts的下一级配置。<code>&lt;constant name=&quot;key&quot; value=&quot;value&quot;&gt;&lt;/constant&gt;</code></li>
+<li>web.xml 比较少在此页面配置。如果配置需要在StrutsPrepareAndExecuteFilter下面配置init-param节点，在其中配置初始化参数</li>
+</ul>
+</li>
+<li><p>需要了解的常量 </p>
+<p>eg：<code>&lt;constant name=&quot;struts.devMode&quot; value=&quot;true&quot; /&gt;</code></p>
+<ul>
+<li>struts.i18n.encoding=UTF-8          – 指定默认编码集,作用于HttpServletRequest的setCharacterEncoding方法 </li>
+<li>struts.action.extension=action   – 该属性指定需要Struts 2处理的请求后缀，该属性的默认值是action，即所有匹配*.action的请求都由Struts2处理。如果用户需要指定多个请求后缀，则多个后缀之间以英文逗号（,）隔开</li>
+<li>struts.serve.static.browserCache=true       – 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 </li>
+<li>struts.configuration.xml.reload=false       – 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用) </li>
+<li>struts.devMode = false               – 开发模式下使用,这样可以打印出更详细的错误信息 </li>
+<li>struts.enable.DynamicMethodInvocation = true 是否开启动态方法访问</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="指定多个配置文件"><a href="#指定多个配置文件" class="headerlink" title="指定多个配置文件"></a>指定多个配置文件</h3><p>在大部分应用里，随着应用规模的增加，系统中Action的数量也会大量增加，导致struts.xml配置文件变得非常臃肿。为了避免struts.xml文件过于庞大、臃肿，提高struts.xml文件的可读性，我们可以将一个struts.xml配置文件分解成多个配置文件，然后在struts.xml文件中包含其他配置文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">include</span> <span class="attr">file</span>=<span class="string">"struts2/struts-sysadmin.xml"</span>/&gt;</span></div><div class="line"><span class="comment">&lt;!--引用外部的配置文件--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">include</span> <span class="attr">file</span>=<span class="string">"com/action/struts_part1.xml"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">include</span> <span class="attr">file</span>=<span class="string">"struts-part2.xml"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<hr>
+<h3 id="Action类的编写"><a href="#Action类的编写" class="headerlink" title="Action类的编写"></a>Action类的编写</h3><ul>
+<li>直接定义类，无继承无接口实现</li>
+<li>实现Action接口。此接口中定义了五个常量，和一个方法execute</li>
+<li>继承ActionSupport类，一般开发中多用此方案。此类中也实现了上项的Action接口</li>
+</ul>
+<hr>
+<h3 id="Action类的访问"><a href="#Action类的访问" class="headerlink" title="Action类的访问"></a>Action类的访问</h3><p>关于访问的后缀名上面也提到过，默认是.action如果要修改需要配置一下常量值。如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">struts</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!--设置访问的后缀名,默认为action和空,添加do--&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">constant</span> <span class="attr">name</span>=<span class="string">"struts.action.extension"</span> <span class="attr">value</span>=<span class="string">"do,action,,"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">struts</span>&gt;</span></div></pre></td></tr></table></figure>
+<ol>
+<li><p>通过action标签中的name属性配置</p>
+<p>配置此属性后访问时会查询到method属性上定义的方法执行。</p>
+<p>访问代码： <code>&lt;a href=&quot;${pageContext.request.contextPath}/addBook.action&quot;&gt;添加图书&lt;/a&gt;</code></p>
+<p>配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">"demo2"</span> <span class="attr">extends</span>=<span class="string">"struts-default"</span> <span class="attr">namespace</span>=<span class="string">"/"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"addBook"</span> <span class="attr">class</span>=<span class="string">"cn.demo2.BookAction"</span> <span class="attr">method</span>=<span class="string">"add"</span>&gt;</span><span class="tag">&lt;/<span class="name">action</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"deleteBook"</span> <span class="attr">class</span>=<span class="string">"cn.demo2.BookAction"</span> <span class="attr">method</span>=<span class="string">"delete"</span>&gt;</span><span class="tag">&lt;/<span class="name">action</span>&gt;</span>	<span class="tag">&lt;/<span class="name">package</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>通过通配符访问</p>
+<p>此种方式在开发过程中最为常用。通配符是指使用*代表任意的字符。</p>
+<p>使用通配符的方式可以简化配置文件的代码编写，而且扩展和维护比较容易。</p>
+<p>访问代码：<code>&lt;a href=&quot;${pageContext.request.contextPath}/order_add.action&quot;&gt;添加订单&lt;/a&gt;</code></p>
+<p><code>add</code>即表示通配的内容，对应的访问的是相应action中的add方法。</p>
+<p>配置</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;action name="order_*" class="cn.demo2.OrderAction" method="&#123;1&#125;"&gt;&lt;/action&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>通过动态方法访问</p>
+<p>如果要开启动态方法访问必须要开启一个常量值，把<code>struts.enable.DynamicMethodInvocation</code>设置为true</p>
+<p>访问代码：<code>&lt;a href=&quot;${pageContext.request.contextPath}/product!add.action&quot;&gt;添加商品&lt;/a&gt;</code></p>
+<p>配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"product"</span> <span class="attr">class</span>=<span class="string">"cn.demo2.ProductAction"</span>&gt;</span><span class="tag">&lt;/<span class="name">action</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ol>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://xxyxpy.pub/2017/12/25/java/struts2/struts2-01入门/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/12/25/java/jdbc/Jdbc-03工具类DbUtils/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Jdbc-03工具类DbUtils
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/12/25/java/struts2/struts2-02拦截器、请求封装以及结果跳转/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">struts2-02拦截器、请求封装以及结果跳转</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-06Listener,Filter/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-06Listener,Filter/" class="title">web-06Listener,Filter</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:44.644Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-05事务/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-05事务/" class="title">web-05事务</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:35.875Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-04Jsp,El,Jstl/" class="title">web-04Jsp,El,Jstl</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:29.429Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-03Cookie,Session/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-03Cookie,Session/" class="title">web-03Cookie,Session</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:14.922Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2017/12/25/java/web/web-02Request,Response/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/web/">web</a></p>
+                            <p class="item-title"><a href="/2017/12/25/java/web/web-02Request,Response/" class="title">web-02Request，Response</a></p>
+                            <p class="item-date"><time datetime="2017-12-25T07:54:10.249Z" itemprop="datePublished">2017-12-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2017 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
