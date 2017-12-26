@@ -3,20 +3,20 @@
 <head>
     <meta charset="utf-8">
     
-    <title>ashx获取post的json | code dog</title>
+    <title>c#抓取网页数据 | code dog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="html-agility-packhtml-agility-pack是一个非常轻量级的网页抓取工具，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。  加载html字符串 支持通过文件、字符串或web请求的方式来加载html字符串包装成HtmlDocument对象  节点解析 支持通过xPath和Linq方式进行节点和内容获取">
+    <meta name="description" content="html-agility-packhtml-agility-pack是一个非常轻量级的网页抓取工具库，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。  加载html字符串 支持通过文件、字符串或web请求的方式来加载html字符串包装成HtmlDocument对象 由于库中包装了http请求，所以web请求非常的简单，具体可以看下面的例子。  节点解析 支持通过xPath">
 <meta name="keywords" content="爬虫">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ashx获取post的json">
+<meta property="og:title" content="c#抓取网页数据">
 <meta property="og:url" content="http://blog.xxyxpy.pub/2017/12/26/csharp/c#抓取网页数据/index.html">
 <meta property="og:site_name" content="code dog">
-<meta property="og:description" content="html-agility-packhtml-agility-pack是一个非常轻量级的网页抓取工具，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。  加载html字符串 支持通过文件、字符串或web请求的方式来加载html字符串包装成HtmlDocument对象  节点解析 支持通过xPath和Linq方式进行节点和内容获取">
+<meta property="og:description" content="html-agility-packhtml-agility-pack是一个非常轻量级的网页抓取工具库，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。  加载html字符串 支持通过文件、字符串或web请求的方式来加载html字符串包装成HtmlDocument对象 由于库中包装了http请求，所以web请求非常的简单，具体可以看下面的例子。  节点解析 支持通过xPath">
 <meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/csharp\spy.jpg">
-<meta property="og:updated_time" content="2017-12-26T09:04:19.983Z">
+<meta property="og:updated_time" content="2017-12-26T09:08:20.546Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ashx获取post的json">
-<meta name="twitter:description" content="html-agility-packhtml-agility-pack是一个非常轻量级的网页抓取工具，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。  加载html字符串 支持通过文件、字符串或web请求的方式来加载html字符串包装成HtmlDocument对象  节点解析 支持通过xPath和Linq方式进行节点和内容获取">
+<meta name="twitter:title" content="c#抓取网页数据">
+<meta name="twitter:description" content="html-agility-packhtml-agility-pack是一个非常轻量级的网页抓取工具库，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。  加载html字符串 支持通过文件、字符串或web请求的方式来加载html字符串包装成HtmlDocument对象 由于库中包装了http请求，所以web请求非常的简单，具体可以看下面的例子。  节点解析 支持通过xPath">
 <meta name="twitter:image" content="http://oo0vldwkt.bkt.clouddn.com/static/images/csharp\spy.jpg">
     
 
@@ -235,7 +235,7 @@ var _hmt = _hmt || [];
                 
     
         <h1 class="article-title" itemprop="name">
-            ashx获取post的json
+            c#抓取网页数据
         </h1>
     
 
@@ -275,10 +275,11 @@ var _hmt = _hmt || [];
                     <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#html-agility-pack"><span class="toc-number">1.</span> <span class="toc-text">html-agility-pack</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取网页内容"><span class="toc-number">2.</span> <span class="toc-text">获取网页内容</span></a></li></ol>
                 </div>
             
-            <h3 id="html-agility-pack"><a href="#html-agility-pack" class="headerlink" title="html-agility-pack"></a>html-agility-pack</h3><p><a href="http://html-agility-pack.net/" target="_blank" rel="external">html-agility-pack</a>是一个非常轻量级的网页抓取工具，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。</p>
+            <h3 id="html-agility-pack"><a href="#html-agility-pack" class="headerlink" title="html-agility-pack"></a>html-agility-pack</h3><p><a href="http://html-agility-pack.net/" target="_blank" rel="external">html-agility-pack</a>是一个非常轻量级的网页抓取工具库，不需要依赖其它的库，大小只有100多k.可以在nuget上直接进行下载。</p>
 <ul>
 <li><p>加载html字符串</p>
 <p>支持通过文件、字符串或web请求的方式来加载html字符串包装成<code>HtmlDocument</code>对象</p>
+<p>由于库中包装了http请求，所以web请求非常的简单，具体可以看下面的例子。</p>
 </li>
 <li><p>节点解析</p>
 <p>支持通过xPath和Linq方式进行节点和内容获取</p>
@@ -393,7 +394,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/c/">c#</a></p>
-                            <p class="item-title"><a href="/2017/12/26/csharp/c#抓取网页数据/" class="title">ashx获取post的json</a></p>
+                            <p class="item-title"><a href="/2017/12/26/csharp/c#抓取网页数据/" class="title">c#抓取网页数据</a></p>
                             <p class="item-date"><time datetime="2017-12-26T09:04:10.000Z" itemprop="datePublished">2017-12-26</time></p>
                         </div>
                     </li>
