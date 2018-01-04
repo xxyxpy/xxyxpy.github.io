@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="申请免费的SSL证书目前可以申请免费个人站点证书的网站比较多，个人推荐使用腾讯云，好处是申请速度快，半小时之内就可以通过审核。提交的资料也简单，只需要实名认证即可。试过七牛云还需要提供公司等很多信息，比较麻烦。当然还有很多其它的可以通过这个页面去选择。  注意选择的证书类型为域名型免费版，期限为一年 仅支持单域名的申请，如abc.mysite.com.不支持通配符如*.mysite.com，这种要">
 <meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/0d338744ebf81a4cd1641bdadd2a6059252da64b.jpg">
-<meta property="og:updated_time" content="2018-01-04T06:02:05.664Z">
+<meta property="og:updated_time" content="2018-01-04T06:15:15.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务器开启Https">
 <meta name="twitter:description" content="申请免费的SSL证书目前可以申请免费个人站点证书的网站比较多，个人推荐使用腾讯云，好处是申请速度快，半小时之内就可以通过审核。提交的资料也简单，只需要实名认证即可。试过七牛云还需要提供公司等很多信息，比较麻烦。当然还有很多其它的可以通过这个页面去选择。  注意选择的证书类型为域名型免费版，期限为一年 仅支持单域名的申请，如abc.mysite.com.不支持通配符如*.mysite.com，这种要">
@@ -312,6 +312,7 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 适用于centos7 其它操作系统的自行设置</div><div class="line">firewall-cmd --add-port=443/tcp --permanent</div><div class="line"># 查询是否开启443端口，发现没开启，原因是需要重启一发</div><div class="line">firewall-cmd --query-port=443/tcp</div><div class="line"># 重启</div><div class="line">reboot</div></pre></td></tr></table></figure>
 <p>做完这一步再次访问<code>https//c.yourdomain.com</code>就可以了，访问http开头的地址也会跳转到https</p>
 <p>参考：</p>
+<p><a href="https://www.jianshu.com/p/e7c7b23a92b4" target="_blank" rel="external">为Nginx配置 SSL 证书 + 搭建 HTTPS网站</a></p>
 
         
         </div>
