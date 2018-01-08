@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>标签: docker | code dog</title>
+    <title>Http请求利器 | code dog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="什么鬼...">
-<meta property="og:type" content="website">
-<meta property="og:title" content="code dog">
-<meta property="og:url" content="http://blog.xxyxpy.pub/tags/docker/index.html">
+    <meta name="description" content="Http Request简介Http Request是一个轻量级的Http请求封装工具，不依赖于其它的第三方组件。使用起来简单快捷。 Maven12345&amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;com.github.kevinsawicki&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;http-request&amp;lt;/artifactId&amp;g">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Http请求利器">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/01/08/java/tool/Http请求利器/index.html">
 <meta property="og:site_name" content="code dog">
-<meta property="og:description" content="什么鬼...">
+<meta property="og:description" content="Http Request简介Http Request是一个轻量级的Http请求封装工具，不依赖于其它的第三方组件。使用起来简单快捷。 Maven12345&amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;com.github.kevinsawicki&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;http-request&amp;lt;/artifactId&amp;g">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg">
+<meta property="og:updated_time" content="2018-01-08T02:08:18.052Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="code dog">
-<meta name="twitter:description" content="什么鬼...">
+<meta name="twitter:title" content="Http请求利器">
+<meta name="twitter:description" content="Http Request简介Http Request是一个轻量级的Http请求封装工具，不依赖于其它的第三方组件。使用起来简单快捷。 Maven12345&amp;lt;dependency&amp;gt;  &amp;lt;groupId&amp;gt;com.github.kevinsawicki&amp;lt;/groupId&amp;gt;  &amp;lt;artifactId&amp;gt;http-request&amp;lt;/artifactId&amp;g">
+<meta name="twitter:image" content="http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg">
     
 
     
@@ -223,50 +227,169 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main">
-<div class="timeline timeline-wrap">
-    <div class="timeline-row timeline-row-major">
-        <span class="node"><i class="fa fa-tag"></i></span>
-        <h1 class="title">#docker</h1>
-    </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+            <section id="main"><article id="post-java/tool/Http请求利器" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
                 
     
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/2017/12/25/linux/docker/">docker</a>
+        <h1 class="article-title" itemprop="name">
+            Http请求利器
         </h1>
     
 
-                <div class="article-meta">
-                    
+                
+                    <div class="article-meta">
+                        
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2017/12/25/linux/docker/">
-            <time datetime="2017-12-25T07:44:20.398Z" itemprop="datePublished">2017-12-25</time>
+        <a href="/2018/01/08/java/tool/Http请求利器/">
+            <time datetime="2018-01-08T01:43:51.000Z" itemprop="datePublished">2018-01-08</time>
         </a>
     </div>
 
 
-                    
+                        
     <div class="article-category">
     	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/linux/">linux</a>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a>
     </div>
 
-                    
+                        
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/docker/">docker</a>
+        <a class="tag-link" href="/tags/Java/">Java</a>
     </div>
 
-                </div>
-            </div>
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h3 id="Http-Request简介"><a href="#Http-Request简介" class="headerlink" title="Http Request简介"></a>Http Request简介</h3><p>Http Request是一个轻量级的Http请求封装工具，不依赖于其它的第三方组件。使用起来简单快捷。</p>
+<h3 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.kevinsawicki<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>http-request<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h3><ul>
+<li><p>获取响应的状态码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> response = HttpRequest.get(<span class="string">"http://google.com"</span>).code();</div></pre></td></tr></table></figure>
+</li>
+<li><p>获取响应的内容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String response = HttpRequest.get(<span class="string">"http://google.com"</span>).body();</div><div class="line">System.out.println(<span class="string">"Response was: "</span> + response);</div></pre></td></tr></table></figure>
+</li>
+<li><p>Get请求中添加参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HttpRequest request = HttpRequest.get(<span class="string">"http://google.com"</span>, <span class="keyword">true</span>, <span class="string">'q'</span>, <span class="string">"baseball gloves"</span>, <span class="string">"size"</span>, <span class="number">100</span>);</div><div class="line">System.out.println(request.toString()); <span class="comment">// GET http://google.com?q=baseball%20gloves&amp;size=100</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>处理请求和响应的header</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">String contentType = HttpRequest.get(<span class="string">"http://google.com"</span>)</div><div class="line">                                .accept(<span class="string">"application/json"</span>) <span class="comment">//Sets request header</span></div><div class="line">                                .contentType(); <span class="comment">//Gets response header</span></div><div class="line">System.out.println(<span class="string">"Response content type was "</span> + contentType);</div><div class="line"></div><div class="line"><span class="comment">// 拼装好map传入</span></div><div class="line">Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">map.put(<span class="string">"Connection"</span>, <span class="string">"keep-alive"</span>);</div><div class="line">map.put(<span class="string">"Accept-Encoding"</span>, <span class="string">"gzip,deflate"</span>);</div><div class="line">map.put(<span class="string">"Accept-Language"</span>, <span class="string">"zh-CN,en-US;q=0.8"</span>);</div><div class="line">HttpRequest request = <span class="keyword">new</span> HttpRequest(<span class="string">"http://google.com"</span>, <span class="string">"GET"</span>)</div><div class="line">                .headers(map);</div><div class="line">String response = request.body(<span class="string">"UTF-8"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p>使用代理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HttpRequest request = <span class="keyword">new</span> HttpRequest(<span class="string">"http://google.com"</span>, <span class="string">"GET"</span>)</div><div class="line">                .useProxy(<span class="string">"122.224.227.202"</span>, <span class="number">3128</span>) <span class="comment">// 中国代理</span></div><div class="line">                .proxyBasic(<span class="string">"username"</span>, <span class="string">"p4ssw0rd"</span>); <span class="comment">// 代理的用户名和密码，可选项</span></div><div class="line">                .contentType(<span class="string">"text/html"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">String response = request.body(<span class="string">"UTF-8"</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p>需要身份认证的请求</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> response = HttpRequest.get(<span class="string">"http://google.com"</span>).basic(<span class="string">"username"</span>, <span class="string">"p4ssw0rd"</span>).code();</div></pre></td></tr></table></figure>
+</li>
+<li><p>在请求Https网址时忽略安全校验</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HttpRequest request = HttpRequest.get(<span class="string">"https://google.com"</span>);</div><div class="line"><span class="comment">//Accept all certificates</span></div><div class="line">request.trustAllCerts();</div><div class="line"><span class="comment">//Accept all hostnames</span></div><div class="line">request.trustAllHosts();</div></pre></td></tr></table></figure>
+</li>
+<li><p>跟进重定向</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> code = HttpRequest.get(<span class="string">"http://google.com"</span>).followRedirects(<span class="keyword">true</span>).code();</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h3 id="post请求"><a href="#post请求" class="headerlink" title="post请求"></a>post请求</h3><ul>
+<li><p>获取响应状态码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> response = HttpRequest.post(<span class="string">"http://google.com"</span>).send(<span class="string">"name=kevin"</span>).code();</div></pre></td></tr></table></figure>
+</li>
+<li><p>提交组装的map数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Map&lt;String, String&gt; data = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</div><div class="line">data.put(<span class="string">"user"</span>, <span class="string">"A User"</span>);</div><div class="line">data.put(<span class="string">"state"</span>, <span class="string">"CA"</span>);</div><div class="line"><span class="keyword">if</span> (HttpRequest.post(<span class="string">"http://google.com"</span>).form(data).created())</div><div class="line">  System.out.println(<span class="string">"User was created"</span>);</div></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<p>参考：</p>
+<p><a href="http://kevinsawicki.github.io/http-request/" target="_blank" rel="external">使用说明</a></p>
+
+        
         </div>
-    
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
 </div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/01/08/java/tool/Http请求利器/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/01/05/java/tool/Java抓取网页数据/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Java抓取网页数据
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
 </section>
             
                 
