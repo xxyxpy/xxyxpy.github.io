@@ -266,48 +266,11 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            
-            <h3 id="Http-Request简介"><a href="#Http-Request简介" class="headerlink" title="Http Request简介"></a>Http Request简介</h3><p>Http Request是一个轻量级的Http请求封装工具，不依赖于其它的第三方组件。使用起来简单快捷。</p>
-<h3 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.kevinsawicki<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>http-request<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h3><ul>
-<li><p>获取响应的状态码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> response = HttpRequest.get(<span class="string">"http://google.com"</span>).code();</div></pre></td></tr></table></figure>
-</li>
-<li><p>获取响应的内容</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String response = HttpRequest.get(<span class="string">"http://google.com"</span>).body();</div><div class="line">System.out.println(<span class="string">"Response was: "</span> + response);</div></pre></td></tr></table></figure>
-</li>
-<li><p>Get请求中添加参数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HttpRequest request = HttpRequest.get(<span class="string">"http://google.com"</span>, <span class="keyword">true</span>, <span class="string">'q'</span>, <span class="string">"baseball gloves"</span>, <span class="string">"size"</span>, <span class="number">100</span>);</div><div class="line">System.out.println(request.toString()); <span class="comment">// GET http://google.com?q=baseball%20gloves&amp;size=100</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>处理请求和响应的header</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">String contentType = HttpRequest.get(<span class="string">"http://google.com"</span>)</div><div class="line">                                .accept(<span class="string">"application/json"</span>) <span class="comment">//Sets request header</span></div><div class="line">                                .contentType(); <span class="comment">//Gets response header</span></div><div class="line">System.out.println(<span class="string">"Response content type was "</span> + contentType);</div><div class="line"></div><div class="line"><span class="comment">// 拼装好map传入</span></div><div class="line">Map&lt;String, String&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">map.put(<span class="string">"Connection"</span>, <span class="string">"keep-alive"</span>);</div><div class="line">map.put(<span class="string">"Accept-Encoding"</span>, <span class="string">"gzip,deflate"</span>);</div><div class="line">map.put(<span class="string">"Accept-Language"</span>, <span class="string">"zh-CN,en-US;q=0.8"</span>);</div><div class="line">HttpRequest request = <span class="keyword">new</span> HttpRequest(<span class="string">"http://google.com"</span>, <span class="string">"GET"</span>)</div><div class="line">                .headers(map);</div><div class="line">String response = request.body(<span class="string">"UTF-8"</span>);</div></pre></td></tr></table></figure>
-</li>
-<li><p>使用代理</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HttpRequest request = <span class="keyword">new</span> HttpRequest(<span class="string">"http://google.com"</span>, <span class="string">"GET"</span>)</div><div class="line">                .useProxy(<span class="string">"122.224.227.202"</span>, <span class="number">3128</span>) <span class="comment">// 中国代理</span></div><div class="line">                .proxyBasic(<span class="string">"username"</span>, <span class="string">"p4ssw0rd"</span>); <span class="comment">// 代理的用户名和密码，可选项</span></div><div class="line">                .contentType(<span class="string">"text/html"</span>, <span class="string">"UTF-8"</span>);</div><div class="line">String response = request.body(<span class="string">"UTF-8"</span>);</div></pre></td></tr></table></figure>
-</li>
-<li><p>需要身份认证的请求</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> response = HttpRequest.get(<span class="string">"http://google.com"</span>).basic(<span class="string">"username"</span>, <span class="string">"p4ssw0rd"</span>).code();</div></pre></td></tr></table></figure>
-</li>
-<li><p>在请求Https网址时忽略安全校验</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">HttpRequest request = HttpRequest.get(<span class="string">"https://google.com"</span>);</div><div class="line"><span class="comment">//Accept all certificates</span></div><div class="line">request.trustAllCerts();</div><div class="line"><span class="comment">//Accept all hostnames</span></div><div class="line">request.trustAllHosts();</div></pre></td></tr></table></figure>
-</li>
-<li><p>跟进重定向</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> code = HttpRequest.get(<span class="string">"http://google.com"</span>).followRedirects(<span class="keyword">true</span>).code();</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<h3 id="post请求"><a href="#post请求" class="headerlink" title="post请求"></a>post请求</h3><ul>
-<li><p>获取响应状态码</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> response = HttpRequest.post(<span class="string">"http://google.com"</span>).send(<span class="string">"name=kevin"</span>).code();</div></pre></td></tr></table></figure>
-</li>
-<li><p>提交组装的map数据</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Map&lt;String, String&gt; data = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</div><div class="line">data.put(<span class="string">"user"</span>, <span class="string">"A User"</span>);</div><div class="line">data.put(<span class="string">"state"</span>, <span class="string">"CA"</span>);</div><div class="line"><span class="keyword">if</span> (HttpRequest.post(<span class="string">"http://google.com"</span>).form(data).created())</div><div class="line">  System.out.println(<span class="string">"User was created"</span>);</div></pre></td></tr></table></figure>
-<p>​</p>
-</li>
-</ul>
-<p>参考：</p>
-<p><a href="http://kevinsawicki.github.io/http-request/" target="_blank" rel="external">使用说明</a></p>
-
+            <p><h3 id="Http-Request简介"><a href="#Http-Request简介" class="headerlink" title="Http Request简介"></a>Http Request简介</h3><p>Http Request是一个轻量级的Http请求封装工具，不依赖于其它的第三方组件。使用起来简单快捷。</p>
+<h3 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.kevinsawicki<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>http-request<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>6.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
+            <p class="article-more-link">
+                <a href="/2018/01/08/java/tool/Http请求利器/#more">查看更多</a>
+            </p>
         
         </div>
         <footer class="article-footer">
