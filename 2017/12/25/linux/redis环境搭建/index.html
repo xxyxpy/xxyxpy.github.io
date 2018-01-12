@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://blog.xxyxpy.pub/2017/12/25/linux/redis环境搭建/index.html">
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="准备工作redis编译时需要gcc环境，所以需要先安装gcc 1yum install gcc gcc-c++ 下载安装包1wget http://download.redis.io/releases/redis-3.2.5.tar.gz  安装123456# 解压到/usr/local/目录下tar zxf redis-3.2.5.tar.gz -C /usr/local/# 进入解压后的目录c">
-<meta property="og:updated_time" content="2017-12-25T07:45:07.726Z">
+<meta property="og:updated_time" content="2018-01-10T07:54:58.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="redis环境搭建">
 <meta name="twitter:description" content="准备工作redis编译时需要gcc环境，所以需要先安装gcc 1yum install gcc gcc-c++ 下载安装包1wget http://download.redis.io/releases/redis-3.2.5.tar.gz  安装123456# 解压到/usr/local/目录下tar zxf redis-3.2.5.tar.gz -C /usr/local/# 进入解压后的目录c">
@@ -173,11 +173,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                54
+                55
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                46
+                47
                 <span>标签</span>
             </div>
         </div>
@@ -268,6 +268,11 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备工作"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下载安装包"><span class="toc-number">2.</span> <span class="toc-text">下载安装包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动"><span class="toc-number">4.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#连接"><span class="toc-number">5.</span> <span class="toc-text">连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#停止"><span class="toc-number">6.</span> <span class="toc-text">停止</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群版本"><span class="toc-number">7.</span> <span class="toc-text">集群版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#docker容器中启动redis"><span class="toc-number">8.</span> <span class="toc-text">docker容器中启动redis</span></a></li></ol>
+                </div>
+            
             <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>redis编译时需要gcc环境，所以需要先安装gcc</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install gcc gcc-c++</div></pre></td></tr></table></figure>
 <h3 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://download.redis.io/releases/redis-3.2.5.tar.gz</div></pre></td></tr></table></figure>
@@ -295,6 +300,11 @@ var _hmt = _hmt || [];
 <h3 id="集群版本"><a href="#集群版本" class="headerlink" title="集群版本"></a>集群版本</h3><p>redis集群中至少应该有三个节点。要保证集群的高可用，需要每个节点有一个备份机。</p>
 <p>所以至少需要6台服务器，复制出来6个实例，设置端口号7001-7006</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"># 安装ruby</div><div class="line">yum install ruby</div><div class="line">yuminstall rubygems</div><div class="line"># 安装gem-redis 本机下载安装https://rubygems.org/gems/redis/versions/3.2.2</div><div class="line"># 下载完上传到centos</div><div class="line">gem install redis-3.2.2.gem</div><div class="line"># 新建集群目录</div><div class="line">cd /usr/local</div><div class="line">mkdir redis-cluster</div><div class="line"># 查看安装后的rb文件</div><div class="line">cd /usr/local/redis-3.2.5/src/</div><div class="line">ll *.rb</div><div class="line"># 复制到redis-cluster下面</div><div class="line">cp *.rb /usr/local/redis-cluster/</div><div class="line"># 复制单机版的实例到集群目录下面</div><div class="line">cd /usr/local/redis</div><div class="line">cp -r bin redis-cluster/redis01</div><div class="line"># 修改端口号 开启集群配置cluster-enabled去掉注释，值为yes</div><div class="line">vim redis-conf</div><div class="line"># 复制出来其它五个实例</div><div class="line">cp -r redis01 redis02</div><div class="line">......</div><div class="line"># 启动每一个实例，通过脚本批量启动</div><div class="line">vim start-all.sh</div><div class="line">cd redis01</div><div class="line">./redis-server redis.conf</div><div class="line">cd ..</div><div class="line">cd redis02</div><div class="line">./redis-server redis.conf</div><div class="line">cd ..</div><div class="line">cd redis03</div><div class="line">./redis-server redis.conf</div><div class="line">cd ..</div><div class="line">cd redis04</div><div class="line">./redis-server redis.conf</div><div class="line">cd ..</div><div class="line">cd redis05</div><div class="line">./redis-server redis.conf</div><div class="line">cd ..</div><div class="line">cd redis06</div><div class="line">./redis-server redis.conf</div><div class="line">cd ..</div><div class="line"># 添加执行权限</div><div class="line">chmod +x start-all.sh</div><div class="line"># 使用ruby脚本搭建集群，外部访问时需要开放端口号</div><div class="line"># --replicas 1：为集群中的每个主节点创建一个从节点</div><div class="line">./redis-trib.rb create --replicas 1 192.168.80.129:7001 192.168.80.129:7002 192.168.80.129:7003 192.168.80.129:7004 192.168.80.129:7005 192.168.80.129:7006</div><div class="line"># 此时有可能会报node is not empty的错误，需要删除节点目录下面的dump.rdb和nodes.conf</div><div class="line"># 这是单机版本节点的数据库文件，删除后重启启动执行即可</div><div class="line"></div><div class="line"># 连接集群，连接之后set一个key，切换一个集群端口去查看这个key</div><div class="line">redis01/redis-cli -p 7002 -c</div><div class="line">set abc 123</div><div class="line">redis01/redis-cli -p 7005 -c</div><div class="line">get abc</div><div class="line"></div><div class="line"># 关闭集群</div><div class="line">vim shutdown-all.sh</div><div class="line">./redis01/redis-cli -p 7001 shutdown</div><div class="line">./redis01/redis-cli -p 7002 shutdown</div><div class="line">./redis01/redis-cli -p 7003 shutdown</div><div class="line">./redis01/redis-cli -p 7004 shutdown</div><div class="line">./redis01/redis-cli -p 7005 shutdown</div><div class="line">./redis01/redis-cli -p 7006 shutdown</div><div class="line"># 添加权限</div><div class="line">chmod +x shutdown-all.sh</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="docker容器中启动redis"><a href="#docker容器中启动redis" class="headerlink" title="docker容器中启动redis"></a>docker容器中启动redis</h3><blockquote>
+<p>使用外部的配置启动，并且将数据保存在外部的data目录</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -p 6379:6379 --name myredis -v /usr/local/myredis/conf/redis.conf:/etc/redis/redis.conf -v /usr/local/myredis/data:/data -d redis:3.2 redis-server /etc/redis/redis.conf</div></pre></td></tr></table></figure>
 <p>参考：</p>
 <p><a href="http://www.cnblogs.com/java-zhao/p/6134337.html" target="_blank" rel="external">redis集群搭建</a></p>
 <p><a href="http://www.jianshu.com/p/338bc2a74300#" target="_blank" rel="external">redis集群搭建报node is not emtpy</a> </p>
@@ -399,7 +409,26 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/01/08/前端/Html标签/" class="thumbnail">
+                            <a href="/2018/01/11/前端/JS/JavaScript 高级程序设计/JavaScript基本概念/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2018/01/11/前端/JS/JavaScript 高级程序设计/JavaScript基本概念/" class="title">JavaScript基本概念</a></p>
+                            <p class="item-date"><time datetime="2018-01-11T07:01:16.000Z" itemprop="datePublished">2018-01-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/前端/HTML/Html标签/" class="thumbnail">
     
     
         <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/91ef76c6a7efce1b101f0bd9a551f3deb48f65e9.jpg)" alt="Html标签" class="thumbnail-image"></span>
@@ -410,7 +439,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Html/">Html</a></p>
-                            <p class="item-title"><a href="/2018/01/08/前端/Html标签/" class="title">Html标签</a></p>
+                            <p class="item-title"><a href="/2018/01/08/前端/HTML/Html标签/" class="title">Html标签</a></p>
                             <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
                         </div>
                     </li>
@@ -472,25 +501,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/01/04/linux/服务器开启Https/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0d338744ebf81a4cd1641bdadd2a6059252da64b.jpg)" alt="服务器开启Https" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/linux/">linux</a></p>
-                            <p class="item-title"><a href="/2018/01/04/linux/服务器开启Https/" class="title">服务器开启Https</a></p>
-                            <p class="item-date"><time datetime="2018-01-04T01:34:28.000Z" itemprop="datePublished">2018-01-04</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -500,7 +510,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Html/" style="font-size: 10px;">Html</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Html/" style="font-size: 10px;">Html</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 
