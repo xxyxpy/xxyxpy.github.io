@@ -12,7 +12,7 @@
 <meta property="og:url" content="http://blog.xxyxpy.pub/2017/12/25/linux/docker/index.html">
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="安装在centos中安装时内核需要在3.10以上，所以必须要centos7以上版本 os的下载可以访问阿里云 安装教程可参考鸟哥的linux 12345678910# 查看系统内核版本uname -r# 安装yum -y install docker# 更新yum -y update docker# 启动service docker start# docker 开机启动systemctl enab">
-<meta property="og:updated_time" content="2018-01-11T03:05:51.202Z">
+<meta property="og:updated_time" content="2018-01-15T05:44:02.732Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker">
 <meta name="twitter:description" content="安装在centos中安装时内核需要在3.10以上，所以必须要centos7以上版本 os的下载可以访问阿里云 安装教程可参考鸟哥的linux 12345678910# 查看系统内核版本uname -r# 安装yum -y install docker# 更新yum -y update docker# 启动service docker start# docker 开机启动systemctl enab">
@@ -173,11 +173,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                55
+                58
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                47
+                48
                 <span>标签</span>
             </div>
         </div>
@@ -312,10 +312,14 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>–restart :参数来设置容器开机启动。<br>no-container：不重启<br>on-failure-container：退出状态非0时重启<br>always：始终重启</p>
 </blockquote>
+<p>如果创建时未指定自启动可以通过以下命令添加，详情使用参考<a href="https://docs.docker.com/engine/reference/commandline/update/#parent-command" target="_blank" rel="external">官方说明</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker update --restart=always 容器标识</div></pre></td></tr></table></figure>
 <p><strong>查看运行中的容器列表</strong></p>
 <p><code>docker ps</code></p>
 <p><strong>查看运行和停止状态的容器列表</strong></p>
 <p><code>docker ps -a</code></p>
+<p><strong>查看容器占用的大小</strong></p>
+<p><code>docker ps -a -s</code></p>
 <p><strong>停止容器</strong> <code>docker stop container-name/container-id</code></p>
 <p><code>docker stop test-redis</code></p>
 <p><strong>启动容器</strong><code>docker start container-name/container-id</code></p>
@@ -327,9 +331,11 @@ var _hmt = _hmt || [];
 <p><strong>删除容器</strong></p>
 <p>单个<code>docker rm container-id</code></p>
 <p>所有<code>docker rm ${docker ps -a -q}</code></p>
-<p><strong>容器日志</strong></p>
+<p><strong><a href="https://docs.docker.com/engine/reference/commandline/logs/#usage" target="_blank" rel="external">容器日志</a></strong></p>
 <p>指定容器的日志 <code>docker logs container-name/container-id</code></p>
 <p>eg：<code>dokcer logs port-redis</code></p>
+<p>查看最近的容器日志</p>
+<p><code>docker logs 容器标识 -f</code></p>
 <p><strong>登录容器</strong><br>运行中的容器产是一个功能完备的linux操作系统，可以像常规系统一样登录并访问容器，并可以通过<code>exit</code>退出。命令如下：</p>
 <p><code>docker exec -it container-name/container-id bash</code></p>
 <p><strong>在容器中安装vim</strong></p>
@@ -360,6 +366,7 @@ var _hmt = _hmt || [];
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"># 上传一个编译好的jar到centos</div><div class="line"># 在同级目录下面新建Dockerfile文件，内容如下：</div><div class="line"># 基镜像为java8</div><div class="line">FROM java:8</div><div class="line"># 设置作者</div><div class="line">MAINTAINER wyf</div><div class="line"># 将restful.jar添加到镜像中，重命名为restful.jar</div><div class="line">ADD restful.jar restful.jar</div><div class="line"># 运行镜像的容器，端口为8077</div><div class="line">EXPOSE 8077</div><div class="line"># 启动时运行 java -jar restful.jar</div><div class="line">ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;/restful.jar&quot;]</div><div class="line"></div><div class="line"># 编译镜像 xxyxpy/restful 为镜像名称 .表示DockerFile的路径为当前目录</div><div class="line">docker build -t xxyxpy/restful .</div><div class="line"></div><div class="line"># 编译完成之后可以查看本地的镜像</div><div class="line">docker images</div><div class="line"></div><div class="line"># 运行编译完成的镜像 映射容器的8080端口（restful.jar的启动端口）到服务器的8077端口</div><div class="line">docker run -d --name restful -p 8077:8080 xxyxpy/restful</div><div class="line"></div><div class="line"># 此时可以通过服务器的ip:8077进行访问</div></pre></td></tr></table></figure>
 <p><a href="http://www.runoob.com/docker/docker-install-mysql.html" target="_blank" rel="external">docker 安装 mysql</a></p>
 <p><a href="https://itbilu.com/linux/docker/EyP7QP86M.html" target="_blank" rel="external">MySQL 官方Docker镜像的使用</a></p>
+<p><a href="http://wiki.11ten.net/Docker/docker-%E5%AD%A6%E4%B9%A0%E4%B9%8B%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3.html" target="_blank" rel="external">更多docker命令</a></p>
 
         
         </div>
@@ -459,19 +466,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/01/11/前端/JS/JavaScript 高级程序设计/JavaScript基本概念/" class="thumbnail">
+                            <a href="/2018/01/08/common/软件使用/" class="thumbnail">
     
     
-        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/a044ad345982b2b713b5ad7d3aadcbef76099b65.jpg)" alt="JavaScript基本概念" class="thumbnail-image"></span>
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0df431adcbef76097cf2985527dda3cc7dd99e7a.jpg)" alt="软件使用" class="thumbnail-image"></span>
     
 </a>
 
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
-                            <p class="item-title"><a href="/2018/01/11/前端/JS/JavaScript 高级程序设计/JavaScript基本概念/" class="title">JavaScript基本概念</a></p>
-                            <p class="item-date"><time datetime="2018-01-11T07:01:16.000Z" itemprop="datePublished">2018-01-11</time></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/工具/">工具</a></p>
+                            <p class="item-title"><a href="/2018/01/08/common/软件使用/" class="title">软件使用</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
                         </div>
                     </li>
                 
@@ -490,25 +497,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Html/">Html</a></p>
                             <p class="item-title"><a href="/2018/01/08/前端/HTML/Html标签/" class="title">Html标签</a></p>
-                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/01/08/common/软件使用/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0df431adcbef76097cf2985527dda3cc7dd99e7a.jpg)" alt="软件使用" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/工具/">工具</a></p>
-                            <p class="item-title"><a href="/2018/01/08/common/软件使用/" class="title">软件使用</a></p>
                             <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
                         </div>
                     </li>
@@ -551,6 +539,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/04/linux/服务器开启Https/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0d338744ebf81a4cd1641bdadd2a6059252da64b.jpg)" alt="服务器开启Https" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/linux/">linux</a></p>
+                            <p class="item-title"><a href="/2018/01/04/linux/服务器开启Https/" class="title">服务器开启Https</a></p>
+                            <p class="item-date"><time datetime="2018-01-04T01:34:28.000Z" itemprop="datePublished">2018-01-04</time></p>
+                        </div>
+                    </li>
+                
             </ul>
         </div>
     </div>
@@ -560,7 +567,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Html/" style="font-size: 10px;">Html</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/Html/" style="font-size: 10px;">Html</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>JavaScript变量作用域和内存 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="基本类型和引用类型的值基本类型（Undefined、Null、Number、String、Boolean）是按值访问的。而引用类型的值是保存在内存中对象的引用，所以引用类型的值是按引用访问的。 动态属性引用类型可以动态的添加属性和方法，而基本类型不可以 1234567var person = new Object();person.name = &quot;tom&quot;;alert(person.name);v">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript变量作用域和内存">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2017/10/25/前端/JS/JavaScript 高级程序设计/JavaScript变量作用域和内存/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="基本类型和引用类型的值基本类型（Undefined、Null、Number、String、Boolean）是按值访问的。而引用类型的值是保存在内存中对象的引用，所以引用类型的值是按引用访问的。 动态属性引用类型可以动态的添加属性和方法，而基本类型不可以 1234567var person = new Object();person.name = &quot;tom&quot;;alert(person.name);v">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/a044ad345982b2b713b5ad7d3aadcbef76099b65.jpg">
+<meta property="og:updated_time" content="2018-01-16T07:44:01.406Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript变量作用域和内存">
+<meta name="twitter:description" content="基本类型和引用类型的值基本类型（Undefined、Null、Number、String、Boolean）是按值访问的。而引用类型的值是保存在内存中对象的引用，所以引用类型的值是按引用访问的。 动态属性引用类型可以动态的添加属性和方法，而基本类型不可以 1234567var person = new Object();person.name = &quot;tom&quot;;alert(person.name);v">
+<meta name="twitter:image" content="http://oo0vldwkt.bkt.clouddn.com/a044ad345982b2b713b5ad7d3aadcbef76099b65.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                58
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                48
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-前端/JS/JavaScript 高级程序设计/JavaScript变量作用域和内存" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            JavaScript变量作用域和内存
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/10/25/前端/JS/JavaScript 高级程序设计/JavaScript变量作用域和内存/">
+            <time datetime="2017-10-25T07:01:16.000Z" itemprop="datePublished">2017-10-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/前端/">前端</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/JavaScript/">JavaScript</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基本类型和引用类型的值"><span class="toc-number">1.</span> <span class="toc-text">基本类型和引用类型的值</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#动态属性"><span class="toc-number">1.1.</span> <span class="toc-text">动态属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复制变量值"><span class="toc-number">1.2.</span> <span class="toc-text">复制变量值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#传递参数"><span class="toc-number">1.3.</span> <span class="toc-text">传递参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#检测类型"><span class="toc-number">1.4.</span> <span class="toc-text">检测类型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#执行环境和作用域"><span class="toc-number">2.</span> <span class="toc-text">执行环境和作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#标识符解析"><span class="toc-number">2.1.</span> <span class="toc-text">标识符解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#延长作用域链"><span class="toc-number">2.2.</span> <span class="toc-text">延长作用域链</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#没有块级作用域"><span class="toc-number">2.3.</span> <span class="toc-text">没有块级作用域</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#垃圾回收"><span class="toc-number">3.</span> <span class="toc-text">垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#标记清除"><span class="toc-number">3.1.</span> <span class="toc-text">标记清除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#引用计数"><span class="toc-number">3.2.</span> <span class="toc-text">引用计数</span></a></li></ol></li></ol>
+                </div>
+            
+            <h1 id="基本类型和引用类型的值"><a href="#基本类型和引用类型的值" class="headerlink" title="基本类型和引用类型的值"></a>基本类型和引用类型的值</h1><p>基本类型（Undefined、Null、Number、String、Boolean）是按值访问的。而引用类型的值是保存在内存中对象的引用，所以引用类型的值是按引用访问的。</p>
+<h2 id="动态属性"><a href="#动态属性" class="headerlink" title="动态属性"></a>动态属性</h2><p>引用类型可以动态的添加属性和方法，而基本类型不可以</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">person.name = <span class="string">"tom"</span>;</div><div class="line">alert(person.name);</div><div class="line"></div><div class="line"><span class="keyword">var</span> name = <span class="string">"abcd"</span>;</div><div class="line">name.age = <span class="number">27</span>;</div><div class="line">alert(name.age); <span class="comment">// undefined,只能为引用类型动态添加属性</span></div></pre></td></tr></table></figure>
+<h2 id="复制变量值"><a href="#复制变量值" class="headerlink" title="复制变量值"></a>复制变量值</h2><p>复制基本类型的值，会在变量对象上创建一个新值，两者互不影响；</p>
+<a id="more"></a>
+<p>复制引用类型的值，复制的是指针值，而两个变量的指针指向的是同一个内存地址，即同一个引用对象。所以修改任何一个变量都会影响另一个变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 基本类型复制，拷贝值</span></div><div class="line"><span class="keyword">var</span> num1 = <span class="number">5</span>;</div><div class="line"><span class="keyword">var</span> num2 = num1; <span class="comment">// 两者互不影响</span></div><div class="line"></div><div class="line"><span class="comment">// 引用类型复制，拷贝引用。互相影响</span></div><div class="line"><span class="keyword">var</span> obj1 = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line"><span class="keyword">var</span> obj2 = obj1;</div><div class="line">obj1.name = <span class="string">"jack"</span>;</div><div class="line">alert(obj2.name); <span class="comment">// jack</span></div></pre></td></tr></table></figure>
+<h2 id="传递参数"><a href="#传递参数" class="headerlink" title="传递参数"></a>传递参数</h2><p>ECMAScript中所有函数的参数都是按值传递的。也就是说把函数外部的值复制给函数内部的参数。基本类型复制值的副本，引用类型复制的引用。</p>
+<p>所以向函数内部传递一个引用类型，在函数内修改这个引用类型时会反应到外部的引用对象上。</p>
+<h2 id="检测类型"><a href="#检测类型" class="headerlink" title="检测类型"></a>检测类型</h2><p><code>typeof</code>用于检测变量是不是基本数据类型。如果变量是一个对象或null，此操作会显示为object。假如要检测一个变量是否是Person类型的对象，就无从下手了。此时需要用到ECMAScript提供的<code>instanceof</code>操作符</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">alert(person <span class="keyword">instanceof</span> <span class="built_in">Object</span>);</div><div class="line">alert(colors <span class="keyword">instanceof</span> <span class="built_in">Array</span>)</div><div class="line"><span class="keyword">var</span> obj1 = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">alert(obj1 <span class="keyword">instanceof</span> <span class="built_in">Array</span>);</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="执行环境和作用域"><a href="#执行环境和作用域" class="headerlink" title="执行环境和作用域"></a>执行环境和作用域</h1><p>执行环境定义了变量或函数有权限访问的其它数据，决定了它们各自的行为。每个执行环境都有一个与之关联的变量对象，环境中定义的所有变量和函数都保存在这个对象中。</p>
+<p>全局执行环境</p>
+<p>最外围的执行环境，一般被认为是window对象。因此所有全局变量和函数都是作为window对象的属性和方法创建的，当关闭网页或浏览器此环境中的变量和函数才会销毁。</p>
+<p>私有执行环境</p>
+<p>每个函数都有自己的执行环境。当执行流进入函数时，函数的环境就会被推入一个环境栈中。执行完成之后栈将其环境弹出，把控制权返回给之前执行的环境。退出私有执行环境时，在此环境中创建的变量和函数会被销毁。</p>
+<h2 id="标识符解析"><a href="#标识符解析" class="headerlink" title="标识符解析"></a>标识符解析</h2><p>在执行环境中使用一个变量标识符时会沿着作用域链（从当前环境向后一直到全局环境形成的一条链）查找这个标识符，直到找到它。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> color = <span class="string">"red"</span>;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getColor</span>(<span class="params"></span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> color = <span class="string">"blue"</span>;</div><div class="line">  <span class="keyword">return</span> <span class="built_in">window</span>.color;<span class="comment">// 访问到全局执行环境</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">alert(getColor());</div></pre></td></tr></table></figure>
+<h2 id="延长作用域链"><a href="#延长作用域链" class="headerlink" title="延长作用域链"></a><a href="https://www.jianshu.com/p/a9e3a605f4ab" target="_blank" rel="external">延长作用域链</a></h2><p>当执行流进入下列语句时作用域链会得到加长：</p>
+<ul>
+<li>try-catch语句的catch块</li>
+<li>with语句</li>
+</ul>
+<p>这两个语句都会在作用域链的前端添加一个变量对象。with语句会将指定的对象添加到作用域链中。catch语句会创建一个新的变量对象，其中包含被抛出的错误对象的声明。</p>
+<h2 id="没有块级作用域"><a href="#没有块级作用域" class="headerlink" title="没有块级作用域"></a>没有块级作用域</h2><p>ECMAScript并不像其它高级语言那样存在块级作用域。在块中声明的变量在外部可以访问到，通过以下代码可以看出：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 没有块级作用域</span></div><div class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</div><div class="line">  <span class="keyword">var</span> s = <span class="string">"haha"</span>;</div><div class="line">&#125;</div><div class="line">alert(s);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">&#125;</div><div class="line">alert(i);</div></pre></td></tr></table></figure>
+<hr>
+<h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h1><p>JavaScript和现代的高级语言一样具有自动垃圾回收机制，不需要开发人员手动的去释放内存。回收机制通过有两个策略：</p>
+<h2 id="标记清除"><a href="#标记清除" class="headerlink" title="标记清除"></a>标记清除</h2><p>当变量进入环境，就将其标遍为进入环境。此时变量不可以进行释放。变量离开环境就标记为离开。垃圾回收器在执行时会根据不同的标记执行不同的操作（是否进行清除等）。</p>
+<h2 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h2><p>通过记录变量被引用的次数来决定是否清除。如果引用次数为0说明可以被清除掉。<br>但会存在A引用B，而B又引用A的循环引用问题。导致无法完成清除。所以在不需要使用时最好给对象赋值为null以方法垃圾回收器及时清除。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2017/10/25/前端/JS/JavaScript 高级程序设计/JavaScript变量作用域和内存/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/10/21/前端/JS/JavaScript 高级程序设计/JavaScript基本概念/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    JavaScript基本概念
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/11/03/linux/rabbitmq环境搭建/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">rabbitmq环境搭建</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/common/软件使用/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0df431adcbef76097cf2985527dda3cc7dd99e7a.jpg)" alt="软件使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/工具/">工具</a></p>
+                            <p class="item-title"><a href="/2018/01/08/common/软件使用/" class="title">软件使用</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/前端/HTML/Html标签/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/91ef76c6a7efce1b101f0bd9a551f3deb48f65e9.jpg)" alt="Html标签" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Html/">Html</a></p>
+                            <p class="item-title"><a href="/2018/01/08/前端/HTML/Html标签/" class="title">Html标签</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/java/tool/Http请求利器/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg)" alt="Http请求利器" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a></p>
+                            <p class="item-title"><a href="/2018/01/08/java/tool/Http请求利器/" class="title">Http请求利器</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T01:43:51.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/05/java/tool/Java抓取网页数据/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/b3b7d0a20cf431adfe3942f34236acaf2fdd9814.jpg)" alt="Java抓取网页数据" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a></p>
+                            <p class="item-title"><a href="/2018/01/05/java/tool/Java抓取网页数据/" class="title">Java抓取网页数据</a></p>
+                            <p class="item-date"><time datetime="2018-01-05T01:24:49.000Z" itemprop="datePublished">2018-01-05</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/04/linux/服务器开启Https/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0d338744ebf81a4cd1641bdadd2a6059252da64b.jpg)" alt="服务器开启Https" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/linux/">linux</a></p>
+                            <p class="item-title"><a href="/2018/01/04/linux/服务器开启Https/" class="title">服务器开启Https</a></p>
+                            <p class="item-date"><time datetime="2018-01-04T01:34:28.000Z" itemprop="datePublished">2018-01-04</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/Html/" style="font-size: 10px;">Html</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 14px;">JavaScript</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 18px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
