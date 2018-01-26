@@ -171,7 +171,7 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                60
+                61
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -224,6 +224,187 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-前端/JS/JavaScript 高级程序设计/JavaScript(5)函数表达式" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/11/30/前端/JS/JavaScript 高级程序设计/JavaScript(5)函数表达式/">JavaScript(5)函数表达式</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/11/30/前端/JS/JavaScript 高级程序设计/JavaScript(5)函数表达式/">
+            <time datetime="2017-11-30T07:01:16.000Z" itemprop="datePublished">2017-11-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/前端/">前端</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/JavaScript/">JavaScript</a>, <a class="tag-link" href="/tags/JavaScript高级程序设计/">JavaScript高级程序设计</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="函数定义和声明提升"><a href="#函数定义和声明提升" class="headerlink" title="函数定义和声明提升"></a>函数定义和声明提升</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 调用可以在函数声明前</span></div><div class="line">functionName();</div><div class="line"><span class="comment">// 函数声明</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">functionName</span>(<span class="params">arg0, arg1, arg2</span>)</span>&#123;</div><div class="line">  <span class="comment">// 函数体</span></div><div class="line">&#125;</div><div class="line">alert(functionName.name); <span class="comment">// functionName</span></div></pre></td></tr></table></figure>
+<h2 id="函数表达式"><a href="#函数表达式" class="headerlink" title="函数表达式"></a>函数表达式</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 调用发生错误，必须在函数表达式之后</span></div><div class="line">functionName();</div><div class="line"><span class="keyword">var</span> functionName = <span class="function"><span class="keyword">function</span>(<span class="params">arg0, arg1, arg2</span>)</span>&#123;</div><div class="line">  <span class="comment">// 函数体</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h1><p>递归函数是在一个函数通过名字调用自身的情况下构成的。如阶乘函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">factorial</span>(<span class="params">num</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(num &lt;= <span class="number">1</span>)&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> num * factorial(num - <span class="number">1</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以上函数在下面的代码中调用会出错。由于在factorial函数中引用到了factorial变量，而其值又被设置成为了null。所以anotherFactorial在执行使用到factorial时报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> anotherFactorial = factorial;</div><div class="line">factorial = <span class="literal">null</span>;</div><div class="line">alert(anotherFactorial(<span class="number">4</span>)); <span class="comment">// 出错！</span></div></pre></td></tr></table></figure>
+<p>此时可以使用<code>arguments.callee</code>解决这个问题，<code>arguments.callee</code>是一个指向正在执行函数的指针，因此可以使用它来实现对函数的递归调用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">factorial</span>(<span class="params">num</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(num &lt;= <span class="number">1</span>)&#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> num * <span class="built_in">arguments</span>.callee(num - <span class="number">1</span>); <span class="comment">// 与函数名称解除关联</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>闭包是指有权访问另一个函数作用域中的变量的函数。所以闭包本质上是一个函数。</p>
+<p>创建闭包的常见方式是在一个函数内部创建另一个函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createComparisonFunction</span>(<span class="params">propertyName</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">object1, object2</span>) </span>&#123;</div><div class="line">        <span class="comment">// 访问外部函数中的变量 propertyName</span></div><div class="line">        <span class="keyword">var</span> value1 = object1[propertyName];</div><div class="line">        <span class="keyword">var</span> value2 = object2[propertyName];</div><div class="line">        <span class="keyword">if</span> (value1 &lt; value2) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value1 &gt; value2) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span> (<span class="params">name, age</span>) </span>&#123;</div><div class="line">    <span class="keyword">this</span>.name = name;</div><div class="line">    <span class="keyword">this</span>.age = age;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">"tom"</span>, <span class="number">19</span>);</div><div class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">"jack"</span>, <span class="number">20</span>);</div><div class="line"><span class="keyword">var</span> compare = createComparisonFunction(<span class="string">"age"</span>);</div><div class="line"><span class="built_in">console</span>.log(compare(person1, person2)); <span class="comment">// -1</span></div></pre></td></tr></table></figure>
+<p><code>createComparisonFunction</code>函数返回一个匿名函数，在匿名函数内部调用了外部函数中的变量propertyName，即使这个内部函数被返回了，而且在其它地方被调用了，但它仍然可以访问变量propertyName。</p>
+<p>之所以还能访问这个变量，是因为内部作用域链中包含<code>createComparisonFunction</code>的作用域。</p>
+<p>当某个函数第一次被调用时会创建一个执行环境及相应的作用域链，并把作用域链赋值给一个特殊的内部属性（[[Scope]]）。然后，使用this、arguments和其它命名参数的值来初始化函数的活动对象（activationobject）。但在作用域链中，外部函数的活动对象始终处于第二位，外部函数的外部函数的活动对象处于第三位，……直至作为作用域链终点的全局执行环境 。在函数执行过程中，为读取和写入变量的值，就需要在作用域链中查找变量。看下面的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">compare</span>(<span class="params">value1, value2</span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span> (value1 &lt; value2) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (value1 &gt; value2) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> result = compare(<span class="number">5</span>, <span class="number">10</span>);</div></pre></td></tr></table></figure>
+<p>以上代码先定义compare()函数，然后又在全局作用域中进行调用。当第一次调用时会创建一个包含this、arguments、value1、value2的活动对象。全局执行环境的变量对象（包含this、result和compare）在compare()执行环境的作用域链中处于第二位。</p>
+<p>后台的每个执行环境都有一个表示变量的对象——变量对象。全局环境的变量对象始终存在，而像compare()函数这样的局部环境的变量对象则只在函数的执行过程中存在。在创建compare()函数时会创建一个预先包含全局变量对象的作用域链，这个作用域链被保存在内部的[[Scope]]属性中。当调用compare()函数时，会为函数创建一个执行环境，然后通过复制函数的[[Scope]]属性中的对象构建起执行环境的作用域链。此后，又有一个活动对象（在此作为变量对象使用）被创建并推入执行环境作用域链的前端。</p>
+<p>对于上面这个例子中compare()函数的执行环境而言，其作用域链中包含两个变量对象：本地活动对象和全局对象。显然，作用域链本质上是一个指向变量对象的指针列表，它只引用但不实际包含变量对象。无论什么时候在函数中访问一个变量时，就会从作用域链中搜索具有相应名字的变量。一般来讲，当函数执行完毕后，局部活动对象就会被销毁，内存中仅保存全局作用域（全局执行环境的变量对象）。但是，闭包的情况又有所不同。在另一个函数内部定义的函数会将包含函数（即外部函数）的活动对象添加到它的作用域链中。因此，在createComparisonFunction()函数内部定义的匿名函数的作用域链中，实际上将包含外部函数createComparisonFunction()的活动对象。如果执行以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 创建函数</span></div><div class="line"><span class="keyword">var</span> compare = createComparisonFunction(<span class="string">"name"</span>);</div><div class="line"><span class="comment">// 调用函数</span></div><div class="line"><span class="keyword">var</span> result = compareNames(&#123;<span class="attr">name</span>: <span class="string">"jack"</span>&#125;, &#123;<span class="attr">name</span>: <span class="string">"tom"</span>&#125;);</div><div class="line"><span class="comment">// 解除对匿名函数的引用（以便释放内存）</span></div><div class="line">compare = <span class="literal">null</span>;</div></pre></td></tr></table></figure>
+<p>在匿名函数从createComparisonFunction()中被返回后，它的作用域链被初始化为包含createComparisonFunction()函数的活动对象和全局变量对象。这样，匿名函数就可以访问在createComparisonFunction()中定义的所有变量。更为重要的是createComparisonFunction()函数在执行完毕后其活动对象也不会被销毁，因为匿名函数的作用域链仍然在引用这个活动对象。换包话说，当createComparisonFunction()函数返回后，其执行环境的作用域链会被销毁，但它的活动对象仍然会留在内存中直到匿名函数被销毁后，createComparisonFunction()的活动对象才会被销毁。</p>
+<p>在完成比较后通过将comare设置为nuoo解除该函数的引用，就等于通知垃圾回收例程将其清除。随着匿名函数的作用域链被销毁，其它作用域（除了全局作用域）也都可以安全地销毁了。</p>
+<h2 id="闭包与变量"><a href="#闭包与变量" class="headerlink" title="闭包与变量"></a>闭包与变量</h2><p>作用域链的这种配置机制引出了一个值得注意的副作用，即闭包只能取得包含函数中任何变量的最后一个值。闭包所保存的是整个变量对象，而不是某个特殊的变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">        result[i] = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> i;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> my = createFunctions(); <span class="comment">// 数组内函数保存的i值都是10</span></div></pre></td></tr></table></figure>
+<p>当函数createFunctions()函数返回后，变量i的值都是10，此时每个函数都引用着保存变量i的同一个变量对象，所以在每个函数内部i的值都是10。但是可以通过创建另外一个匿名函数强制让闭包的行为符合预期。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFunctions</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</div><div class="line">        result[i] = <span class="function"><span class="keyword">function</span> (<span class="params">num</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            	<span class="keyword">return</span> num;</div><div class="line">            &#125;;</div><div class="line">        &#125;(i);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> my = createFunctions(); <span class="comment">// 数组内函数保存的i值都是实际的索引值</span></div></pre></td></tr></table></figure>
+<p>在这个版本中没有把闭包直接赋值给数组，而是定义了一个匿名函数，并将立即执行该其名函数的结果赋给数组。这里的匿名函数有一个参数num，也就是最终的函数要返回的值。在调用每个匿名函数时，传入的变量i被复制给参数num。而在匿名函数内部又创建并返回了一个访问num的闭包。这样一来，result数组中的每个函数都有自己num变量的一个副本，因此就可以返回各自不同的数值了。</p>
+<h2 id="关于this对象"><a href="#关于this对象" class="headerlink" title="关于this对象"></a>关于this对象</h2><p>this对象是在运行时基于函数的执行环境绑定的，在全局函数中this等于window，而当函数被作为某个对象的方法调用时，this等于那个对象。不过匿名函数的执行环境具有全局性，因此this对象通常指向window。但有时候由于编写闭包的方式不同，看起来并不明显。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> object = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">"My Object"</span>,</div><div class="line">    <span class="attr">getNameFunc</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.name; <span class="comment">// 匿名函数中 this 代表window</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">alert(object.getNameFunc()()); <span class="comment">// The Window</span></div></pre></td></tr></table></figure>
+<p>getNameFunc()返回一个匿名函数，而匿名函数又返回this.name。所以object.getNameFunc()()会立即执行匿名函数并返回this.name值。</p>
+<p>为什么匿名函数无法取得外部作用域中的this对象呢？</p>
+<p>因为每个函数在被调用时，其活动对象都会自动取得两个特殊变量：this和arguments。内部函数在搜索这两个变量时由于自己内部也有所以只会搜索到自己活动对象中的this和arguments，无法取到外部作用域中的这两个变量。而匿名函数中的this指向window，所以只会取到在window中定义的name值，而取不到外部作用域中的。</p>
+<p>把外部作用域中的this对象保存在一个闭包能够访问一的变量里就可以让闭包访问该对象了。通过以下方式来实现取外部作用域中的name</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> object2 = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">"My Object"</span>,</div><div class="line">    <span class="attr">getNameFunc</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> that.name; <span class="comment">// that 代表 object2</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">alert(object2.getNameFunc()()); <span class="comment">// My Object</span></div></pre></td></tr></table></figure>
+<p>在几种特殊情况下this的值可能会意外的改变。比如下面的例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> name = <span class="string">"The Window"</span>;</div><div class="line"><span class="keyword">var</span> object3 = &#123;</div><div class="line">    <span class="attr">name</span>: <span class="string">"My Object"</span>,</div><div class="line">    <span class="attr">getName</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">alert(object3.getName());<span class="comment">// "My Object"</span></div><div class="line">alert((object3.getName)());<span class="comment">// "My Object"</span></div><div class="line">alert((object3.getName = object3.getName)());<span class="comment">// "The Window",object3.getName是一个函数this值得不到维持</span></div></pre></td></tr></table></figure>
+<p>执行object3.getName()时返回”My Object”因为this.name就是object3.name。第二次调用时虽然加了括号，但是this的值得到了维持指向的还是object3（因为object3.getName和(object3.getName)的定义是相同的）。</p>
+<p>第三次调用时先执行了一条赋值语句，然后再调用赋值后的结果。因为赋值表达式的值是函数本身，所以this值不能得到维持，指向了window，所以返回”The Window”</p>
+<h1 id="模仿块级作用域"><a href="#模仿块级作用域" class="headerlink" title="模仿块级作用域"></a>模仿块级作用域</h1><p>JavaScript中没有块线作用域的概念，这意味着在块语句中定义的变量，实际上是在包含函数中而非语句中创建的。定义之后在函数内部就可以访问这个变量，即使重新声明（不带初始化）也不会改变它的值</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outputNumbers</span>(<span class="params">count</span>) </span>&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">        alert(i);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">var</span> i; <span class="comment">// 重新声明，不改变它的值</span></div><div class="line">    alert(i); <span class="comment">// 可以访问</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>匿名函数可以用来模仿块级作用域并避免这个问题。用作块级作用域的匿名函数语法为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="comment">// 这里是块级作用域</span></div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>以上代码定义并立即调用了一个匿名函数。将函数声明包含在一对圆括号中，表示它实际上是一个函数表达式。而紧随其后的另一对圆括号会立即调用这个函数。</p>
+<p>当临时需要一些变量时就可以使用块级作用域。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">outputNumbers</span>(<span class="params">count</span>) </span>&#123;</div><div class="line">    (<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">            alert(i);</div><div class="line">        &#125;</div><div class="line">    &#125;)();</div><div class="line"></div><div class="line">    alert(i); <span class="comment">// 报错，无法访问到i</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>变量i只能在块级作用域内部使用，使用后即被销毁。在私有作用域中能够访问变量count是因为这个其名函数是一个闭包，它能够访问包含作用域中的所有变量。这种技术经常在全局作用域中被用在函数外部，从而限制向全局作用域中添加过多的变量和函数，因为过多的全局变量和函数很容易导致命名冲突。通过创建私有作用域，每个开发人员既可以使用自己的变量，又不必担心搞乱全局作用域。如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> now = <span class="keyword">new</span> <span class="built_in">Date</span>();</div><div class="line">    <span class="keyword">if</span> (now.getMonth() == <span class="number">0</span> &amp;&amp; now.getDate() == <span class="number">1</span>) &#123;</div><div class="line">        alert(<span class="string">"Happy new year!"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>变量now是匿名函数中的变量，不需要在全局作用域中创建它，而且全局作用域中也无法访问到它。并且这种作用可以减少闭包占用的内存问题，因为没有指向匿名函数的引用。只要函数执行完毕就可以立即销毁其作用域链。</p>
+<h1 id="私有变量"><a href="#私有变量" class="headerlink" title="私有变量"></a>私有变量</h1><p>严格来讲JavaScript中没有私有成员的概念，所有对象属性都是仅有的。不过有一个私有变量的概念。任何在函数中定义的变量都可以认为是私有变量，因为不能在函数的外部访问这些变量。私有变量包括函数的参数、局部变量和在函数内部定义的其他函数。如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">num1, num2</span>) </span>&#123;</div><div class="line">  <span class="keyword">var</span> sum = num1 + num2;</div><div class="line">  <span class="keyword">return</span> sum;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个函数内部，有3个私有变量：num1、num2和sum。在函数内部可以访问它们，外部无法访问到。</p>
+<p>如果在这个函数内部创建一个闭包，那么闭包通过自己的作用域链也可以访问这些问题。而利用这一点，就可以创建用于访问私有变量的公有方法。我们把有权访问私有变量和私有函数的公有方法称为特权方法。有两种在对象上创建特权方法的方式。</p>
+<p>第一种，在构造函数中定义</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyObject</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 特权方法</span></div><div class="line">    <span class="keyword">this</span>.publicMethod = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        privateVariable++;</div><div class="line">        <span class="keyword">return</span> privateFunction();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> MyObject();</div><div class="line">alert(a.publicMethod());</div></pre></td></tr></table></figure>
+<p>能够在构造函数中定义特权方法是因为特权方法作为闭包有权访问在构造函数中定义的所有变量和函数。对这个例子而言，变量privateVariable和函数privateFunction()只能通过特权方法publicMethod()来访问。通过此方式可以隐藏那些不应该被直接修改的数据 。</p>
+<p>构造函数模式中定义的好入是每个实例中的私有变量都是互不相同的。缺点是只能使用构造函数模式来达到目的，每个实例都会创建同样的一组新方法，而使用静态私有变量来实现特权方法就可以避免这个问题</p>
+<h2 id="静态私有变量"><a href="#静态私有变量" class="headerlink" title="静态私有变量"></a>静态私有变量</h2><p>通过在私有作用域中定义私有变量或函数，同样也可以创建特权方法。代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 方法内为私有作用域</span></div><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// 私有变量和私有函数</span></div><div class="line">    <span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 构造函数</span></div><div class="line">    MyObject = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">// 公有/特权方法</span></div><div class="line">    MyObject.prototype.publicMethod = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        privateVariable++;</div><div class="line">        <span class="keyword">return</span> privateFunction();</div><div class="line">    &#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>这个模式创建了一个私有作用域，并且在其中封装了一个构造函数及相应的方法。特权方法是在原型上定义的，这体现了典型的原型模式，区别于构造函数模式的好处原型会被所有的实例所引用，方法不会跟随实例进行创建。</p>
+<p>另外在定义构造函数时不使用函数声明而使用函数表达式是因为函数声明只能创建局部函数，如果是局部函数的话外部无法访问到。出于同样的原因MyObject在声明时也没有使用var关键字，这样的话MyObject就会创建成一个全局变量，能够在私有作用域之外被访问到。</p>
+<p>与构造函数中定义特权方法的区别有：</p>
+<ul>
+<li>私有变量和函数是由实例共享的，改变其中一个实例的值会立即反映到其它实例上</li>
+<li>特权方法定义在原型上，因为所有的实例都使用同一个函数。特权方法作为一个闭包，总着保存着对包含作用域的引用</li>
+</ul>
+<p>示例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> name = <span class="string">""</span>;</div><div class="line">    Person = <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</div><div class="line">        name = value;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    Person.prototype.getName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    Person.prototype.setName = <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</div><div class="line">        name = value;</div><div class="line">    &#125;</div><div class="line">&#125;)();</div><div class="line"></div><div class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> Person(<span class="string">"a"</span>);</div><div class="line">alert(p1.getName());</div><div class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> Person(<span class="string">"b"</span>);</div><div class="line"></div><div class="line">p1.setName(<span class="string">"c"</span>); <span class="comment">// 影响所有的实例</span></div><div class="line">alert(p1.getName()); <span class="comment">// c</span></div><div class="line">alert(p2.getName()); <span class="comment">// c</span></div></pre></td></tr></table></figure>
+<p>在上面的例子中Person构造函数与getName()和setName()方法一样，都有权访问私有变量name。在这种模式下变量name就变成了一个静态的由所有实例共享的属性。也就是说在一个实例上调用setName()会影响所有实例。</p>
+<p>以这种方式创建静态私有变量会因为使用原型而增进代码复用，但每个实例都没有自己的私有变量。</p>
+<h2 id="模块模式（单例模式）"><a href="#模块模式（单例模式）" class="headerlink" title="模块模式（单例模式）"></a>模块模式（单例模式）</h2><p>模块是为单例创建私有变量和特权方法。所谓单例指的是只有一个实例对象。通常情况下JavaScript是以对象字面量的方式来创建单例对象的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> singleton = &#123;</div><div class="line">  <span class="attr">name</span>: value,</div><div class="line">  <span class="attr">method</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    </div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>模块模式通过为单例添加私有变量和特权方法能够使其得到增强，语法形式为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> singleton = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="comment">// 私有变量和函数</span></div><div class="line">  <span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 特权/公有方法和属性</span></div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">publicProperty</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">publicMethod</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      privateVariable++;</div><div class="line">      <span class="keyword">return</span> privateFunction();</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;();</div><div class="line">alert(singleton.publicProperty);</div><div class="line">alert(singleton.publicMethod());</div></pre></td></tr></table></figure>
+<p>模块模式使用了一个返回对象的匿名函数。在这个匿名函数内部，首先定义了私有变量和函数。然后将一个对象字面量作为函数的值返回。返回的对象字面量中只包含可以公开的属性和方法。由于这个对象是在匿名函数内部定义的因此它的仅有方法有权访问私有变量和函数（因为闭包）。从本质上来讲，这个对象字段量定义的是单例的公共接口。这种模式在需要对单例进行某些初始化，同时又需要维护其私有变量时是非常有用的。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> application = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// 私有变量和函数</span></div><div class="line">    <span class="keyword">var</span> components = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">    <span class="comment">// 初始化，传进去一些东西。</span></div><div class="line">    components.push(<span class="keyword">new</span> BaseComponent());</div><div class="line">    <span class="comment">// 公共</span></div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">        <span class="attr">getComponentCount</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> components.length;</div><div class="line">        &#125;,</div><div class="line">        <span class="attr">registerComponent</span>: <span class="function"><span class="keyword">function</span> (<span class="params">component</span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> component == <span class="string">"object"</span>) &#123;</div><div class="line">                components.push(component);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;();</div></pre></td></tr></table></figure>
+<p>在Web应用程序中，经常需要使用一个单例来管理应用程序级的信息。这个简单的例子创建了一个用于管理组件的application对象。在创建这个对象的过程中，首先声明了一个私有的components数组，并向数组中添加了一个BaseComponent的新实例。而返回对象的getComponentCount()和registerComponent()方法都是有权访问数组components的特权方法。</p>
+<p>简言之，如果必须创建一个对象并以某些数据对其进行初始化，同时还要公开一些能够访问这些私有数据的方法，那么就可以使用模块模式。</p>
+<h2 id="增强的模块模式"><a href="#增强的模块模式" class="headerlink" title="增强的模块模式"></a>增强的模块模式</h2><p>有人进一步改进了模块模式，即在返回对象之前加入对其增加的代码。这种增强的模块模式适合那些单例必须是某种类型的实例，同时还必须添加某些属性或方法对其加以增强的情况。比如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> CustomerType = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">&#125;;</div><div class="line"><span class="comment">// 为单例创建私有变量和特权方法</span></div><div class="line"><span class="keyword">var</span> singleton = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// 私有变量和函数</span></div><div class="line">    <span class="keyword">var</span> privateVariable = <span class="number">10</span>;</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">privateFunction</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 创建对象，指定的类型</span></div><div class="line">    <span class="keyword">var</span> object = <span class="keyword">new</span> CustomerType();</div><div class="line">    <span class="comment">// 特权/公有方法和属性</span></div><div class="line">    object.publicProperty = <span class="literal">true</span>;</div><div class="line">    object.publicMethod = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        privateVariable++;</div><div class="line">        <span class="keyword">return</span> privateFunction();</div><div class="line">    &#125;;</div><div class="line">    <span class="comment">// 返回这个对象</span></div><div class="line">    <span class="keyword">return</span> object;</div><div class="line">&#125;();</div><div class="line">alert(singleton.publicProperty);</div><div class="line">alert(singleton.publicMethod());</div></pre></td></tr></table></figure>
+<p>如果前面演示模块模式的例子中的application对象必须是BaseComponent的实例，那么就可以使用以下代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> BaseComponent = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">var</span> application = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// 私有变量和函数</span></div><div class="line">    <span class="keyword">var</span> components = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">    <span class="comment">// 初始化</span></div><div class="line">    components.push(<span class="keyword">new</span> BaseComponent());</div><div class="line">    <span class="comment">// 创建application的一个局部副本</span></div><div class="line">    <span class="keyword">var</span> app = <span class="keyword">new</span> BaseComponent();</div><div class="line">    <span class="comment">// 公共接口</span></div><div class="line">    app.getComponentCount = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> components.length;</div><div class="line">    &#125;;</div><div class="line">    app.registerComponent = <span class="function"><span class="keyword">function</span> (<span class="params">component</span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">typeof</span> component == <span class="string">"object"</span>) &#123;</div><div class="line">            components.push(component);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">return</span> app;</div><div class="line">&#125;();</div><div class="line"></div><div class="line">alert(application.getComponentCount()); <span class="comment">// 1</span></div><div class="line">application.registerComponent(<span class="keyword">new</span> BaseComponent());</div><div class="line">alert(application.getComponentCount()); <span class="comment">//2</span></div></pre></td></tr></table></figure>
+<p>和模块械最主要的不同之处在于命名变量app的创建过程，因为它必须是BaseComponent的实例。这个实例实际上是application对象的局部变量。此后又为app对象添加了能够访问私有变量的公共方法。最后一步是返回app对象，结果仍然是将它赋值给全局变量application。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2017/11/30/前端/JS/JavaScript 高级程序设计/JavaScript(5)函数表达式/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-前端/JS/JavaScript 高级程序设计/JavaScript(4)面向对象" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1600,108 +1781,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="post-hexo配置" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/04/12/hexo配置/">hexo配置</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/04/12/hexo配置/">
-            <time datetime="2017-04-12T06:07:38.000Z" itemprop="datePublished">2017-04-12</time>
-        </a>
-    </div>
-
-
-                        
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/hexo/">hexo</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h1 id="Hexo"><a href="#Hexo" class="headerlink" title="Hexo"></a>Hexo</h1><h2 id="发布并部署"><a href="#发布并部署" class="headerlink" title="发布并部署"></a>发布并部署</h2><ul>
-<li>使用<code>hexo d -g</code>命令</li>
-</ul>
-<h2 id="配置标签-tags"><a href="#配置标签-tags" class="headerlink" title="配置标签(tags)"></a>配置标签(tags)</h2><p>默认情况下标签而是没有的，需要手动去创建启用。</p></p>
-            <p class="article-more-link">
-                <a href="/2017/04/12/hexo配置/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://blog.xxyxpy.pub/2017/04/12/hexo配置/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/5/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+        <a class="extend prev" rel="prev" href="/page/5/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">下一页 &raquo;</a>
     </nav>
 </section>
             
