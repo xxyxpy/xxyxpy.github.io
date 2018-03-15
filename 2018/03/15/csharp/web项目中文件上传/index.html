@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>web项目中文件上传 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="文件上传在web项目上经常会有文件上传的需求，本质上是由前端页面发起的post请求，其中 content-type 必须为 multipart/form-data。浏览器将文件信息以流的形式提交到后端服务器。 在.NET中上传的文件被包装到了request的Files属性中，本质上是一个HttpFileCollection。从名称上可以看出来是一个文件的集合，所以同时上传多个图片时都会存在这个集合">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web项目中文件上传">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/03/15/csharp/web项目中文件上传/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="文件上传在web项目上经常会有文件上传的需求，本质上是由前端页面发起的post请求，其中 content-type 必须为 multipart/form-data。浏览器将文件信息以流的形式提交到后端服务器。 在.NET中上传的文件被包装到了request的Files属性中，本质上是一个HttpFileCollection。从名称上可以看出来是一个文件的集合，所以同时上传多个图片时都会存在这个集合">
+<meta property="og:updated_time" content="2018-03-15T08:57:45.521Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="web项目中文件上传">
+<meta name="twitter:description" content="文件上传在web项目上经常会有文件上传的需求，本质上是由前端页面发起的post请求，其中 content-type 必须为 multipart/form-data。浏览器将文件信息以流的形式提交到后端服务器。 在.NET中上传的文件被包装到了request的Files属性中，本质上是一个HttpFileCollection。从名称上可以看出来是一个文件的集合，所以同时上传多个图片时都会存在这个集合">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                66
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                48
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-csharp/web项目中文件上传" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            web项目中文件上传
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/03/15/csharp/web项目中文件上传/">
+            <time datetime="2018-03-15T08:49:05.000Z" itemprop="datePublished">2018-03-15</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/c/">c#</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/web/">web</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#文件上传"><span class="toc-number">1.</span> <span class="toc-text">文件上传</span></a></li></ol>
+                </div>
+            
+            <h3 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h3><p>在web项目上经常会有文件上传的需求，本质上是由前端页面发起的post请求，其中 <code>content-type</code> 必须为 <code>multipart/form-data</code>。浏览器将文件信息以流的形式提交到后端服务器。</p>
+<p>在.NET中上传的文件被包装到了request的Files属性中，本质上是一个HttpFileCollection。从名称上可以看出来是一个文件的集合，所以同时上传多个图片时都会存在这个集合中。集合中的元素是HttpPostedFile类型，可根据它来获取文件名及对应的流。</p>
+<a id="more"></a>
+<p>简单的ashx中的文件处理</p>
+<p>public class Handler1 : IHttpHandler<br>    {</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">    public void ProcessRequest(HttpContext context)</div><div class="line">    &#123;</div><div class="line">        String uid = context.Request[&quot;uid&quot;];</div><div class="line">        // file</div><div class="line">        HttpFileCollection files = context.Request.Files;</div><div class="line">        if (files.Count &gt; 0)</div><div class="line">        &#123;</div><div class="line">            // first </div><div class="line">            HttpPostedFile file = files[0];</div><div class="line">            String fileName = file.FileName;</div><div class="line">            //file.SaveAs(context.Server.MapPath(&quot;.&quot;) + &quot;/&quot; + fileName);</div><div class="line">            using (FileStream newFile = File.Create(context.Server.MapPath(&quot;.&quot;) + &quot;/&quot; + fileName))</div><div class="line">            &#123;</div><div class="line">                byte[] buffer = new byte[1024];</div><div class="line">                int len;</div><div class="line">                while ((len = file.InputStream.Read(buffer, 0, buffer.Length)) &gt; 0)</div><div class="line">                &#123;</div><div class="line">                    newFile.Write(buffer, 0, len);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        HttpContext.Current.Response.ContentType = &quot;text/plain&quot;;</div><div class="line">        HttpContext.Current.Response.ContentEncoding = Encoding.UTF8;</div><div class="line">        HttpContext.Current.Response.Clear();</div><div class="line">        HttpContext.Current.Response.Write(&quot;hello world&quot;);</div><div class="line">        HttpContext.Current.ApplicationInstance.CompleteRequest();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public bool IsReusable</div><div class="line">    &#123;</div><div class="line">        get</div><div class="line">        &#123;</div><div class="line">            return false;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/03/15/csharp/web项目中文件上传/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/01/23/前端/CSS/CSS基础/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    CSS基础
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/03/15/csharp/web项目中文件上传/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/c/">c#</a></p>
+                            <p class="item-title"><a href="/2018/03/15/csharp/web项目中文件上传/" class="title">web项目中文件上传</a></p>
+                            <p class="item-date"><time datetime="2018-03-15T08:49:05.000Z" itemprop="datePublished">2018-03-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/23/前端/CSS/CSS基础/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/a044ad345982b2b713b5ad7d3aadcbef76099b65.jpg)" alt="CSS基础" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2018/01/23/前端/CSS/CSS基础/" class="title">CSS基础</a></p>
+                            <p class="item-date"><time datetime="2018-01-22T16:00:00.000Z" itemprop="datePublished">2018-01-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/common/软件使用/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0df431adcbef76097cf2985527dda3cc7dd99e7a.jpg)" alt="软件使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/工具/">工具</a></p>
+                            <p class="item-title"><a href="/2018/01/08/common/软件使用/" class="title">软件使用</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/前端/HTML/Html标签/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/91ef76c6a7efce1b101f0bd9a551f3deb48f65e9.jpg)" alt="Html标签" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2018/01/08/前端/HTML/Html标签/" class="title">Html标签</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/java/tool/Http请求利器/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg)" alt="Http请求利器" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a></p>
+                            <p class="item-title"><a href="/2018/01/08/java/tool/Http请求利器/" class="title">Http请求利器</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T01:43:51.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 10px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
