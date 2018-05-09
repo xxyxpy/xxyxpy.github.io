@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>统计连续N天记录 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在一般的论坛网站中一般会有显示连续N天登录用户的功能。解决方案一般有两种：一种是通过Job去跑截止前一天所有的用户的登录信息，另一个是直接用sql去统计数据。这里主要讨论用sql去查询的方式。 需求：统计所有用户连续登录的最大次数 思路：大概的思路是先将记录按用户id进行排序，然后用日期-排序后的行号得到的结果相等的记录就是连续登录，然后统计结果相同的行数，最后取得统计的行数的最大值。">
+<meta name="keywords" content="sqlserver,套路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计连续N天记录">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/04/07/database/统计连续N天记录/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="在一般的论坛网站中一般会有显示连续N天登录用户的功能。解决方案一般有两种：一种是通过Job去跑截止前一天所有的用户的登录信息，另一个是直接用sql去统计数据。这里主要讨论用sql去查询的方式。 需求：统计所有用户连续登录的最大次数 思路：大概的思路是先将记录按用户id进行排序，然后用日期-排序后的行号得到的结果相等的记录就是连续登录，然后统计结果相同的行数，最后取得统计的行数的最大值。">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2018-05-09T08:00:24.333Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="统计连续N天记录">
+<meta name="twitter:description" content="在一般的论坛网站中一般会有显示连续N天登录用户的功能。解决方案一般有两种：一种是通过Job去跑截止前一天所有的用户的登录信息，另一个是直接用sql去统计数据。这里主要讨论用sql去查询的方式。 需求：统计所有用户连续登录的最大次数 思路：大概的思路是先将记录按用户id进行排序，然后用日期-排序后的行号得到的结果相等的记录就是连续登录，然后统计结果相同的行数，最后取得统计的行数的最大值。">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                67
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                48
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-database/统计连续N天记录" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            统计连续N天记录
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/04/07/database/统计连续N天记录/">
+            <time datetime="2018-04-07T07:01:16.000Z" itemprop="datePublished">2018-04-07</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/database/">database</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/sqlserver/">sqlserver</a>, <a class="tag-link" href="/tags/套路/">套路</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-分组排序取得行号"><span class="toc-number">1.</span> <span class="toc-text">1. 分组排序取得行号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-时间减去行号得到连续值天相同的记录"><span class="toc-number">2.</span> <span class="toc-text">2. 时间减去行号得到连续值天相同的记录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-统计每个用户连续登录的天数"><span class="toc-number">3.</span> <span class="toc-text">3. 统计每个用户连续登录的天数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-再查每个用户连续登录天数的最大值"><span class="toc-number">4.</span> <span class="toc-text">4. 再查每个用户连续登录天数的最大值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#效率问题"><span class="toc-number">5.</span> <span class="toc-text">效率问题</span></a></li></ol>
+                </div>
+            
+            <p>在一般的论坛网站中一般会有显示连续N天登录用户的功能。解决方案一般有两种：一种是通过Job去跑截止前一天所有的用户的登录信息，另一个是直接用sql去统计数据。这里主要讨论用sql去查询的方式。</p>
+<p>需求：统计所有用户连续登录的最大次数</p>
+<p>思路：大概的思路是先将记录按用户id进行排序，然后用日期-排序后的行号得到的结果相等的记录就是连续登录，然后统计结果相同的行数，最后取得统计的行数的最大值。</p>
+<a id="more"></a>
+<h5 id="1-分组排序取得行号"><a href="#1-分组排序取得行号" class="headerlink" title="1. 分组排序取得行号"></a>1. 分组排序取得行号</h5><p>在oracle中直接就有RowNum机制，无奈SqlServer中没有，需要用分区函数来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-- clocktotalid 为用户唯一标识</div><div class="line">-- time 为登录时间</div><div class="line">select ROW_NUMBER() OVER(PARTITION BY clocktotalid ORDER BY time) ROW, clocktotalid,</div><div class="line"> time dd from  [Clock] with(nolock) where clockstatus = 1</div></pre></td></tr></table></figure>
+<h5 id="2-时间减去行号得到连续值天相同的记录"><a href="#2-时间减去行号得到连续值天相同的记录" class="headerlink" title="2. 时间减去行号得到连续值天相同的记录"></a>2. 时间减去行号得到连续值天相同的记录</h5><p>这里面的套路为比如登录记录为 4.1 4.2 4.4 4.5 4.6 4.7，排序号为1~6.那么相减之后的结果为：</p>
+<table>
+<thead>
+<tr>
+<th>登录日期</th>
+<th>排序号</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2018-04-01</td>
+<td>1</td>
+<td>2018-03-31</td>
+</tr>
+<tr>
+<td>2018-04-02</td>
+<td>2</td>
+<td>2018-03-31</td>
+</tr>
+<tr>
+<td>2018-04-04</td>
+<td>3</td>
+<td>2018-04-01</td>
+</tr>
+<tr>
+<td>2018-04-05</td>
+<td>4</td>
+<td>2018-04-01</td>
+</tr>
+<tr>
+<td>2018-04-06</td>
+<td>5</td>
+<td>2018-04-01</td>
+</tr>
+<tr>
+<td>2018-04-07</td>
+<td>6</td>
+<td>2018-04-01</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-- 相减后的值 d 相同的话就是连续的</div><div class="line">select u.*,CONVERT(VARCHAR(100), DATEADD(day,-row,u.dd), 112) d from</div><div class="line">(select ROW_NUMBER() OVER(PARTITION BY clocktotalid ORDER BY time) ROW, clocktotalid,</div><div class="line"> time dd from  [Clock] with(nolock) where clockstatus = 1) u</div></pre></td></tr></table></figure>
+<h5 id="3-统计每个用户连续登录的天数"><a href="#3-统计每个用户连续登录的天数" class="headerlink" title="3. 统计每个用户连续登录的天数"></a>3. 统计每个用户连续登录的天数</h5><p>如上面的表格，此用户统计的连续登录天数为2天和4天</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">select p.clocktotalid,p.d, count(1) c from (</div><div class="line">select u.*,CONVERT(VARCHAR(100), DATEADD(day,-row,u.dd), 112) d from</div><div class="line">(select ROW_NUMBER() OVER(PARTITION BY clocktotalid ORDER BY time) ROW, clocktotalid,</div><div class="line"> time dd from  [Clock] with(nolock) where clockstatus = 1) u) p</div><div class="line">group by p.clocktotalid,p.d</div></pre></td></tr></table></figure>
+<h5 id="4-再查每个用户连续登录天数的最大值"><a href="#4-再查每个用户连续登录天数的最大值" class="headerlink" title="4. 再查每个用户连续登录天数的最大值"></a>4. 再查每个用户连续登录天数的最大值</h5><p>这个就简单了，直接用max函数即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">select clocktotalid,max(c) cc from</div><div class="line">(select p.clocktotalid,p.d, count(1) c from (</div><div class="line">select u.*,CONVERT(VARCHAR(100), DATEADD(day,-row,u.dd), 112) d from</div><div class="line">(select ROW_NUMBER() OVER(PARTITION BY clocktotalid ORDER BY time) ROW, clocktotalid,</div><div class="line"> time dd from  [Clock] with(nolock) where clockstatus = 1) u) p</div><div class="line">group by p.clocktotalid,p.d</div><div class="line">) q</div><div class="line">group by clocktotalid</div><div class="line">order by cc desc</div></pre></td></tr></table></figure>
+<h5 id="效率问题"><a href="#效率问题" class="headerlink" title="效率问题"></a>效率问题</h5><p>目前来看在记录为8W条左右时查询一次耗时约200ms，如果数据量过大的话估计会不乐观。从需求上来看对实时性的要求并不是很高，所以效率低下时可以考虑缓存查询结果，一段时间刷新一次</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/04/07/database/统计连续N天记录/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/03/15/csharp/web项目中文件上传/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    web项目中文件上传
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/04/07/database/统计连续N天记录/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="统计连续N天记录" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/database/">database</a></p>
+                            <p class="item-title"><a href="/2018/04/07/database/统计连续N天记录/" class="title">统计连续N天记录</a></p>
+                            <p class="item-date"><time datetime="2018-04-07T07:01:16.000Z" itemprop="datePublished">2018-04-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/03/15/csharp/web项目中文件上传/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/a044ad345982b2b713b5ad7d3aadcbef76099b65.jpg)" alt="web项目中文件上传" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/c/">c#</a></p>
+                            <p class="item-title"><a href="/2018/03/15/csharp/web项目中文件上传/" class="title">web项目中文件上传</a></p>
+                            <p class="item-date"><time datetime="2018-03-15T08:49:05.000Z" itemprop="datePublished">2018-03-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/23/前端/CSS/CSS基础/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/a044ad345982b2b713b5ad7d3aadcbef76099b65.jpg)" alt="CSS基础" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2018/01/23/前端/CSS/CSS基础/" class="title">CSS基础</a></p>
+                            <p class="item-date"><time datetime="2018-01-22T16:00:00.000Z" itemprop="datePublished">2018-01-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/common/软件使用/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/0df431adcbef76097cf2985527dda3cc7dd99e7a.jpg)" alt="软件使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/工具/">工具</a></p>
+                            <p class="item-title"><a href="/2018/01/08/common/软件使用/" class="title">软件使用</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/01/08/前端/HTML/Html标签/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/91ef76c6a7efce1b101f0bd9a551f3deb48f65e9.jpg)" alt="Html标签" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/前端/">前端</a></p>
+                            <p class="item-title"><a href="/2018/01/08/前端/HTML/Html标签/" class="title">Html标签</a></p>
+                            <p class="item-date"><time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
