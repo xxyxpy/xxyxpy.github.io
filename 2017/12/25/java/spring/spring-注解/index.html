@@ -5,17 +5,17 @@
     
     <title>spring-注解 | code dog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="@Profile 指定环境名称，用于实现不同的环境的切换。比如数据库连接 @ActiveProfiles 声明活动的Profile 1234567891011121314151617181920212223242526272829303132333435363738public class TestBean &amp;#123;    private String content;    public T">
+    <meta name="description" content="@Profile指定环境名称，用于实现不同的环境的切换。比如数据库连接 @ActiveProfiles声明活动的Profile 1234567891011121314151617181920212223242526272829303132333435363738public class TestBean &amp;#123;    private String content;    public Tes">
 <meta name="keywords" content="annotaion">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring-注解">
 <meta property="og:url" content="http://blog.xxyxpy.pub/2017/12/25/java/spring/spring-注解/index.html">
 <meta property="og:site_name" content="code dog">
-<meta property="og:description" content="@Profile 指定环境名称，用于实现不同的环境的切换。比如数据库连接 @ActiveProfiles 声明活动的Profile 1234567891011121314151617181920212223242526272829303132333435363738public class TestBean &amp;#123;    private String content;    public T">
-<meta property="og:updated_time" content="2017-12-25T07:51:09.303Z">
+<meta property="og:description" content="@Profile指定环境名称，用于实现不同的环境的切换。比如数据库连接 @ActiveProfiles声明活动的Profile 1234567891011121314151617181920212223242526272829303132333435363738public class TestBean &amp;#123;    private String content;    public Tes">
+<meta property="og:updated_time" content="2018-07-10T02:25:21.023Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="spring-注解">
-<meta name="twitter:description" content="@Profile 指定环境名称，用于实现不同的环境的切换。比如数据库连接 @ActiveProfiles 声明活动的Profile 1234567891011121314151617181920212223242526272829303132333435363738public class TestBean &amp;#123;    private String content;    public T">
+<meta name="twitter:description" content="@Profile指定环境名称，用于实现不同的环境的切换。比如数据库连接 @ActiveProfiles声明活动的Profile 1234567891011121314151617181920212223242526272829303132333435363738public class TestBean &amp;#123;    private String content;    public Tes">
     
 
     
@@ -173,11 +173,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                71
+                72
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                52
+                53
                 <span>标签</span>
             </div>
         </div>
@@ -268,39 +268,64 @@ var _hmt = _hmt || [];
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>@Profile</p>
-<p>指定环境名称，用于实现不同的环境的切换。比如数据库连接</p>
-<p>@ActiveProfiles</p>
-<p>声明活动的Profile</p>
+            <h4 id="Profile"><a href="#Profile" class="headerlink" title="@Profile"></a>@Profile</h4><p>指定环境名称，用于实现不同的环境的切换。比如数据库连接</p>
+<h4 id="ActiveProfiles"><a href="#ActiveProfiles" class="headerlink" title="@ActiveProfiles"></a>@ActiveProfiles</h4><p>声明活动的Profile</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestBean</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String content;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TestBean</span><span class="params">(String content)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.content = content;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getContent</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> content;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setContent</span><span class="params">(String content)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.content = content;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 配置</span></div><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestConfig</span> </span>&#123;</div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="meta">@Profile</span>(<span class="string">"dev"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> TestBean <span class="title">devTestBean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TestBean(<span class="string">"dev profile"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="meta">@Profile</span>(<span class="string">"prod"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> TestBean <span class="title">prodTestBean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TestBean(<span class="string">"prod profile"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 测试</span></div><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="meta">@SpringBootTest</span></div><div class="line"><span class="meta">@ActiveProfiles</span>(<span class="string">"dev"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProfileTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> TestBean testBean;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(testBean.getContent());<span class="comment">// 打印 dev profile</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>@EnableWebMvc 开启SpringMvc的支持</p>
+<h4 id="EnableWebMvc"><a href="#EnableWebMvc" class="headerlink" title="@EnableWebMvc"></a>@EnableWebMvc</h4><p>开启SpringMvc的支持</p>
 <a id="more"></a>
-<p>@ControllerAdvice 将对于控制器的全局配置放置在同一个位置，组合了@Component注解</p>
-<p>@ExceptionHandler 用于全局处理控制器里的异常</p>
-<p>@InitBinder 用来设置WeDataBinder，WeDataBinder用来自动绑定前台请求参数到Model中</p>
-<p>@ModelAttribute 绑定键值对到Model里</p>
-<p>配置</p>
-<blockquote>
-<p>@Value 加载单个配置项</p>
-<p>@PropertySource 加载配置文件。不支持加载yaml文件,必须为property</p>
-<p>@ImportResource 导入外部的xml配置</p>
-<p>@ConfigurationProperties将配置和一个Bean的属性进行关联,从而实现类型安全的配置</p>
-</blockquote>
-<p>条件注解</p>
-<blockquote>
-<p>@ConditionalOnBean 当容器中有指定的Bean的条件下</p>
-<p>@ConditionalOnClass 当类路径下有指定的类的条件下</p>
-<p>@ConditionalOnExpression 基于SpEL表达式作为判断条件</p>
-<p>@ConditionalOnJava 基于jvm版本作为判断条件</p>
-<p>@ConditionalOnJndi 在Jndi存在的条件下查找指定的位置</p>
-<p>@ConditionalOnMissingBean 当容器没有指定Bean的情况下</p>
-<p>@ConditionalOnMissingClass 当类路径下没有指定类的条件下</p>
-<p>@ConditionalOnNotWebApplication 当前项目不是web项目的条件下</p>
-<p>@ConditionalOnProperty 指定的属性是否有指定的值</p>
-<p>@ConditionalOnResource 类路径是否有指定的值</p>
-<p>@ConditionalOnSingleCandidate 当指定Bean在容器中只有一个，或者虽然有多个但是指定首选的Bean</p>
-<p>@ConditionalOnWebApplication 当前项目是web项目的条件下</p>
-</blockquote>
+<h4 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h4><p>将对于控制器的全局配置放置在同一个位置，组合了@Component注解</p>
+<h4 id="ExceptionHandler"><a href="#ExceptionHandler" class="headerlink" title="@ExceptionHandler"></a>@ExceptionHandler</h4><p>用于全局处理控制器里的异常</p>
+<h4 id="InitBinder"><a href="#InitBinder" class="headerlink" title="@InitBinder"></a>@InitBinder</h4><p>用来设置WeDataBinder，WeDataBinder用来自动绑定前台请求参数到Model中</p>
+<h4 id="ModelAttribute"><a href="#ModelAttribute" class="headerlink" title="@ModelAttribute"></a>@ModelAttribute</h4><p>绑定键值对到Model里</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="Value"><a href="#Value" class="headerlink" title="@Value"></a>@Value</h4><p>加载单个配置项</p>
+<h4 id="PropertySource"><a href="#PropertySource" class="headerlink" title="@PropertySource"></a>@PropertySource</h4><p>加载配置文件。不支持加载yaml文件,必须为property</p>
+<h4 id="ImportResource"><a href="#ImportResource" class="headerlink" title="@ImportResource"></a>@ImportResource</h4><p>导入外部的xml配置</p>
+<h4 id="ConfigurationProperties"><a href="#ConfigurationProperties" class="headerlink" title="@ConfigurationProperties"></a>@ConfigurationProperties</h4><p>将配置和一个Bean的属性进行关联,从而实现类型安全的配置</p>
+<h3 id="条件注解"><a href="#条件注解" class="headerlink" title="条件注解"></a>条件注解</h3><h4 id="ConditionalOnBean"><a href="#ConditionalOnBean" class="headerlink" title="@ConditionalOnBean"></a>@ConditionalOnBean</h4><p>当容器中有指定的Bean的条件下</p>
+<h4 id="ConditionalOnClass"><a href="#ConditionalOnClass" class="headerlink" title="@ConditionalOnClass"></a>@ConditionalOnClass</h4><p>当类路径下有指定的类的条件下</p>
+<h4 id="ConditionalOnExpression"><a href="#ConditionalOnExpression" class="headerlink" title="@ConditionalOnExpression"></a>@ConditionalOnExpression</h4><p>基于SpEL表达式作为判断条件</p>
+<h4 id="ConditionalOnJava"><a href="#ConditionalOnJava" class="headerlink" title="@ConditionalOnJava"></a>@ConditionalOnJava</h4><p>基于jvm版本作为判断条件</p>
+<h4 id="ConditionalOnJndi"><a href="#ConditionalOnJndi" class="headerlink" title="@ConditionalOnJndi"></a>@ConditionalOnJndi</h4><p>在Jndi存在的条件下查找指定的位置</p>
+<h4 id="ConditionalOnMissingBean"><a href="#ConditionalOnMissingBean" class="headerlink" title="@ConditionalOnMissingBean"></a>@ConditionalOnMissingBean</h4><p>当容器没有指定Bean的情况下</p>
+<h4 id="ConditionalOnMissingClass"><a href="#ConditionalOnMissingClass" class="headerlink" title="@ConditionalOnMissingClass"></a>@ConditionalOnMissingClass</h4><p>当类路径下没有指定类的条件下</p>
+<h4 id="ConditionalOnNotWebApplication"><a href="#ConditionalOnNotWebApplication" class="headerlink" title="@ConditionalOnNotWebApplication"></a>@ConditionalOnNotWebApplication</h4><p>当前项目不是web项目的条件下</p>
+<h4 id="ConditionalOnProperty"><a href="#ConditionalOnProperty" class="headerlink" title="@ConditionalOnProperty"></a>@ConditionalOnProperty</h4><p>指定的属性是否有指定的值</p>
+<h4 id="ConditionalOnResource"><a href="#ConditionalOnResource" class="headerlink" title="@ConditionalOnResource"></a>@ConditionalOnResource</h4><p>类路径是否有指定的值</p>
+<h4 id="ConditionalOnSingleCandidate"><a href="#ConditionalOnSingleCandidate" class="headerlink" title="@ConditionalOnSingleCandidate"></a>@ConditionalOnSingleCandidate</h4><p>当指定Bean在容器中只有一个，或者虽然有多个但是指定首选的Bean</p>
+<h4 id="ConditionalOnWebApplication"><a href="#ConditionalOnWebApplication" class="headerlink" title="@ConditionalOnWebApplication"></a>@ConditionalOnWebApplication</h4><p>当前项目是web项目的条件下</p>
+<h3 id="请求和响应"><a href="#请求和响应" class="headerlink" title="请求和响应"></a>请求和响应</h3><p><strong>@GetMapping</strong></p>
+<p>实际上是@RequestMapping(method = RequestMethod.GET)</p>
+<p><strong>@PostMapping</strong></p>
+<p>实际上是@RequestMapping(method = RequestMethod.POST)</p>
+<h4 id="RequestParam"><a href="#RequestParam" class="headerlink" title="@RequestParam"></a>@RequestParam</h4><p>从request中获取请求参数。有如下四个参数：</p>
+<ul>
+<li>defaultValue 如果请求中没有这个参数或者参数为空就会使用指定的默认值</li>
+<li>name 绑定本参数的名称，与request上面的一致</li>
+<li>required 表示此参数为必须的</li>
+<li>value 和name一样的作用，是name属性的一个别名</li>
+</ul>
+<h4 id="PathVariable"><a href="#PathVariable" class="headerlink" title="@PathVariable"></a>@PathVariable</h4><p>获取rest风格接口中的请求参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/hello/&#123;id&#125;"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getDetails</span><span class="params">(@PathVariable(value=<span class="string">"id"</span>)</span> String id) </span>&#123; ...... &#125;</div></pre></td></tr></table></figure>
+<h4 id="ResponseBody"><a href="#ResponseBody" class="headerlink" title="@ResponseBody"></a>@ResponseBody</h4><p>指定以json格式进行返回</p>
+<h4 id="RequestBody"><a href="#RequestBody" class="headerlink" title="@RequestBody"></a>@RequestBody</h4><p>一般是在post请求时为方法的参数添加此注解，以json格式传入，使用pojo去接收时会自动的进行反序列化</p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><h3 id="JSR提供的校验注解"><a href="#JSR提供的校验注解" class="headerlink" title="JSR提供的校验注解"></a>JSR提供的校验注解</h3><p><strong>@Null</strong>   被注释的元素必须为 null    </p>
+<p><strong>@NotNull</strong>    被注释的元素必须不为 null   </p>
+<p><strong>@AssertTrue</strong>     被注释的元素必须为 true    </p>
+<p><strong>@AssertFalse</strong>    被注释的元素必须为 false</p>
+<p><strong>@Min(value)</strong>     被注释的元素必须是一个数字，其值必须大于等于指定的最小值 </p>
+<p><strong>@Max(value)</strong>     被注释的元素必须是一个数字，其值必须小于等于指定的最大值    </p>
+<p><strong>@DecimalMin(value)</strong>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值   </p>
+<p><strong>@DecimalMax(value)</strong>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值   </p>
+<p><strong>@Size(max=, min=)</strong>   被注释的元素的大小必须在指定的范围内    </p>
+<p><strong>@Digits (integer, fraction)</strong>     被注释的元素必须是一个数字，其值必须在可接受的范围内  </p>
+<p><strong>@Past</strong>   被注释的元素必须是一个过去的日期 </p>
+<p><strong>@Future</strong>     被注释的元素必须是一个将来的日期 </p>
+<p><strong>@Pattern(regex=,flag=)</strong>  被注释的元素必须符合指定的正则表达式    </p>
+<h3 id="Hibernate-Validator提供的校验注解"><a href="#Hibernate-Validator提供的校验注解" class="headerlink" title="Hibernate Validator提供的校验注解"></a>Hibernate Validator提供的校验注解</h3><p><strong>@NotBlank(message =)</strong>   验证字符串非null，且长度必须大于0    </p>
+<p><strong>@Email</strong>  被注释的元素必须是电子邮箱地址   </p>
+<p><strong>@Length(min=,max=)</strong>  被注释的字符串的大小必须在指定的范围内    </p>
+<p><strong>@NotEmpty</strong>   被注释的字符串的必须非空    </p>
+<p><strong>@Range(min=,max=,message=)</strong>  被注释的元素必须在合适的范围内</p>
 
         
         </div>
@@ -400,7 +425,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/07/02/java/swagger/spring boot整合swagger/" class="thumbnail">
+                            <a href="/2018/07/02/java/spring boot/spring boot整合swagger/" class="thumbnail">
     
     
         <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="spring boot整合swagger" class="thumbnail-image"></span>
@@ -411,7 +436,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-                            <p class="item-title"><a href="/2018/07/02/java/swagger/spring boot整合swagger/" class="title">spring boot整合swagger</a></p>
+                            <p class="item-title"><a href="/2018/07/02/java/spring boot/spring boot整合swagger/" class="title">spring boot整合swagger</a></p>
                             <p class="item-date"><time datetime="2018-07-01T16:00:00.000Z" itemprop="datePublished">2018-07-02</time></p>
                         </div>
                     </li>
@@ -457,6 +482,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/04/15/java/spring boot/Spring Boot中使用validation/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Spring Boot中使用validation" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/04/15/java/spring boot/Spring Boot中使用validation/" class="title">Spring Boot中使用validation</a></p>
+                            <p class="item-date"><time datetime="2018-04-14T16:00:00.000Z" itemprop="datePublished">2018-04-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/04/08/java/并发编程/1.线程基础/" class="thumbnail">
     
     
@@ -473,25 +517,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/04/07/database/统计连续N天记录/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="统计连续N天记录" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/database/">database</a></p>
-                            <p class="item-title"><a href="/2018/04/07/database/统计连续N天记录/" class="title">统计连续N天记录</a></p>
-                            <p class="item-date"><time datetime="2018-04-07T07:01:16.000Z" itemprop="datePublished">2018-04-07</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -501,7 +526,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 10px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 
