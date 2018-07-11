@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="前言RestTemplate是Spring提供的用于访问Rest服务的客户端，RestTemplate提供了多种便捷访问远程Http服务的方法，能够大大提高客户端的编写效率。 调用RestTemplate的默认构造函数，RestTemplate对象在底层通过使用java.net包下的实现创建HTTP 请求，可以通过使用ClientHttpRequestFactory指定不同的HTTP请求方式。 C">
 <meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
-<meta property="og:updated_time" content="2018-07-11T09:08:02.475Z">
+<meta property="og:updated_time" content="2018-07-11T09:15:08.961Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用RestTemplate请求">
 <meta name="twitter:description" content="前言RestTemplate是Spring提供的用于访问Rest服务的客户端，RestTemplate提供了多种便捷访问远程Http服务的方法，能够大大提高客户端的编写效率。 调用RestTemplate的默认构造函数，RestTemplate对象在底层通过使用java.net包下的实现创建HTTP 请求，可以通过使用ClientHttpRequestFactory指定不同的HTTP请求方式。 C">
@@ -283,6 +283,7 @@ var _hmt = _hmt || [];
 <li>第二种方式是使用<code>HttpComponentsClientHttpRequestFactory</code>方式，底层使用<code>HttpClient</code>访问远程的<code>Http</code>服务，使用<code>HttpClient</code>可以配置连接池和证书等信息。</li>
 </ul>
 <p><code>RestTemplate</code>默认是使用<code>SimpleClientHttpRequestFactory</code>，内部是调用<code>jdk</code>的<code>HttpConnection</code>，默认超时为<code>-1</code>。</p>
+<a id="more"></a>
 <h2 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h2><p><code>Spring Boot</code>框架中并没有将<code>RestTemplate</code>作为<code>Bean</code>进行管理，因为每个请求可能有不同的超时间设置。所以使用前需要实例化。<code>RestTemplate</code>提供了很多种不同的get和post方法，具体可以查看<code>api</code>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"object"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">requestObject</span><span class="params">()</span> </span>&#123;</div><div class="line">    RestTemplate rest = <span class="keyword">new</span> RestTemplate();</div><div class="line">    String str = rest.getForObject(<span class="string">"http://localhost:9999/commonapi/test"</span>, String.class);</div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="使用RestTemplateBuilder构造"><a href="#使用RestTemplateBuilder构造" class="headerlink" title="使用RestTemplateBuilder构造"></a>使用RestTemplateBuilder构造</h2><p>使用<code>RestTemplateBuilder</code>可以很方便的进行实例化并设置超时时间以及<code>basic</code>认证等。以下代码同时演示了如何传输get参数。</p>
