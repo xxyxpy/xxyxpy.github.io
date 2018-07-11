@@ -171,11 +171,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                72
+                73
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                53
+                54
                 <span>标签</span>
             </div>
         </div>
@@ -536,6 +536,136 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
+    <article id="post-java/spring boot/使用RestTemplat请求" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/04/23/java/spring boot/使用RestTemplat请求/">使用RestTemplate请求</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/04/23/java/spring boot/使用RestTemplat请求/">
+            <time datetime="2018-04-22T16:00:00.000Z" itemprop="datePublished">2018-04-23</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/resttemplate/">resttemplate</a>, <a class="tag-link" href="/tags/spring-boot/">spring boot</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>RestTemplate</code>是<code>Spring</code>提供的用于访问<code>Rest</code>服务的客户端，<code>RestTemplate</code>提供了多种便捷访问远程<code>Http</code>服务的方法，能够大大提高客户端的编写效率。</p>
+<p>调用<code>RestTemplate</code>的默认构造函数，<code>RestTemplate</code>对象在底层通过使用<code>java.net</code>包下的实现创建<code>HTTP</code> 请求，可以通过使用<code>ClientHttpRequestFactory</code>指定不同的<code>HTTP</code>请求方式。</p>
+<p><code>ClientHttpRequestFactory</code>接口主要提供了两种实现方式：</p>
+<ul>
+<li>一种是<code>SimpleClientHttpRequestFactory</code>，使用<code>J2SE</code>提供的方式（既<code>java.net</code>包提供的方式）创建底层的Http请求连接。</li>
+<li>第二种方式是使用<code>HttpComponentsClientHttpRequestFactory</code>方式，底层使用<code>HttpClient</code>访问远程的<code>Http</code>服务，使用<code>HttpClient</code>可以配置连接池和证书等信息。</li>
+</ul>
+<p><code>RestTemplate</code>默认是使用<code>SimpleClientHttpRequestFactory</code>，内部是调用<code>jdk</code>的<code>HttpConnection</code>，默认超时为<code>-1</code>。</p>
+<h2 id="Get请求"><a href="#Get请求" class="headerlink" title="Get请求"></a>Get请求</h2><p><code>Spring Boot</code>框架中并没有将<code>RestTemplate</code>作为<code>Bean</code>进行管理，因为每个请求可能有不同的超时间设置。所以使用前需要实例化。<code>RestTemplate</code>提供了很多种不同的get和post方法，具体可以查看<code>api</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"object"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">requestObject</span><span class="params">()</span> </span>&#123;</div><div class="line">    RestTemplate rest = <span class="keyword">new</span> RestTemplate();</div><div class="line">    String str = rest.getForObject(<span class="string">"http://localhost:9999/commonapi/test"</span>, String.class);</div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="使用RestTemplateBuilder构造"><a href="#使用RestTemplateBuilder构造" class="headerlink" title="使用RestTemplateBuilder构造"></a>使用RestTemplateBuilder构造</h2><p>使用<code>RestTemplateBuilder</code>可以很方便的进行实例化并设置超时时间以及<code>basic</code>认证等。以下代码同时演示了如何传输get参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Autowired</span></div><div class="line"><span class="keyword">private</span> RestTemplateBuilder restTemplateBuilder;</div><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"entity"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> User <span class="title">requestEntity</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">    <span class="comment">// 自定义超时时间</span></div><div class="line">    RestTemplate rest = restTemplateBuilder</div><div class="line">            .basicAuthorization(<span class="string">"user"</span>, <span class="string">"password"</span>)</div><div class="line">            .setConnectTimeout(<span class="number">3000</span>)</div><div class="line">            .setReadTimeout(<span class="number">3000</span>).build();</div><div class="line">    MultiValueMap&lt;String,Object&gt; dataMap = <span class="keyword">new</span> LinkedMultiValueMap&lt;String, Object&gt;();</div><div class="line">    Map&lt;String, Object&gt; newMap = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    newMap.put(<span class="string">"name"</span>, <span class="string">"tom"</span>);</div><div class="line">    newMap.put(<span class="string">"age"</span>, age);</div><div class="line">    User user = rest.getForObject(<span class="string">"http://localhost:9999/commonapi/test/user3?name=&#123;name&#125;&amp;age=&#123;age&#125;"</span>, User.class, newMap);</div><div class="line">    <span class="keyword">return</span> user;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Post请求"><a href="#Post请求" class="headerlink" title="Post请求"></a>Post请求</h2><p>支持使用<code>Post</code>请求发送<code>Json</code>数据，并且可以在<code>header</code>中添加信息。使用<code>xxxForEntity</code>时还可以获取除了响应之外的header等信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Autowired</span></div><div class="line"><span class="keyword">private</span> RestTemplateBuilder restTemplateBuilder;</div><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"postentity"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> User <span class="title">postEntity</span><span class="params">()</span> </span>&#123;</div><div class="line">    RestTemplate rest = restTemplateBuilder.build();</div><div class="line">    Map&lt;String, Object&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">    map.put(<span class="string">"name"</span>, <span class="string">"jack"</span>);</div><div class="line">    map.put(<span class="string">"age"</span>, <span class="number">18</span>);</div><div class="line">    String reqStr = JacksonUtil.obj2json(map);</div><div class="line">    HttpHeaders headers = <span class="keyword">new</span> HttpHeaders();</div><div class="line">    headers.add(<span class="string">"token"</span>, <span class="string">"37348eb8ff934a8ca495f09e96712924"</span>);</div><div class="line">    headers.add(<span class="string">"Content-Type"</span>, <span class="string">"application/json"</span>);</div><div class="line">    HttpEntity&lt;String&gt; entity = <span class="keyword">new</span> HttpEntity&lt;&gt;(reqStr, headers);</div><div class="line">    User user = rest.postForObject(<span class="string">"http://localhost:9999/commonapi/test/user"</span>, entity</div><div class="line">    , User.class);</div><div class="line">    ResponseEntity&lt;User&gt; responseEntity = rest.postForEntity(<span class="string">"http://localhost:9999/commonapi/test/user"</span>, entity</div><div class="line">    , User.class);</div><div class="line">    System.out.println(responseEntity.getHeaders().get(<span class="string">"token"</span>));</div><div class="line">    <span class="keyword">return</span> user;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="使用HttpClient池化"><a href="#使用HttpClient池化" class="headerlink" title="使用HttpClient池化"></a>使用HttpClient池化</h2><p><code>RestTemplate</code>在实例化时可以选择传入<code>ClientHttpRequestFactory</code>接口的实现类。此处选择前言中所说的第二种方式<code>HttpComponentsClientHttpRequestFactory</code>，需要使用到<code>HttpClient</code>。首先要添加依赖，现在最常用的版本为<code>4.5.3</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.httpcomponents<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>httpclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.5.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>可以配置不同的环境设置不同的超时时间，配置类如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RestClientConfig</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;httpclient.connectionrequesttimeout&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> connectionRequestTimeout;</div><div class="line">    </div><div class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;httpclient.connecttimeout&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> connectTimeout;</div><div class="line">    </div><div class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;httpclient.sockettimeout&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> socketTimeout;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate(httpRequestFactory());</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> ClientHttpRequestFactory <span class="title">httpRequestFactory</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> HttpComponentsClientHttpRequestFactory(httpClient());</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> HttpClient <span class="title">httpClient</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 注册访问协议相关的Socket工厂</span></div><div class="line">        Registry&lt;ConnectionSocketFactory&gt; registry = RegistryBuilder.&lt;ConnectionSocketFactory&gt; create()</div><div class="line">                .register(<span class="string">"http"</span>, PlainConnectionSocketFactory.getSocketFactory())</div><div class="line">                .register(<span class="string">"https"</span>, SSLConnectionSocketFactory.getSocketFactory())</div><div class="line">                .build();</div><div class="line">        </div><div class="line">        <span class="comment">// HttpConnection工厂：配置写请求/解析响应处理器</span></div><div class="line">        HttpConnectionFactory&lt;HttpRoute, ManagedHttpClientConnection&gt; connFactory = </div><div class="line">                <span class="keyword">new</span> ManagedHttpClientConnectionFactory(</div><div class="line">                        DefaultHttpRequestWriterFactory.INSTANCE</div><div class="line">                        , DefaultHttpResponseParserFactory.INSTANCE);</div><div class="line">        </div><div class="line">        <span class="comment">// Dns解析器</span></div><div class="line">        DnsResolver dnsResolver = SystemDefaultDnsResolver.INSTANCE;</div><div class="line">        </div><div class="line">        <span class="comment">// 创建池化连接管理器</span></div><div class="line">        PoolingHttpClientConnectionManager manager = <span class="keyword">new</span> PoolingHttpClientConnectionManager(</div><div class="line">                registry, connFactory, dnsResolver);</div><div class="line">        </div><div class="line">        <span class="comment">// 默认为Socket配置</span></div><div class="line">        SocketConfig defaultSocketConfig = SocketConfig.custom().setTcpNoDelay(<span class="keyword">true</span>).build();</div><div class="line">        manager.setDefaultSocketConfig(defaultSocketConfig);</div><div class="line">        </div><div class="line">        manager.setMaxTotal(<span class="number">300</span>);                   <span class="comment">// 设置整个连接池的最大连接数</span></div><div class="line">        <span class="comment">// DefaultMaxPerRoute控制每个路由最大连接数，MaxTotal控制整个池子最大数，设置过小无法支持大并发。会报</span></div><div class="line">        <span class="comment">// org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool</span></div><div class="line">        <span class="comment">// 路由是对MaxTotal的细分</span></div><div class="line">        manager.setDefaultMaxPerRoute(<span class="number">200</span>);         <span class="comment">// 设置每个路由最大连接数</span></div><div class="line">        <span class="comment">// 在从连接池获取连接时，连接不活跃多长时间后需要进行一次验证，默认为2s</span></div><div class="line">        manager.setValidateAfterInactivity(<span class="number">5</span> * <span class="number">1000</span>);   </div><div class="line">        </div><div class="line">        <span class="comment">// 默认请求配置</span></div><div class="line">        RequestConfig requestConfig = RequestConfig.custom()</div><div class="line">                <span class="comment">// 从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool</span></div><div class="line">                .setConnectionRequestTimeout(connectionRequestTimeout)</div><div class="line">                <span class="comment">//连接上服务器(握手成功)的时间，超出该时间抛出connect timeout</span></div><div class="line">                .setConnectTimeout(connectTimeout)</div><div class="line">                <span class="comment">//服务器返回数据(response)的时间，超过该时间抛出read timeout</span></div><div class="line">                .setSocketTimeout(socketTimeout)</div><div class="line">                .build();</div><div class="line">        </div><div class="line">        <span class="comment">// 创建HttpClient</span></div><div class="line">        CloseableHttpClient httpClient = HttpClientBuilder.create()</div><div class="line">                .setConnectionManager(manager)</div><div class="line">                .setConnectionManagerShared(<span class="keyword">false</span>)<span class="comment">// 连接池不是共享模式</span></div><div class="line">                .evictIdleConnections(<span class="number">60</span>, TimeUnit.SECONDS)<span class="comment">// 定期回收空闲连接</span></div><div class="line">                .evictExpiredConnections() <span class="comment">// 定期回收过期连接</span></div><div class="line">                .setConnectionTimeToLive(<span class="number">60</span>, TimeUnit.SECONDS)<span class="comment">// 连接存活时间，若不设置，根据长连接信息决定</span></div><div class="line">                .setDefaultRequestConfig(requestConfig)<span class="comment">// 默认请求配置</span></div><div class="line">                .setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE) <span class="comment">// 连接重用策略，即是否能keepAlive</span></div><div class="line">                .setKeepAliveStrategy(DefaultConnectionKeepAliveStrategy.INSTANCE)  <span class="comment">// 长连接配置，即获取长连接多长时间</span></div><div class="line">                <span class="comment">// 设置重试次数，默认是3次。此处暂时关闭，可根据需要开启</span></div><div class="line">                .setRetryHandler(<span class="keyword">new</span> DefaultHttpRequestRetryHandler(<span class="number">0</span>, <span class="keyword">false</span>))</div><div class="line">                .build();</div><div class="line">        </div><div class="line">        <span class="comment">// JVM停止或重启时，关闭连接池释放掉连接</span></div><div class="line">        Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">               <span class="keyword">try</span> &#123;</div><div class="line">                   httpClient.close();</div><div class="line">               &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                   e.printStackTrace();</div><div class="line">                   LogFactory.build()</div><div class="line">                           .withMarker(<span class="string">"HttpClient"</span>, <span class="string">""</span>, <span class="string">""</span>)</div><div class="line">                           .withMessage(<span class="string">"HttpClient关闭失败"</span>)</div><div class="line">                           .withException(e)</div><div class="line">                           .error();</div><div class="line">               &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        <span class="keyword">return</span> httpClient;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用时只需要用<code>@Autowired</code>注入即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Autowired</span></div><div class="line"><span class="keyword">private</span> RestTemplate restTemplate;</div></pre></td></tr></table></figure>
+<p>由于已经单例化，超时设置都相同。如果有不同的需求实例化新的<code>RestTemplate</code>进行设置和操作。</p>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/zhangzhi19861216/p/8594674.html" target="_blank" rel="external">spring-boot RestTemplate 连接池</a></p>
+<p><a href="https://blog.csdn.net/HeatDeath/article/details/79449607" target="_blank" rel="external">RestTemplate 中设置 header 以及使用 HTTP 基本认证的方法</a> </p>
+<p><a href="http://rensanning.iteye.com/blog/2362105" target="_blank" rel="external">ring Boot 入门 - 进阶篇（4）- REST访问(RestTemplate)</a></p>
+<p><a href="https://github.com/jiwenxing/spring-boot-demo/wiki/Using-RestTemplate" target="_blank" rel="external">Using RestTemplate</a></p>
+<p><a href="http://jinnianshilongnian.iteye.com/blog/2089792" target="_blank" rel="external">使用httpclient必须知道的参数设置及代码写法、存在的风险</a></p>
+<p><a href="http://nanjiwubing123.iteye.com/blog/2271966" target="_blank" rel="external">estTemplate添加超时处理ClientHttpRequestFactory的选择。</a></p>
+<p><a href="https://blog.csdn.net/wangpeng047/article/details/19624529" target="_blank" rel="external">HttpClient使用详解</a></p>
+<p><a href="http://yu-duo.iteye.com/blog/1956677" target="_blank" rel="external">Spring restTemplat 常用基本用法总结</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/04/23/java/spring boot/使用RestTemplat请求/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-java/spring boot/Spring Boot中使用validation" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -578,72 +708,13 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般情况下的<code>restful</code>接口都是无状态的，在接口请求后都需要进行数据校验工作。比如判断某个字段是否为空，是不是大于0等等。对于简单的校验逻辑耦合在业务代码中是比较丑陋的。<code>Spring Boot</code>自带了<code>Hibernate Validator</code>可以帮我们完成很多前置的校验工作，校验通过后请求才会进入业务逻辑中进行处理。</p>
+            <p><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一般情况下的<code>restful</code>接口都是无状态的，在接口请求后都需要进行数据校验工作。比如判断某个字段是否为空，是不是大于0等等。对于简单的校验逻辑耦合在业务代码中是比较丑陋的。<code>Spring Boot</code>自带了<code>Hibernate Validator</code>可以帮我们完成很多前置的校验工作，校验通过后请求才会进入业务逻辑中进行处理。</p>
 <h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>只需要在<code>pom</code>文件中添加如下依赖即完成了校验组件的引入，而此依赖是<code>restful</code>接口开发所必须的。所以可以理解为天然支持数据校验</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>查看其依赖列表会发现其子依赖项中已经包含了<code>hibernate-validator</code>和<code>jackson-databind</code></p>
-<img title="validation" alt="validation" src="http://oo0vldwkt.bkt.clouddn.com/static/images/java\springboot\validation1.png">
-<h2 id="简单校验"><a href="#简单校验" class="headerlink" title="简单校验"></a>简单校验</h2><p><code>Spring MVC</code>中提供了简单的参数验证支持，仅可以控制参数不能为空</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"simple/&#123;name&#125;"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">simple</span><span class="params">(@PathVariable(value = <span class="string">"name"</span>, required = <span class="keyword">true</span>)</span> String name) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"hello "</span> + name;</div><div class="line">&#125;</div><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"simple2"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">simple2</span><span class="params">(@RequestParam(value = <span class="string">"name"</span>, required = <span class="keyword">false</span>)</span> String name) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"hello2 "</span> + name;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="实体校验"><a href="#实体校验" class="headerlink" title="实体校验"></a>实体校验</h2><p>在实体中使用校验框架的注解完成自动校验。实体定义：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="meta">@NotBlank</span></div><div class="line">    <span class="meta">@NotNull</span>(message = <span class="string">"不能为空"</span>)</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="meta">@Min</span>(value = <span class="number">18</span>, message = <span class="string">"年龄不能小于18"</span>)</div><div class="line">    <span class="keyword">private</span> Integer age;</div><div class="line">    <span class="comment">// 省略get和set方法</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>从上面代码中可以看到是支持多个注解组合校验的，多个时必须同时满足才算校验通过。其实大部分注解还支持列表形式的校验，说起来比较抽象，先看下注解中的定义</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">@Target(&#123; METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE &#125;)</div><div class="line">@Retention(RUNTIME)</div><div class="line">@Repeatable(List.class)</div><div class="line">@Documented</div><div class="line">@Constraint(validatedBy = &#123; &#125;)</div><div class="line">public @interface Min &#123;</div><div class="line"></div><div class="line">   String message() default "&#123;javax.validation.constraints.Min.message&#125;";</div><div class="line">   ...</div><div class="line">   /**</div><div class="line">    * Defines several &#123;@link Min&#125; annotations on the same element.</div><div class="line">    *</div><div class="line">    * @see Min</div><div class="line">    */</div><div class="line">   @Target(&#123; METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE &#125;)</div><div class="line">   @Retention(RUNTIME)</div><div class="line">   @Documented</div><div class="line">   @interface List &#123;</div><div class="line">      Min[] value();</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中<code>List</code>属性即用于定义多个相同的注解，当然如果定义多个时需要同时满足，不过此用法还是比较少的。用法如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Min</span>.List(&#123;</div><div class="line">        <span class="meta">@Min</span>(value = <span class="number">8</span>, message = <span class="string">"年龄不能小于8"</span>),</div><div class="line">        <span class="meta">@Min</span>(value = <span class="number">18</span>, message = <span class="string">"年龄不能小于18"</span>)</div><div class="line">&#125;)</div><div class="line"><span class="keyword">private</span> Integer age;</div></pre></td></tr></table></figure>
-<p>实体在使用时需要添加<code>@Valid</code>或<code>@Validated</code>校验才会生效。这两个注解的区别在于后者可以添加分组，至于什么是分组下面会讲到。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@PostMapping</span>(<span class="string">"middle"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> User <span class="title">middle</span><span class="params">(@Valid @RequestBody User user)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> user;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="框架提供的注解"><a href="#框架提供的注解" class="headerlink" title="框架提供的注解"></a>框架提供的注解</h2><blockquote>
-<p><strong>JSR提供的校验注解</strong></p>
-<p><strong>@Null</strong>   被注释的元素必须为 null    </p>
-<p><strong>@NotNull</strong>    被注释的元素必须不为 null   </p>
-<p><strong>@AssertTrue</strong>     被注释的元素必须为 true    </p>
-<p><strong>@AssertFalse</strong>    被注释的元素必须为 false</p>
-<p><strong>@Min(value)</strong>     被注释的元素必须是一个数字，其值必须大于等于指定的最小值 </p>
-<p><strong>@Max(value)</strong>     被注释的元素必须是一个数字，其值必须小于等于指定的最大值    </p>
-<p><strong>@DecimalMin(value)</strong>  被注释的元素必须是一个数字，其值必须大于等于指定的最小值   </p>
-<p><strong>@DecimalMax(value)</strong>  被注释的元素必须是一个数字，其值必须小于等于指定的最大值   </p>
-<p><strong>@Size(max=, min=)</strong>   被注释的元素的大小必须在指定的范围内    </p>
-<p><strong>@Digits (integer, fraction)</strong>     被注释的元素必须是一个数字，其值必须在可接受的范围内  </p>
-<p><strong>@Past</strong>   被注释的元素必须是一个过去的日期 </p>
-<p><strong>@Future</strong>     被注释的元素必须是一个将来的日期 </p>
-<p><strong>@Pattern(regex=,flag=)</strong>  被注释的元素必须符合指定的正则表达式    </p>
-<p><strong>Hibernate Validator提供的校验注解</strong></p>
-<p><strong>@NotBlank(message =)</strong>   验证字符串非null，且长度必须大于0    </p>
-<p><strong>@Email</strong>  被注释的元素必须是电子邮箱地址   </p>
-<p><strong>@Length(min=,max=)</strong>  被注释的字符串的大小必须在指定的范围内    </p>
-<p><strong>@NotEmpty</strong>   被注释的字符串的必须非空    </p>
-<p><strong>@Range(min=,max=,message=)</strong>  被注释的元素必须在合适的范围内</p>
-</blockquote>
-<h2 id="分组校验"><a href="#分组校验" class="headerlink" title="分组校验"></a>分组校验</h2><p>设想这样的场景，同一个实体在新建时<code>id</code>可以为<code>null</code>，而在更新时<code>id</code>必须要大于0。显然直接使用上面讲到的注解是无法实现的。现在为实体添加校验分组实现：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User2</span> </span>&#123;</div><div class="line">    <span class="meta">@NotBlank</span>(groups = &#123; Name.class &#125;)</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="meta">@Min</span>(value = <span class="number">18</span>, groups = Age18.class, message = <span class="string">"年龄不能小于18"</span>)</div><div class="line">    <span class="meta">@Min</span>(value = <span class="number">3</span>, groups = Age3.class, message = <span class="string">"年龄不能小于3"</span>)</div><div class="line">    <span class="keyword">private</span> Integer age;</div><div class="line">    <span class="comment">// 省略get set方法</span></div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Age3</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Age18</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Name</span></span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用时只需要指定不同的组即可</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@PostMapping</span>(<span class="string">"middle2"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> User2 <span class="title">middle2</span><span class="params">(@Validated(&#123;User2.Age3.class&#125;)</span> @RequestBody User2 user) </span>&#123;</div><div class="line">    <span class="keyword">return</span> user;</div><div class="line">&#125;</div><div class="line"><span class="meta">@PostMapping</span>(<span class="string">"middle3"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> User2 <span class="title">middle3</span><span class="params">(@Validated(&#123;User2.Name.class, User2.Age18.class&#125;)</span> @RequestBody User2 user) </span>&#123;</div><div class="line">    <span class="keyword">return</span> user;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="自定义验证"><a href="#自定义验证" class="headerlink" title="自定义验证"></a>自定义验证</h2><p>虽然框架为我们提供了一些注解，但是遇到复杂校验时无法满足条件。此时需要自己实现自定义的注解。参考自带的注解实现，两步即可完成自定义校验注解的开发。假如现在需要实现手机号校验的功能。</p>
-<h3 id="定义校验的注解"><a href="#定义校验的注解" class="headerlink" title="定义校验的注解"></a>定义校验的注解</h3><p>@Constraint用于指定用于校验的具体的类，校验的规则在此类中进行实现</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Documented</span></div><div class="line"><span class="comment">// 指定真正实现校验规则的类</span></div><div class="line"><span class="meta">@Constraint</span>(validatedBy = PhoneValidator.class)</div><div class="line"><span class="meta">@Target</span>( &#123; ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER &#125;)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> PhoneValidation &#123;</div><div class="line">    <span class="function">String <span class="title">message</span><span class="params">()</span> <span class="keyword">default</span> "不是正确的手机号"</span>;</div><div class="line">    Class&lt;?&gt;[] groups() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">    Class&lt;? extends Payload&gt;[] payload() <span class="keyword">default</span> &#123;&#125;;</div><div class="line">    <span class="comment">// 是否添加list根据需要</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="定义校验的类"><a href="#定义校验的类" class="headerlink" title="定义校验的类"></a>定义校验的类</h3><p>此类需要实现<code>ConstraintValidator</code>泛型接口，需要传入上面的注解和要校验的类型，比如校验<code>String</code>类型就传<code>String</code>，校验<code>User</code>类型就传<code>User</code>。</p>
-<p>最主要的实现在<code>isValid()</code>方法中，此方法返回校验是否成功。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhoneValidator</span> <span class="keyword">implements</span> <span class="title">ConstraintValidator</span>&lt;<span class="title">PhoneValidation</span>, <span class="title">String</span>&gt;</span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Pattern PHONE_PATTERN = Pattern.compile(</div><div class="line">            <span class="string">"^(13[0-9]|14[14-9]|15[0-35-9]|166|17[0-9]|18[0-9]|19[89])\\d&#123;8&#125;$"</span></div><div class="line">    );</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">(PhoneValidation constraintAnnotation)</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String value, ConstraintValidatorContext context)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> ( value == <span class="keyword">null</span> || value.length() == <span class="number">0</span> ) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        Matcher m = PHONE_PATTERN.matcher(value);</div><div class="line">        <span class="keyword">return</span> m.matches();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@PhoneValidation</span></div><div class="line"><span class="keyword">private</span> String phone;</div></pre></td></tr></table></figure>
-<h2 id="使用JavaScript自定义注解"><a href="#使用JavaScript自定义注解" class="headerlink" title="使用JavaScript自定义注解"></a>使用JavaScript自定义注解</h2><p><code>hibernate-validator</code>支持使用<code>@ScriptAssert</code>来定义自定义的注解实现，此方式不需要额外的类，只需要在使用类中定义静态方法，成本相对比较低。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ScriptAssert</span>(lang = <span class="string">"javascript"</span></div><div class="line">        , script = <span class="string">"com.ly.model.User3.checkParams(_this)"</span></div><div class="line">        ,groups = User3.Check.class</div><div class="line">        ,message = <span class="string">"参数错误"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User3</span> </span>&#123;</div><div class="line">    <span class="meta">@NotBlank</span>(groups = &#123; Name.class &#125;)</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="meta">@Min</span>(value = <span class="number">18</span>, groups = Age18.class, message = <span class="string">"年龄不能小于18"</span>)</div><div class="line">    <span class="meta">@Min</span>(value = <span class="number">3</span>, groups = Age3.class, message = <span class="string">"年龄不能小于3"</span>)</div><div class="line">    <span class="keyword">private</span> Integer age;</div><div class="line">    <span class="meta">@PhoneValidation</span></div><div class="line">    <span class="keyword">private</span> String phone;</div><div class="line">    <span class="comment">// 省略get set方法</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">checkParams</span><span class="params">(User3 u)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (u.name != <span class="keyword">null</span> &amp;&amp; u.age == <span class="number">10</span>) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Age3</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Age18</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Name</span></span>&#123;&#125;</div><div class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Check</span></span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>需要特别注意的是：</p>
-<ul>
-<li>校验方法必须是静态的；</li>
-<li><code>@ScriptAssert</code>注解中的<code>script</code>属性定义的是全路径；</li>
-<li>上下文变量默认值是<code>_this</code>，指的是当前实例。可以通过<code>alias</code>属性进行更改。</li>
-</ul>
-<h2 id="异常捕捉"><a href="#异常捕捉" class="headerlink" title="异常捕捉"></a>异常捕捉</h2><p>当校验不通过时我们需要给调用方一些友好的提示，此时最佳的方式就是把校验的错误信息进行返回。而不是直接响应大段的<code>Exception</code>。</p>
-<p>当校验不通过时会返回<code>MethodArgumentNotValidException</code>异常，此时结合<code>Spring Boot</code>的全局异常处理对此异常进行捕获，进而提取出它的<code>ErrorMessage</code>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@ControllerAdvice</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GlobalExceptionHandler</span> </span>&#123;</div><div class="line">    <span class="meta">@ExceptionHandler</span>(value = &#123; MethodArgumentNotValidException.class &#125;)</div><div class="line">    <span class="meta">@ResponseBody</span></div><div class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity <span class="title">validateExceptionHandler</span><span class="params">(HttpServletRequest req, MethodArgumentNotValidException e)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        String errorMsg = <span class="string">""</span>;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            errorMsg = e.getBindingResult().getAllErrors().get(<span class="number">0</span>).getDefaultMessage();</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception ex) &#123;</div><div class="line">            ex.printStackTrace();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (StringUtils.isEmpty(errorMsg)) &#123;</div><div class="line">            errorMsg = e.getBindingResult().getFieldErrors().stream()</div><div class="line">                    .map(DefaultMessageSourceResolvable::getDefaultMessage)</div><div class="line">                    .findFirst()</div><div class="line">                    .orElse(e.getMessage());</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 记下log</span></div><div class="line">        <span class="comment">// ...</span></div><div class="line">        <span class="comment">// 生成返回结果</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseEntity(ResponseType.EXCEPTION, ResponseCode.C_1000, errorMsg);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>参考：</p>
-<p><a href="https://blog.csdn.net/u013815546/article/details/77248003" target="_blank" rel="external">使用Spring Validation完成数据后端校验</a></p>
-<p><a href="http://wangxinchun.iteye.com/blog/2155682" target="_blank" rel="external">hibernate-validator</a></p>
-<p><a href="https://lmonkiewicz.com/programming/get-noticed-2017/spring-boot-rest-request-validation/" target="_blank" rel="external">Spring Boot REST – request validation</a></p>
-<p><a href="https://juejin.im/entry/5ab0edc06fb9a028c71e4889" target="_blank" rel="external">Spring Boot系列十四 Spring boot使用spring validation实现对Restful请求的数据进行校验</a></p>
-
+<p>查看其依赖列表会发现其子依赖项中已经包含了<code>hibernate-validator</code>和<code>jackson-databind</code></p></p>
+            <p class="article-more-link">
+                <a href="/2018/04/15/java/spring boot/Spring Boot中使用validation/#more">查看更多</a>
+            </p>
         
         </div>
         <footer class="article-footer">
@@ -1152,103 +1223,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="post-common/软件使用" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2018/01/08/common/软件使用/">软件使用</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2018/01/08/common/软件使用/">
-            <time datetime="2018-01-08T02:43:56.000Z" itemprop="datePublished">2018-01-08</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/工具/">工具</a>
-    </div>
-
-                        
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h1 id="sublime使用"><a href="#sublime使用" class="headerlink" title="sublime使用"></a>sublime使用</h1><h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><p>html:xt                  快速新建html内容<br>div                     补全标签代码<br>ctrl+shift+d             快速复制一行<br>ctrl+shift+k            快速删除一行<br>连续ctrl+单击            集体输入<br>ctrl+h                 查找和替换<br>ctrl+f                查找<br>ctrl+/                注释<br>ctrl+k+b                打开/隐藏侧边栏<br>ctrl+n                新建<br>ctrl+l                选中一行<br>ctrl+w                关闭当前页面<br>ctrl+shift+↑/↓            光标定位行,快速整体移动</p></p>
-            <p class="article-more-link">
-                <a href="/2018/01/08/common/软件使用/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://blog.xxyxpy.pub/2018/01/08/common/软件使用/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <article id="post-前端/HTML/Html标签" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1429,6 +1403,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="使用RestTemplate请求" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" class="title">使用RestTemplate请求</a></p>
+                            <p class="item-date"><time datetime="2018-04-22T16:00:00.000Z" itemprop="datePublished">2018-04-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/04/15/java/spring boot/Spring Boot中使用validation/" class="thumbnail">
     
     
@@ -1445,25 +1438,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/04/08/java/并发编程/1.线程基础/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="1.线程基础" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-                            <p class="item-title"><a href="/2018/04/08/java/并发编程/1.线程基础/" class="title">1.线程基础</a></p>
-                            <p class="item-date"><time datetime="2018-04-08T07:01:16.000Z" itemprop="datePublished">2018-04-08</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1473,7 +1447,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 

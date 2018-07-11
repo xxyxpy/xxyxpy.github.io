@@ -171,11 +171,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                72
+                73
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                53
+                54
                 <span>标签</span>
             </div>
         </div>
@@ -224,6 +224,113 @@ var _hmt = _hmt || [];
 
             
             <section id="main">
+    <article id="post-linux/docker" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2017/12/25/linux/docker/">docker</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2017/12/25/linux/docker/">
+            <time datetime="2017-12-25T07:44:20.398Z" itemprop="datePublished">2017-12-25</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/linux/">linux</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/docker/">docker</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            <p><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>在centos中安装时内核需要在3.10以上，所以必须要centos7以上版本</p>
+<p>os的下载可以访问<a href="http://mirrors.aliyun.com/centos/7.3.1611/isos/x86_64/CentOS-7-x86_64-DVD-1611.iso">阿里云</a></p>
+<p>安装教程可参考<a href="https://wizardforcel.gitbooks.io/vbird-linux-basic-4e/content/27.html">鸟哥的linux</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 查看系统内核版本</div><div class="line">uname -r</div><div class="line"># 安装</div><div class="line">yum -y install docker</div><div class="line"># 更新</div><div class="line">yum -y update docker</div><div class="line"># 启动</div><div class="line">service docker start</div><div class="line"># docker 开机启动</div><div class="line">systemctl enable docker</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="设置镜像加速"><a href="#设置镜像加速" class="headerlink" title="设置镜像加速"></a>设置镜像加速</h3><p>进入<a href="https://cr.console.aliyun.com/">阿里云镜像仓库</a>设置,通过修改daemon配置文件<code>/etc/docker/daemon.json</code>来使用加速器：</p></p>
+            <p class="article-more-link">
+                <a href="/2017/12/25/linux/docker/#more">查看更多</a>
+            </p>
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2017/12/25/linux/docker/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-linux/activeMq环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1187,115 +1294,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="post-前端/HTML/Html表格和表单" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/2017/12/11/前端/HTML/Html表格和表单/">HTML表格和表单</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/2017/12/11/前端/HTML/Html表格和表单/">
-            <time datetime="2017-12-11T07:01:16.000Z" itemprop="datePublished">2017-12-11</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/前端/">前端</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/HTML/">HTML</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            <p><h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><h3 id="一般用法"><a href="#一般用法" class="headerlink" title="一般用法"></a>一般用法</h3><p>展示数据，是对网页的一种补充</p>
-<blockquote>
-<p>cellspacing 单元格间距,默认是2</p>
-<p>cellpadding  内容到边框的距离</p>
-<p>align(left, right, center) 在td上面,设置内容居中;在table上面设置表格居中;在tr上面设置整行居中</p>
-<p>bgcolor 设置背景颜色</p>
-</blockquote>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">table</span> <span class="attr">border</span>=<span class="string">"1"</span> <span class="attr">withd</span>=<span class="string">"150"</span> <span class="attr">height</span>=<span class="string">"300"</span> <span class="attr">cellspacing</span>=<span class="string">"20"</span> <span class="attr">cellpadding</span>=<span class="string">"10"</span> <span class="attr">align</span>=<span class="string">"center"</span></div><div class="line">       <span class="attr">bgcolor</span>=<span class="string">"yellow"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">tr</span> <span class="attr">align</span>=<span class="string">"center"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">td</span> <span class="attr">align</span>=<span class="string">"center"</span>&gt;</span>张三<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span>18<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span>李四<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">td</span>&gt;</span>20<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></div></pre></td></tr></table></figure></p>
-            <p class="article-more-link">
-                <a href="/2017/12/11/前端/HTML/Html表格和表单/#more">查看更多</a>
-            </p>
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-        <a href="http://blog.xxyxpy.pub/2017/12/11/前端/HTML/Html表格和表单/#comments" class="article-comment-link">评论</a>
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <a class="extend prev" rel="prev" href="/page/5/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/7/">下一页 &raquo;</a>
     </nav>
@@ -1370,6 +1368,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="使用RestTemplate请求" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" class="title">使用RestTemplate请求</a></p>
+                            <p class="item-date"><time datetime="2018-04-22T16:00:00.000Z" itemprop="datePublished">2018-04-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/04/15/java/spring boot/Spring Boot中使用validation/" class="thumbnail">
     
     
@@ -1386,25 +1403,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/04/08/java/并发编程/1.线程基础/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="1.线程基础" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-                            <p class="item-title"><a href="/2018/04/08/java/并发编程/1.线程基础/" class="title">1.线程基础</a></p>
-                            <p class="item-date"><time datetime="2018-04-08T07:01:16.000Z" itemprop="datePublished">2018-04-08</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1414,7 +1412,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 

@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="前言一般情况下的restful接口都是无状态的，在接口请求后都需要进行数据校验工作。比如判断某个字段是否为空，是不是大于0等等。对于简单的校验逻辑耦合在业务代码中是比较丑陋的。Spring Boot自带了Hibernate Validator可以帮我们完成很多前置的校验工作，校验通过后请求才会进入业务逻辑中进行处理。 依赖只需要在pom文件中添加如下依赖即完成了校验组件的引入，而此依赖是restf">
 <meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
-<meta property="og:updated_time" content="2018-07-11T08:07:56.848Z">
+<meta property="og:updated_time" content="2018-07-11T08:12:12.181Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Boot中使用validation">
 <meta name="twitter:description" content="前言一般情况下的restful接口都是无状态的，在接口请求后都需要进行数据校验工作。比如判断某个字段是否为空，是不是大于0等等。对于简单的校验逻辑耦合在业务代码中是比较丑陋的。Spring Boot自带了Hibernate Validator可以帮我们完成很多前置的校验工作，校验通过后请求才会进入业务逻辑中进行处理。 依赖只需要在pom文件中添加如下依赖即完成了校验组件的引入，而此依赖是restf">
@@ -175,11 +175,11 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                72
+                73
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                53
+                54
                 <span>标签</span>
             </div>
         </div>
@@ -279,6 +279,7 @@ var _hmt = _hmt || [];
 <h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><p>只需要在<code>pom</code>文件中添加如下依赖即完成了校验组件的引入，而此依赖是<code>restful</code>接口开发所必须的。所以可以理解为天然支持数据校验</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>查看其依赖列表会发现其子依赖项中已经包含了<code>hibernate-validator</code>和<code>jackson-databind</code></p>
+<a id="more"></a>
 <img title="validation" alt="validation" src="http://oo0vldwkt.bkt.clouddn.com/static/images/java\springboot\validation1.png">
 <h2 id="简单校验"><a href="#简单校验" class="headerlink" title="简单校验"></a>简单校验</h2><p><code>Spring MVC</code>中提供了简单的参数验证支持，仅可以控制参数不能为空</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"simple/&#123;name&#125;"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">simple</span><span class="params">(@PathVariable(value = <span class="string">"name"</span>, required = <span class="keyword">true</span>)</span> String name) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"hello "</span> + name;</div><div class="line">&#125;</div><div class="line"><span class="meta">@GetMapping</span>(<span class="string">"simple2"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> String <span class="title">simple2</span><span class="params">(@RequestParam(value = <span class="string">"name"</span>, required = <span class="keyword">false</span>)</span> String name) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="string">"hello2 "</span> + name;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -405,9 +406,9 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         </a>
     
     
-        <a href="/2018/06/19/java/mybatis/mybatis-generator插件/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">mybatis-generator插件</div>
+            <div class="article-nav-title">使用RestTemplate请求</div>
         </a>
     
 </nav>
@@ -495,6 +496,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="使用RestTemplate请求" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/04/23/java/spring boot/使用RestTemplat请求/" class="title">使用RestTemplate请求</a></p>
+                            <p class="item-date"><time datetime="2018-04-22T16:00:00.000Z" itemprop="datePublished">2018-04-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/2018/04/15/java/spring boot/Spring Boot中使用validation/" class="thumbnail">
     
     
@@ -511,25 +531,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/04/08/java/并发编程/1.线程基础/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="1.线程基础" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-                            <p class="item-title"><a href="/2018/04/08/java/并发编程/1.线程基础/" class="title">1.线程基础</a></p>
-                            <p class="item-date"><time datetime="2018-04-08T07:01:16.000Z" itemprop="datePublished">2018-04-08</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -539,7 +540,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 12px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 12px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 12px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 14px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 14px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 12px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 14px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 14px;">套路</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 
