@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Collections工具类 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="###  生成空的List、Set、Map123Collections.EMPTY_LISTCollections.EMPTY_MAPCollections.EMPTY_SET 批量添加addAll public static  boolean addAll(Collection&amp;lt;? super T&amp;gt; c, T… elements)  1234List&amp;lt;String&amp;gt; li">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collections工具类">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/07/08/java/tool/Collections工具类/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="###  生成空的List、Set、Map123Collections.EMPTY_LISTCollections.EMPTY_MAPCollections.EMPTY_SET 批量添加addAll public static  boolean addAll(Collection&amp;lt;? super T&amp;gt; c, T… elements)  1234List&amp;lt;String&amp;gt; li">
+<meta property="og:image" content="http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg">
+<meta property="og:updated_time" content="2018-09-11T12:21:58.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Collections工具类">
+<meta name="twitter:description" content="###  生成空的List、Set、Map123Collections.EMPTY_LISTCollections.EMPTY_MAPCollections.EMPTY_SET 批量添加addAll public static  boolean addAll(Collection&amp;lt;? super T&amp;gt; c, T… elements)  1234List&amp;lt;String&amp;gt; li">
+<meta name="twitter:image" content="http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                79
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                58
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/tool/Collections工具类" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Collections工具类
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/07/08/java/tool/Collections工具类/">
+            <time datetime="2018-07-08T01:43:51.000Z" itemprop="datePublished">2018-07-08</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#生成空的List、Set、Map"><span class="toc-number">1.</span> <span class="toc-text">生成空的List、Set、Map</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#批量添加addAll"><span class="toc-number">2.</span> <span class="toc-text">批量添加addAll</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#排序sort"><span class="toc-number">3.</span> <span class="toc-text">排序sort</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二分查找binarySearch"><span class="toc-number">4.</span> <span class="toc-text">二分查找binarySearch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#混排shuffle"><span class="toc-number">5.</span> <span class="toc-text">混排shuffle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#反转reverse"><span class="toc-number">6.</span> <span class="toc-text">反转reverse</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线程安全集合synchronized系列"><span class="toc-number">7.</span> <span class="toc-text">线程安全集合synchronized系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不可变集合unmodifiable系列"><span class="toc-number">8.</span> <span class="toc-text">不可变集合unmodifiable系列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#元素交换swap"><span class="toc-number">9.</span> <span class="toc-text">元素交换swap</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#填充容器fill"><span class="toc-number">10.</span> <span class="toc-text">填充容器fill</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#复制集合copy"><span class="toc-number">11.</span> <span class="toc-text">复制集合copy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换replaceAll"><span class="toc-number">12.</span> <span class="toc-text">替换replaceAll</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最大最小max、min"><span class="toc-number">13.</span> <span class="toc-text">最大最小max、min</span></a></li></ol>
+                </div>
+            
+            <p>### </p>
+<h4 id="生成空的List、Set、Map"><a href="#生成空的List、Set、Map" class="headerlink" title="生成空的List、Set、Map"></a>生成空的List、Set、Map</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Collections.EMPTY_LIST</div><div class="line">Collections.EMPTY_MAP</div><div class="line">Collections.EMPTY_SET</div></pre></td></tr></table></figure>
+<h4 id="批量添加addAll"><a href="#批量添加addAll" class="headerlink" title="批量添加addAll"></a>批量添加addAll</h4><blockquote>
+<p>public static <t> boolean addAll(Collection&lt;? super T&gt; c, T… elements)</t></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">list.add(<span class="string">"a"</span>);</div><div class="line">list.add(<span class="string">"b"</span>);</div><div class="line">Collections.addAll(list, <span class="string">"c"</span>, <span class="string">"d"</span>, <span class="string">"e"</span>);</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h4 id="排序sort"><a href="#排序sort" class="headerlink" title="排序sort"></a>排序sort</h4><blockquote>
+<p>public static <t extends="" comparable<?="" super="" t="">&gt; void sort(List<t> list) 需要泛型T类本身支持Comparable接口<br>public static <t> void sort(List<t> list, Comparator&lt;? super T&gt; c) </t></t></t></t></p>
+</blockquote>
+<p>使用方法见下面的二分查找</p>
+<h4 id="二分查找binarySearch"><a href="#二分查找binarySearch" class="headerlink" title="二分查找binarySearch"></a>二分查找binarySearch</h4><blockquote>
+<p>public static <t> int binarySearch(List&lt;? extends Comparable&lt;? super T&gt;&gt; list, T key)<br>public static <t> int binarySearch(List&lt;? extends T&gt; list, T key, Comparator&lt;? super T&gt; c) </t></t></p>
+</blockquote>
+<p>在执行查找之前需要先对list进行升序排序操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">list.add(<span class="string">"a"</span>);</div><div class="line">list.add(<span class="string">"b"</span>);</div><div class="line">Collections.addAll(list, <span class="string">"d"</span>, <span class="string">"c"</span>, <span class="string">"e"</span>);</div><div class="line">Collections.sort(list); <span class="comment">// 排序</span></div><div class="line">System.out.println(list);</div><div class="line"><span class="keyword">int</span> res = Collections.binarySearch(list, <span class="string">"c"</span>);</div><div class="line">System.out.println(res); <span class="comment">// 2</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person p1 = <span class="keyword">new</span> Person(<span class="string">"tom"</span>, <span class="number">17</span>);</div><div class="line">Person p2 = <span class="keyword">new</span> Person(<span class="string">"jack"</span>, <span class="number">20</span>);</div><div class="line">Person p3 = <span class="keyword">new</span> Person(<span class="string">"judy"</span>, <span class="number">19</span>);</div><div class="line">Person p4 = <span class="keyword">new</span> Person(<span class="string">"jack2"</span>, <span class="number">18</span>);</div><div class="line">List&lt;Person&gt; list1 = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">Collections.addAll(list1, p1, p2, p3, p4);</div><div class="line">Comparator&lt;Person&gt; c = <span class="keyword">new</span> Comparator&lt;Person&gt;() &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Person o1, Person o2)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> o1.age - o2.age;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">Collections.sort(list1, c); <span class="comment">// 先用比较器排序后再查找</span></div><div class="line"><span class="keyword">int</span> res2 = Collections.binarySearch(list1, p4, c);</div><div class="line">System.out.println(res2);</div></pre></td></tr></table></figure>
+<h4 id="混排shuffle"><a href="#混排shuffle" class="headerlink" title="混排shuffle"></a>混排shuffle</h4><blockquote>
+<p>public static void shuffle(List&lt;?&gt; list）<br>public static void shuffle(List&lt;?&gt; list, Random rnd) </p>
+</blockquote>
+<p>混排算法用于打乱List中可能有的任何排列的踪迹，适合用于随机性的需求</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; numList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">Collections.addAll(numList, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>);</div><div class="line">Collections.shuffle(numList);</div><div class="line">System.out.println(numList); <span class="comment">// [6, 9, 1, 4, 5, 3, 2, 10, 7, 8]</span></div></pre></td></tr></table></figure>
+<h4 id="反转reverse"><a href="#反转reverse" class="headerlink" title="反转reverse"></a>反转reverse</h4><blockquote>
+<p>public static void reverse(List&lt;?&gt; list)直接反转集合的元素</p>
+<p>public static <t> Comparator<t> reverseOrder()；返回可以使集合反转的比较器Comparator</t></t></p>
+<p>public static <t> Comparator<t> reverseOrder(Comparator<t> cmp)；如果cmp不为null，返回cmp的反转的比较器，即集合的反转的反转，最后就是没反转。如果cmp为null，效果等同于第二个方法.</t></t></t></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; numList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">Collections.addAll(numList, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>);</div><div class="line">Collections.reverse(numList);</div><div class="line">System.out.println(numList); <span class="comment">// [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</span></div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; numList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">Collections.addAll(numList, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>);</div><div class="line">Comparator&lt;Object&gt; objectComparator = Collections.reverseOrder();</div><div class="line">Collections.sort(numList, objectComparator);</div><div class="line">System.out.println(numList); <span class="comment">// [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]</span></div></pre></td></tr></table></figure>
+<h4 id="线程安全集合synchronized系列"><a href="#线程安全集合synchronized系列" class="headerlink" title="线程安全集合synchronized系列"></a>线程安全集合synchronized系列</h4><blockquote>
+<p>public static <t> Collection<t> synchronizedCollection(Collection<t> c)</t></t></t></p>
+<p>public static <t> SortedSet<t> synchronizedSortedSet(SortedSet<t> s)</t></t></t></p>
+<p>public static <t> List<t> synchronizedList(List<t> list)</t></t></t></p>
+<p>public static <k,v> Map<k,v> synchronizedMap(Map<k,v> m)</k,v></k,v></k,v></p>
+<p>public static <k,v> SortedMap<k,v> synchronizedSortedMap(SortedMap<k,v> m)</k,v></k,v></k,v></p>
+<p>public static <t> SortedSet<t> synchronizedSortedSet(SortedSet<t> s)</t></t></t></p>
+</blockquote>
+<p>传入普通的集合，通过包装的方式返回结束安全的集合，本质上还是在相关的操作上添加synchronized关键字。</p>
+<h4 id="不可变集合unmodifiable系列"><a href="#不可变集合unmodifiable系列" class="headerlink" title="不可变集合unmodifiable系列"></a>不可变集合unmodifiable系列</h4><blockquote>
+<p>public static <t> Collection<t> unmodifiableCollection(Collection&lt;? extends T&gt; c)</t></t></p>
+<p>public static <t> Set<t> unmodifiableSet(Set&lt;? extends T&gt; s)</t></t></p>
+<p>public static <t> SortedSet<t> unmodifiableSortedSet(SortedSet<t> s)</t></t></t></p>
+<p>public static <t> List<t> unmodifiableList(List&lt;? extends T&gt; list)</t></t></p>
+<p>public static <k,v> Map<k,v> unmodifiableMap(Map&lt;? extends K, ? extends V&gt; m)</k,v></k,v></p>
+<p>public static <k,v> SortedMap<k,v> unmodifiableSortedMap(SortedMap<k, ?="" extends="" v=""> m)</k,></k,v></k,v></p>
+</blockquote>
+<p>实现不可变集合的本质是将所有改变容器状态的操作（put add remove等等）都包装成未实现，调用时直接返回异常</p>
+<h4 id="元素交换swap"><a href="#元素交换swap" class="headerlink" title="元素交换swap"></a>元素交换swap</h4><p>交换List中两个指定位置的元素</p>
+<blockquote>
+<p>public static void swap(List&lt;?&gt; list, int i, int j)</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; numList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">Collections.addAll(numList, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>);</div><div class="line">Collections.swap(numList, <span class="number">1</span>, <span class="number">5</span>);</div><div class="line">System.out.println(numList); <span class="comment">// [1, 6, 3, 4, 5, 2, 7, 8, 9, 10]</span></div></pre></td></tr></table></figure>
+<h4 id="填充容器fill"><a href="#填充容器fill" class="headerlink" title="填充容器fill"></a>填充容器fill</h4><blockquote>
+<p>public static <t> void fill(List&lt;? super T&gt; list, T obj)</t></p>
+</blockquote>
+<p>使用指定数值填充容器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; numList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">Collections.addAll(numList, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>);</div><div class="line">Collections.fill(numList, <span class="number">12</span>);</div><div class="line">System.out.println(numList); <span class="comment">// [12, 12, 12, 12, 12, 12, 12, 12, 12, 12]</span></div></pre></td></tr></table></figure>
+<h4 id="复制集合copy"><a href="#复制集合copy" class="headerlink" title="复制集合copy"></a>复制集合copy</h4><blockquote>
+<p>public static <t> void copy(List&lt;? super T&gt; dest, List&lt;? extends T&gt; src)</t></p>
+</blockquote>
+<p>复制完成后索引值一一对应，目标集合的大小必须大于源集合</p>
+<h4 id="替换replaceAll"><a href="#替换replaceAll" class="headerlink" title="替换replaceAll"></a>替换replaceAll</h4><blockquote>
+<p>public static <t> boolean replaceAll(List<t> list, T oldVal, T newVal)</t></t></p>
+</blockquote>
+<h4 id="最大最小max、min"><a href="#最大最小max、min" class="headerlink" title="最大最小max、min"></a>最大最小max、min</h4><blockquote>
+<p>public static <t extends="" object="" &="" comparable<?="" super="" t="">&gt; T min(Collection&lt;? extends T&gt; coll) </t></p>
+<p>public static <t> T min(Collection&lt;? extends T&gt; coll, Comparator&lt;? super T&gt; comp)</t></p>
+<p>public static <t extends="" object="" &="" comparable<?="" super="" t="">&gt; T max(Collection&lt;? extends T&gt; coll) </t></p>
+<p>public static <t> T max(Collection&lt;? extends T&gt; coll, Comparator&lt;? super T&gt; comp)</t></p>
+</blockquote>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/07/08/java/tool/Collections工具类/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/07/02/java/spring boot/spring boot整合swagger/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    spring boot整合swagger
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/09/11/java/并发编程/synchronized和volatile/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title"></div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/11/java/并发编程/synchronized和volatile/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2018/09/11/java/并发编程/synchronized和volatile/" class="title"></a></p>
+                            <p class="item-date"><time datetime="2018-09-11T10:39:39.476Z" itemprop="datePublished">2018-09-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/08/java/tool/Collections工具类/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg)" alt="Collections工具类" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a></p>
+                            <p class="item-title"><a href="/2018/07/08/java/tool/Collections工具类/" class="title">Collections工具类</a></p>
+                            <p class="item-date"><time datetime="2018-07-08T01:43:51.000Z" itemprop="datePublished">2018-07-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/02/java/spring boot/spring boot整合swagger/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="spring boot整合swagger" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/07/02/java/spring boot/spring boot整合swagger/" class="title">spring boot整合swagger</a></p>
+                            <p class="item-date"><time datetime="2018-07-01T16:00:00.000Z" itemprop="datePublished">2018-07-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/06/25/redis/使用Redis实现分布式锁/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="使用Redis实现分布式锁" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/redis/">redis</a></p>
+                            <p class="item-title"><a href="/2018/06/25/redis/使用Redis实现分布式锁/" class="title">使用Redis实现分布式锁</a></p>
+                            <p class="item-date"><time datetime="2018-06-25T01:33:41.000Z" itemprop="datePublished">2018-06-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/06/19/java/mybatis/mybatis-generator插件/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="mybatis-generator插件" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/mybatis/">mybatis</a></p>
+                            <p class="item-title"><a href="/2018/06/19/java/mybatis/mybatis-generator插件/" class="title">mybatis-generator插件</a></p>
+                            <p class="item-date"><time datetime="2018-06-19T02:07:33.000Z" itemprop="datePublished">2018-06-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.67px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.33px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.33px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16.67px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 13.33px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16.67px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 13.33px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 15px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.67px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 13.33px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 13.33px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
