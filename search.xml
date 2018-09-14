@@ -4,7 +4,7 @@
     
     <entry>
       <title><![CDATA[Queue队列接口]]></title>
-      <url>%2F2018%2F09%2F13%2Fjava%2F%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2Fsynchronized%E5%92%8Cvolatile%2F</url>
+      <url>%2F2018%2F09%2F13%2Fjava%2F%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%2FQueue%E9%98%9F%E5%88%97%E6%8E%A5%E5%8F%A3%2F</url>
       <content type="text"><![CDATA[在并发队列中JDK提供了两套实现，一个是以ConcurrentLinkedQueue（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。 ConcurrentLinkedQueue一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并且不允许添加null元素。 add和offer都是加入元素 poll和peek都是取头元素节点，不同的是poll方法会删除元素 12345678910ConcurrentLinkedQueue&lt;String&gt; q = new ConcurrentLinkedQueue&lt;&gt;();q.offer("a");q.offer("b");q.offer("c");q.offer("d");q.add("e");System.out.println(q.poll()); // a 并删除了这个元素System.out.println(q.size()); // 4System.out.println(q.peek()); // bSystem.out.println(q.size()); // 4 PriorityQueue基于数组实现的无界优先队列和PriorityBlockingQueue的实现基本相同，不同的是它不是一个阻塞队列，也不是线程安全的队列 BlockingQueue此接口有多个不同的实现类 ArrayBlockingQueue基于数组的阻塞队列，在其内部维护着一个定长的数组，以便缓存队列中的数据对象，所以也叫有界队列。其内部没有实现读写分离，也就意味着生产和消费不能完全并行，可以指定先进先出或者先进后出 LinkedBlockingQueue基于链表的阻塞队列，与上面的ArrayBlockingQueue类似，内部维护着一个数据缓冲队列（链表实现）。内部实现采用分离锁（读写分离两个锁），从而实现生产者和消费者操作的完全并行运行，它是一个无界队列 PriorityBlockingQueue基于优先级的阻塞队列（优先级的判断通过构造函数传入的Compator对象来决定，也就是说传入队列的对象必须实现Comparable接口），在实现PriorityBlockingQueue时内部控制线程同步的锁采用的是公平锁，它也是一个无界队列。 DelayQueue带有延迟时间的Queue，其中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素。DelayQueue中的元素必须实现Delayed接口，DelayQueue也是一个无界队列，具有比较多的应用场景，比如对缓存超时的数据进行移除、任务超时处理、空闲连接的关闭等 SynchronousQueue一种没有缓冲的队列，生产者生产的数据直接交给消费者消费 参考： Queue队列简单应用]]></content>
     </entry>
 

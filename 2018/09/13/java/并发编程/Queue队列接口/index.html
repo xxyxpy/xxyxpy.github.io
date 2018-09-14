@@ -9,11 +9,11 @@
 <meta name="keywords" content="并发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Queue队列接口">
-<meta property="og:url" content="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/synchronized和volatile/index.html">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/Queue队列接口/index.html">
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="在并发队列中JDK提供了两套实现，一个是以ConcurrentLinkedQueue（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。 ConcurrentLinkedQueue一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并">
 <meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
-<meta property="og:updated_time" content="2018-09-14T01:36:14.468Z">
+<meta property="og:updated_time" content="2018-09-14T01:47:37.369Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Queue队列接口">
 <meta name="twitter:description" content="在并发队列中JDK提供了两套实现，一个是以ConcurrentLinkedQueue（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。 ConcurrentLinkedQueue一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并">
@@ -227,7 +227,7 @@ var _hmt = _hmt || [];
 </aside>
 
             
-            <section id="main"><article id="post-java/并发编程/synchronized和volatile" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-java/并发编程/Queue队列接口" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
         
@@ -244,7 +244,7 @@ var _hmt = _hmt || [];
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/09/13/java/并发编程/synchronized和volatile/">
+        <a href="/2018/09/13/java/并发编程/Queue队列接口/">
             <time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time>
         </a>
     </div>
@@ -282,6 +282,7 @@ var _hmt = _hmt || [];
 <p>poll和peek都是取头元素节点，不同的是poll方法会删除元素</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ConcurrentLinkedQueue&lt;String&gt; q = <span class="keyword">new</span> ConcurrentLinkedQueue&lt;&gt;();</div><div class="line">q.offer(<span class="string">"a"</span>);</div><div class="line">q.offer(<span class="string">"b"</span>);</div><div class="line">q.offer(<span class="string">"c"</span>);</div><div class="line">q.offer(<span class="string">"d"</span>);</div><div class="line">q.add(<span class="string">"e"</span>);</div><div class="line">System.out.println(q.poll()); <span class="comment">// a 并删除了这个元素</span></div><div class="line">System.out.println(q.size()); <span class="comment">// 4</span></div><div class="line">System.out.println(q.peek()); <span class="comment">// b</span></div><div class="line">System.out.println(q.size()); <span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<a id="more"></a>
 <h3 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue"></a>PriorityQueue</h3><p>基于数组实现的无界优先队列和PriorityBlockingQueue的实现基本相同，不同的是它不是一个阻塞队列，也不是线程安全的队列</p>
 <h3 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h3><p>此接口有多个不同的实现类</p>
 <h4 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h4><p>基于数组的阻塞队列，在其内部维护着一个定长的数组，以便缓存队列中的数据对象，所以也叫有界队列。其内部没有实现读写分离，也就意味着生产和消费不能完全并行，可以指定先进先出或者先进后出</p>
@@ -338,7 +339,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/synchronized和volatile/#comments" class="article-comment-link">评论</a>
+        <a href="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/Queue队列接口/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -385,7 +386,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/09/13/java/并发编程/synchronized和volatile/" class="thumbnail">
+                            <a href="/2018/09/13/java/并发编程/Queue队列接口/" class="thumbnail">
     
     
         <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Queue队列接口" class="thumbnail-image"></span>
@@ -396,7 +397,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-                            <p class="item-title"><a href="/2018/09/13/java/并发编程/synchronized和volatile/" class="title">Queue队列接口</a></p>
+                            <p class="item-title"><a href="/2018/09/13/java/并发编程/Queue队列接口/" class="title">Queue队列接口</a></p>
                             <p class="item-date"><time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time></p>
                         </div>
                     </li>
