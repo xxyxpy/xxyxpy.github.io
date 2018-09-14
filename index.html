@@ -228,11 +228,62 @@ var _hmt = _hmt || [];
     <div class="article-inner">
         
         
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/2018/09/13/java/并发编程/synchronized和volatile/">Queue队列接口</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/13/java/并发编程/synchronized和volatile/">
+            <time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/并发/">并发</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
         
         <div class="article-entry" itemprop="articleBody">
         
             
-            
+            <p>在并发队列中JDK提供了两套实现，一个是以<code>ConcurrentLinkedQueue</code>（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。</p>
+<h3 id="ConcurrentLinkedQueue"><a href="#ConcurrentLinkedQueue" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h3><p>一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并且不允许添加null元素。</p>
+<blockquote>
+<p>add和offer都是加入元素</p>
+<p>poll和peek都是取头元素节点，不同的是poll方法会删除元素</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ConcurrentLinkedQueue&lt;String&gt; q = <span class="keyword">new</span> ConcurrentLinkedQueue&lt;&gt;();</div><div class="line">q.offer(<span class="string">"a"</span>);</div><div class="line">q.offer(<span class="string">"b"</span>);</div><div class="line">q.offer(<span class="string">"c"</span>);</div><div class="line">q.offer(<span class="string">"d"</span>);</div><div class="line">q.add(<span class="string">"e"</span>);</div><div class="line">System.out.println(q.poll()); <span class="comment">// a 并删除了这个元素</span></div><div class="line">System.out.println(q.size()); <span class="comment">// 4</span></div><div class="line">System.out.println(q.peek()); <span class="comment">// b</span></div><div class="line">System.out.println(q.size()); <span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<h3 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue"></a>PriorityQueue</h3><p>基于数组实现的无界优先队列和PriorityBlockingQueue的实现基本相同，不同的是它不是一个阻塞队列，也不是线程安全的队列</p>
+<h3 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h3><p>此接口有多个不同的实现类</p>
+<h4 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h4><p>基于数组的阻塞队列，在其内部维护着一个定长的数组，以便缓存队列中的数据对象，所以也叫有界队列。其内部没有实现读写分离，也就意味着生产和消费不能完全并行，可以指定先进先出或者先进后出</p>
+<h4 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h4><p>基于链表的阻塞队列，与上面的ArrayBlockingQueue类似，内部维护着一个数据缓冲队列（链表实现）。内部实现采用分离锁（读写分离两个锁），从而实现生产者和消费者操作的完全并行运行，它是一个无界队列</p>
+<h4 id="PriorityBlockingQueue"><a href="#PriorityBlockingQueue" class="headerlink" title="PriorityBlockingQueue"></a>PriorityBlockingQueue</h4><p>基于优先级的阻塞队列（优先级的判断通过构造函数传入的Compator对象来决定，也就是说传入队列的对象必须实现Comparable接口），在实现PriorityBlockingQueue时内部控制线程同步的锁采用的是公平锁，它也是一个无界队列。</p>
+<h4 id="DelayQueue"><a href="#DelayQueue" class="headerlink" title="DelayQueue"></a>DelayQueue</h4><p>带有延迟时间的Queue，其中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素。DelayQueue中的元素必须实现Delayed接口，DelayQueue也是一个无界队列，具有比较多的应用场景，比如对缓存超时的数据进行移除、任务超时处理、空闲连接的关闭等</p>
+<h4 id="SynchronousQueue"><a href="#SynchronousQueue" class="headerlink" title="SynchronousQueue"></a>SynchronousQueue</h4><p>一种没有缓冲的队列，生产者生产的数据直接交给消费者消费</p>
+<p>参考：</p>
+<p><a href="https://blog.csdn.net/weixin_39549656/article/details/79059743" target="_blank" rel="external">Queue队列简单应用</a></p>
+
         
         </div>
         <footer class="article-footer">
@@ -279,7 +330,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
             
     
-        <a href="http://blog.xxyxpy.pub/2018/09/11/java/并发编程/synchronized和volatile/#comments" class="article-comment-link">评论</a>
+        <a href="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/synchronized和volatile/#comments" class="article-comment-link">评论</a>
     
 
         </footer>
@@ -1266,19 +1317,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/09/11/java/并发编程/synchronized和volatile/" class="thumbnail">
+                            <a href="/2018/09/13/java/并发编程/synchronized和volatile/" class="thumbnail">
     
     
-        <span class="thumbnail-image thumbnail-none"></span>
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Queue队列接口" class="thumbnail-image"></span>
     
 </a>
 
                         </div>
                         
                         <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/09/11/java/并发编程/synchronized和volatile/" class="title"></a></p>
-                            <p class="item-date"><time datetime="2018-09-11T10:39:39.476Z" itemprop="datePublished">2018-09-11</time></p>
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/13/java/并发编程/synchronized和volatile/" class="title">Queue队列接口</a></p>
+                            <p class="item-date"><time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time></p>
                         </div>
                     </li>
                 
@@ -1367,7 +1418,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.67px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.33px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.33px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16.67px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 13.33px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16.67px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 13.33px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 15px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.67px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 13.33px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 13.33px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 10px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.67px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.33px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.33px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16.67px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 13.33px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16.67px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 13.33px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 15px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.67px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 13.33px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 13.33px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 11.67px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 

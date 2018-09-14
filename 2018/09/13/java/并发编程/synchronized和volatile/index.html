@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Queue队列接口 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="在并发队列中JDK提供了两套实现，一个是以ConcurrentLinkedQueue（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。 ConcurrentLinkedQueue一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Queue队列接口">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/synchronized和volatile/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="在并发队列中JDK提供了两套实现，一个是以ConcurrentLinkedQueue（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。 ConcurrentLinkedQueue一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2018-09-14T01:36:14.468Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Queue队列接口">
+<meta name="twitter:description" content="在并发队列中JDK提供了两套实现，一个是以ConcurrentLinkedQueue（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。 ConcurrentLinkedQueue一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                79
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                58
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/并发编程/synchronized和volatile" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Queue队列接口
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/13/java/并发编程/synchronized和volatile/">
+            <time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/并发/">并发</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#ConcurrentLinkedQueue"><span class="toc-number">1.</span> <span class="toc-text">ConcurrentLinkedQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PriorityQueue"><span class="toc-number">2.</span> <span class="toc-text">PriorityQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BlockingQueue"><span class="toc-number">3.</span> <span class="toc-text">BlockingQueue</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ArrayBlockingQueue"><span class="toc-number">3.1.</span> <span class="toc-text">ArrayBlockingQueue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LinkedBlockingQueue"><span class="toc-number">3.2.</span> <span class="toc-text">LinkedBlockingQueue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PriorityBlockingQueue"><span class="toc-number">3.3.</span> <span class="toc-text">PriorityBlockingQueue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DelayQueue"><span class="toc-number">3.4.</span> <span class="toc-text">DelayQueue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SynchronousQueue"><span class="toc-number">3.5.</span> <span class="toc-text">SynchronousQueue</span></a></li></ol></li></ol>
+                </div>
+            
+            <p>在并发队列中JDK提供了两套实现，一个是以<code>ConcurrentLinkedQueue</code>（类）为代表的高性能队列，一个是以BlockingQueue（接口）为代表的阻塞队列。</p>
+<h3 id="ConcurrentLinkedQueue"><a href="#ConcurrentLinkedQueue" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h3><p>一个适用于高并发场景下的队列，通过无锁的方式实现了高并发状态下的高性能，通常它的性能好于BlockingQueue。它是一个基于链表的无界线程安全队列。该列队的元素遵循先进先出的原因，并且不允许添加null元素。</p>
+<blockquote>
+<p>add和offer都是加入元素</p>
+<p>poll和peek都是取头元素节点，不同的是poll方法会删除元素</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ConcurrentLinkedQueue&lt;String&gt; q = <span class="keyword">new</span> ConcurrentLinkedQueue&lt;&gt;();</div><div class="line">q.offer(<span class="string">"a"</span>);</div><div class="line">q.offer(<span class="string">"b"</span>);</div><div class="line">q.offer(<span class="string">"c"</span>);</div><div class="line">q.offer(<span class="string">"d"</span>);</div><div class="line">q.add(<span class="string">"e"</span>);</div><div class="line">System.out.println(q.poll()); <span class="comment">// a 并删除了这个元素</span></div><div class="line">System.out.println(q.size()); <span class="comment">// 4</span></div><div class="line">System.out.println(q.peek()); <span class="comment">// b</span></div><div class="line">System.out.println(q.size()); <span class="comment">// 4</span></div></pre></td></tr></table></figure>
+<h3 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue"></a>PriorityQueue</h3><p>基于数组实现的无界优先队列和PriorityBlockingQueue的实现基本相同，不同的是它不是一个阻塞队列，也不是线程安全的队列</p>
+<h3 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h3><p>此接口有多个不同的实现类</p>
+<h4 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h4><p>基于数组的阻塞队列，在其内部维护着一个定长的数组，以便缓存队列中的数据对象，所以也叫有界队列。其内部没有实现读写分离，也就意味着生产和消费不能完全并行，可以指定先进先出或者先进后出</p>
+<h4 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h4><p>基于链表的阻塞队列，与上面的ArrayBlockingQueue类似，内部维护着一个数据缓冲队列（链表实现）。内部实现采用分离锁（读写分离两个锁），从而实现生产者和消费者操作的完全并行运行，它是一个无界队列</p>
+<h4 id="PriorityBlockingQueue"><a href="#PriorityBlockingQueue" class="headerlink" title="PriorityBlockingQueue"></a>PriorityBlockingQueue</h4><p>基于优先级的阻塞队列（优先级的判断通过构造函数传入的Compator对象来决定，也就是说传入队列的对象必须实现Comparable接口），在实现PriorityBlockingQueue时内部控制线程同步的锁采用的是公平锁，它也是一个无界队列。</p>
+<h4 id="DelayQueue"><a href="#DelayQueue" class="headerlink" title="DelayQueue"></a>DelayQueue</h4><p>带有延迟时间的Queue，其中的元素只有当其指定的延迟时间到了，才能够从队列中获取到该元素。DelayQueue中的元素必须实现Delayed接口，DelayQueue也是一个无界队列，具有比较多的应用场景，比如对缓存超时的数据进行移除、任务超时处理、空闲连接的关闭等</p>
+<h4 id="SynchronousQueue"><a href="#SynchronousQueue" class="headerlink" title="SynchronousQueue"></a>SynchronousQueue</h4><p>一种没有缓冲的队列，生产者生产的数据直接交给消费者消费</p>
+<p>参考：</p>
+<p><a href="https://blog.csdn.net/weixin_39549656/article/details/79059743" target="_blank" rel="external">Queue队列简单应用</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/09/13/java/并发编程/synchronized和volatile/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/07/08/java/tool/Collections工具类/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Collections工具类
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/13/java/并发编程/synchronized和volatile/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Queue队列接口" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/13/java/并发编程/synchronized和volatile/" class="title">Queue队列接口</a></p>
+                            <p class="item-date"><time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/08/java/tool/Collections工具类/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://oo0vldwkt.bkt.clouddn.com/908fa0ec08fa513d08b6a0ab376d55fbb2fbd9a3.jpg)" alt="Collections工具类" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/tool/">tool</a></p>
+                            <p class="item-title"><a href="/2018/07/08/java/tool/Collections工具类/" class="title">Collections工具类</a></p>
+                            <p class="item-date"><time datetime="2018-07-08T01:43:51.000Z" itemprop="datePublished">2018-07-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/07/02/java/spring boot/spring boot整合swagger/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="spring boot整合swagger" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/07/02/java/spring boot/spring boot整合swagger/" class="title">spring boot整合swagger</a></p>
+                            <p class="item-date"><time datetime="2018-07-01T16:00:00.000Z" itemprop="datePublished">2018-07-02</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/06/25/redis/使用Redis实现分布式锁/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="使用Redis实现分布式锁" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/redis/">redis</a></p>
+                            <p class="item-title"><a href="/2018/06/25/redis/使用Redis实现分布式锁/" class="title">使用Redis实现分布式锁</a></p>
+                            <p class="item-date"><time datetime="2018-06-25T01:33:41.000Z" itemprop="datePublished">2018-06-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/06/19/java/mybatis/mybatis-generator插件/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="mybatis-generator插件" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/java/mybatis/">mybatis</a></p>
+                            <p class="item-title"><a href="/2018/06/19/java/mybatis/mybatis-generator插件/" class="title">mybatis-generator插件</a></p>
+                            <p class="item-date"><time datetime="2018-06-19T02:07:33.000Z" itemprop="datePublished">2018-06-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.67px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.33px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.33px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16.67px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 13.33px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16.67px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 13.33px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 15px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.67px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 13.33px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 13.33px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 11.67px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
