@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>并发编程实战-06取消与关闭 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="要使任务和线程能安全、快速、可靠地停止下来，并不是一件容易的事。Java没有任何机制来安全地终止线程。但它提供了中断，它能够一个线程终止另一个线程的工作。 任务取消如果外部代码能在某个操作正常完成之前将其转入“完成”状态，那么这个操作就可以称为可取消的。 在Java中没有一种安全的抢占式方法来停止线程，因此也就没有安全的抢占式方法来停止任务。只有一些协作式的机制，使请求取消的任务和代码都遵循一种协">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发编程实战-06取消与关闭">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/09/20/java/并发编程/06取消与关闭/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="要使任务和线程能安全、快速、可靠地停止下来，并不是一件容易的事。Java没有任何机制来安全地终止线程。但它提供了中断，它能够一个线程终止另一个线程的工作。 任务取消如果外部代码能在某个操作正常完成之前将其转入“完成”状态，那么这个操作就可以称为可取消的。 在Java中没有一种安全的抢占式方法来停止线程，因此也就没有安全的抢占式方法来停止任务。只有一些协作式的机制，使请求取消的任务和代码都遵循一种协">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2018-09-21T09:17:09.132Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="并发编程实战-06取消与关闭">
+<meta name="twitter:description" content="要使任务和线程能安全、快速、可靠地停止下来，并不是一件容易的事。Java没有任何机制来安全地终止线程。但它提供了中断，它能够一个线程终止另一个线程的工作。 任务取消如果外部代码能在某个操作正常完成之前将其转入“完成”状态，那么这个操作就可以称为可取消的。 在Java中没有一种安全的抢占式方法来停止线程，因此也就没有安全的抢占式方法来停止任务。只有一些协作式的机制，使请求取消的任务和代码都遵循一种协">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                85
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                58
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/并发编程/06取消与关闭" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            并发编程实战-06取消与关闭
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/20/java/并发编程/06取消与关闭/">
+            <time datetime="2018-09-19T16:00:00.000Z" itemprop="datePublished">2018-09-20</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/并发/">并发</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#任务取消"><span class="toc-number">1.</span> <span class="toc-text">任务取消</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#中断"><span class="toc-number">1.1.</span> <span class="toc-text">中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#中断策略"><span class="toc-number">1.2.</span> <span class="toc-text">中断策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#响应中断"><span class="toc-number">1.3.</span> <span class="toc-text">响应中断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通过Future来实现取消"><span class="toc-number">1.4.</span> <span class="toc-text">通过Future来实现取消</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#停止基于线程的服务"><span class="toc-number">2.</span> <span class="toc-text">停止基于线程的服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#日志服务"><span class="toc-number">2.1.</span> <span class="toc-text">日志服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭ExecutorService"><span class="toc-number">2.2.</span> <span class="toc-text">关闭ExecutorService</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#毒丸对象"><span class="toc-number">2.3.</span> <span class="toc-text">毒丸对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#只执行一次的服务"><span class="toc-number">2.4.</span> <span class="toc-text">只执行一次的服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shutdownNow的局限性"><span class="toc-number">2.5.</span> <span class="toc-text">shutdownNow的局限性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM关闭"><span class="toc-number">3.</span> <span class="toc-text">JVM关闭</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭钩子"><span class="toc-number">3.1.</span> <span class="toc-text">关闭钩子</span></a></li></ol></li></ol>
+                </div>
+            
+            <p>要使任务和线程能安全、快速、可靠地停止下来，并不是一件容易的事。Java没有任何机制来安全地终止线程。但它提供了中断，它能够一个线程终止另一个线程的工作。</p>
+<h2 id="任务取消"><a href="#任务取消" class="headerlink" title="任务取消"></a>任务取消</h2><p>如果外部代码能在某个操作正常完成之前将其转入“完成”状态，那么这个操作就可以称为可取消的。</p>
+<p>在<code>Java</code>中没有一种安全的抢占式方法来停止线程，因此也就没有安全的抢占式方法来停止任务。只有一些协作式的机制，使请求取消的任务和代码都遵循一种协商好的协议。其中一种协作机制能设置某个“已请求取消”标志，而任务将定期查看该标志。如果设置了此标志，任务将提前结束。</p>
+<a id="more"></a>
+<blockquote>
+<p>质数生成器-使用volatile类型的域来保存取消状态</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrimeGenerator</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;BigInteger&gt; primes = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        BigInteger p = BigInteger.ONE;</div><div class="line">        <span class="keyword">while</span> (!cancelled) &#123;</div><div class="line">            p = p.nextProbablePrime();</div><div class="line">            <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">                primes.add(p);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        cancelled = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> List&lt;BigInteger&gt; <span class="title">get</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ArrayList&lt;&gt;(primes);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>一个仅运行一秒钟的质数生成器</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function">List&lt;BigInteger&gt; <span class="title">aSecondPrimes</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    PrimeGenerator generator = <span class="keyword">new</span> PrimeGenerator();</div><div class="line">    <span class="keyword">new</span> Thread(generator).start();</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        SECONDS.sleep(<span class="number">1</span>);</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        generator.cancel();</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> generator.get();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p><code>PrimeGenerator</code>中采用取消标志的取消机制。但如果使用这种方法的任务调用了一个阻塞方法，例如<code>BlockingQueue.put</code>，那么可能会产生严重的问题——任务可能永远没有机会检查取消标志，因此永远不会结束。</p>
+<p>下面的<code>BrokenPrimeProducer</code>代码说明了这个问题。生产者线程生产质数用于消费者线程消费。如果生产者生产的速度超过消费速度那么队列被填满时生产者的<code>put</code>方法将会阻塞。如此消费者此时取消了消费任务，并且取消生产者任务，那么将会发生由于<code>put</code>方法阻塞无法判断取消标志的情况，一直无法结束。</p>
+<blockquote>
+<p>不可取消的操作把生产者置于阻塞的操作中</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> cancelled;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BrokenPrimeProducer</span><span class="params">(BlockingQueue&lt;BigInteger&gt; queue)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.queue = queue;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BigInteger p = BigInteger.ONE;</div><div class="line">            <span class="keyword">while</span> (!cancelled) &#123;</div><div class="line">                p = p.nextProbablePrime();</div><div class="line">                <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">                    queue.put(p);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        cancelled = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeConsumer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">consumerPrimes</span><span class="params">()</span> </span>&#123;</div><div class="line">        BlockingQueue&lt;BigInteger&gt; primes = <span class="keyword">new</span> ArrayBlockingQueue&lt;BigInteger&gt;(<span class="number">100</span>);</div><div class="line">        BrokenPrimeProducer producer = <span class="keyword">new</span> BrokenPrimeProducer(primes);</div><div class="line">        producer.start();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (flag) &#123;</div><div class="line">                consume(primes.take());</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 当停止消费了，触发生产者取消任务</span></div><div class="line">            producer.cancel();</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">(BigInteger bigInteger)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        Thread.sleep(<span class="number">100</span>);</div><div class="line">        System.out.println(bigInteger);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        flag = <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UseBrokenPrime</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        BrokenPrimeConsumer primeConsumer = <span class="keyword">new</span> BrokenPrimeConsumer();</div><div class="line">        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                primeConsumer.consumerPrimes();</div><div class="line">            &#125;</div><div class="line">        &#125;).start();</div><div class="line">        Thread.sleep(<span class="number">5000</span>);</div><div class="line">        primeConsumer.cancel(); <span class="comment">// 生产者线程无法被取消，因为put操作阻塞了</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>每个线程都有一个<code>boolean</code>类型的中断状态。当中断线程时，这个中断状态将被设置为<code>true</code>。</p>
+<blockquote>
+<p>Thread中的中断方法</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">interrupt</span><span class="params">()</span> </span>&#123; &#125; 			<span class="comment">// 中断目标线程</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isInterrupted</span><span class="params">()</span> </span>&#123; &#125;		<span class="comment">// 返回线程的中断状态</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">interrupted</span><span class="params">()</span> </span>&#123; &#125; <span class="comment">// 清除线程的中断状态并返回它之前的值</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>阻塞库方法，如<code>Thread.sleep</code>和<code>Object.wait</code>等，都会检查线程何时中断，并且在发现中断时提前返回。它们在响应中断时执行的操作包括：<strong>清除中断状态，拋出InterruptedException，表示阻塞操作由于中断而提前结束</strong>。</p>
+<p>当线程在非阻塞状态下中断时，它的中断状态将被设置。然后根据将被取消的操作来检查中断状态以判断发生了中断。通过这样的方法，中断操作将变得“有黏性”——如果不触发<code>InterruptedException</code>，那么中断状态将一直保持，直到明确地清除中断状态。</p>
+<blockquote>
+<p>调用interrupt并不意味着立即停止目标线程正在进行的工作，而只是传递了请求中断的消息。</p>
+</blockquote>
+<p>对中断操作的正确理解是：它并不会真正地中断一个正在运行的线程，而只是发出中断请求，然后由线程在下一个合适的时刻中断自己（这些时刻被称为取消点）。有些方法，如<code>wait</code>、<code>sleep</code>和<code>join</code>等，将严格地处理这种请求，当它们收到中断请求或者在开始执行时发现某个已被设置好的中断状态时，将拋出一个异常。</p>
+<p>使用静态的<code>interrupted</code>时要小心，它会清除当前线程的中断状态。如果调用时返回了<code>true</code>，那么除非你想屏蔽这个中断，否则必须对它进行处理——可以拋出<code>InterruptedException</code>或者通过再次调用<code>interrupt</code>来恢复中断状态。</p>
+<blockquote>
+<p>通过中断来取消</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeProducer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;BigInteger&gt; queue;    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BrokenPrimeProducer</span><span class="params">(BlockingQueue&lt;BigInteger&gt; queue)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.queue = queue;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            BigInteger p = BigInteger.ONE;</div><div class="line">            <span class="comment">//while (!cancelled) &#123;</span></div><div class="line">            <span class="keyword">while</span> (!Thread.currentThread().isInterrupted()) &#123;</div><div class="line">                p = p.nextProbablePrime();</div><div class="line">                <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">                    queue.put(p);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BrokenPrimeConsumer</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> flag = <span class="keyword">true</span>;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">consumerPrimes</span><span class="params">()</span> </span>&#123;</div><div class="line">        BlockingQueue&lt;BigInteger&gt; primes = <span class="keyword">new</span> ArrayBlockingQueue&lt;BigInteger&gt;(<span class="number">100</span>);</div><div class="line">        BrokenPrimeProducer producer = <span class="keyword">new</span> BrokenPrimeProducer(primes);</div><div class="line">        producer.start();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">while</span> (flag) &#123;</div><div class="line">                consume(primes.take());</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 当停止消费了，触发生产者取消任务</span></div><div class="line">            <span class="comment">//producer.cancel();</span></div><div class="line">            producer.interrupt();</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">consume</span><span class="params">(BigInteger bigInteger)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        Thread.sleep(<span class="number">100</span>);</div><div class="line">        System.out.println(bigInteger);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">cancel</span><span class="params">()</span> </span>&#123;</div><div class="line">        flag = <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="中断策略"><a href="#中断策略" class="headerlink" title="中断策略"></a>中断策略</h3><p>中断策略规定线程如何解释某个中断请求——当发现中断请求时，应该做哪些工作（如果需要的话），哪些工作单元对于中断来说是原子操作，以及以多快的速度来响应中断。</p>
+<h3 id="响应中断"><a href="#响应中断" class="headerlink" title="响应中断"></a>响应中断</h3><p>当调用可中断的阻塞函数时，有两种策略可以处理</p>
+<ul>
+<li>传递异常（可能在执行某个特定于任务的清除操作之后），从而使你的方法也成为可中断的阻塞方法；</li>
+<li>恢复中断状态，从而使调用栈中的上层代码能够对其进行处理。</li>
+</ul>
+<blockquote>
+<p>将InterruptedException传递给调用者</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">BlockingQueue&lt;Task&gt; queue;</div><div class="line">...</div><div class="line"><span class="function"><span class="keyword">public</span> Task <span class="title">getNextTask</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    <span class="keyword">return</span> queue.take();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果不想或无法传递<code>InterruptedException</code>，需要寻找另一种方式来保存中断请求。一种标准的方法是通过再次调用interrupt来恢复中断状态。不能直接屏蔽<code>InterruptedException</code>，例如在<code>catch</code>捕获到异常却不做任何处理，除非你在代码中实现了线程的中断策略。</p>
+<blockquote>
+<p>只有实现了线程中断策略的代码才可以屏蔽中断请求。在常规的任务和库代码中都不应该屏蔽中断请求</p>
+</blockquote>
+<p>对于一些不支持取消但仍可以调用可中断阻塞方法的操作，它们必须在循环中调用这些方法，并在发现中断后重新尝试。在这种情况下，它们应该在本地保存中断状态，并在返回前恢复状态而不是捕获<code>InterruptedException</code>时恢复状态。</p>
+<blockquote>
+<p>不可取消的任务在退出前恢复状态</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> Task <span class="title">getNextTask</span><span class="params">(BlockingQueue&lt;Task&gt; queue)</span> </span>&#123;</div><div class="line">    <span class="keyword">boolean</span> interrupted = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">return</span> queue.take();</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                interrupted = <span class="keyword">true</span>;</div><div class="line">                <span class="comment">// 重新尝试</span></div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">if</span> (interrupted) &#123;</div><div class="line">            Thread.currentThread().interrupt();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="通过Future来实现取消"><a href="#通过Future来实现取消" class="headerlink" title="通过Future来实现取消"></a>通过Future来实现取消</h3><p><a href="https://segmentfault.com/a/1190000007961347" target="_blank" rel="external">取消正在运行的任务</a></p>
+<p><code>ExecutorService.submit</code>将返回一个<code>Future</code>来描述任务，<code>Future</code>的<code>cancel</code>方法接收一个<code>boolean</code>类型参数，此方法可以用来（尝试）终止一个任务</p>
+<ul>
+<li>如果任务运行之前调用了该方法，那么任务就不会被运行；</li>
+<li>如果任务已经完成或者已经被取消，那么该方法方法不起作用；</li>
+<li>如果任务正在运行，并且 <code>cancel</code> 传入参数为 <code>true</code>，那么便会去终止与 <code>Future</code> 关联的任务。</li>
+</ul>
+<p><code>cancel(false)</code> 与 <code>cancel(true）</code>的区别在于，<code>cancel(false)</code> 只 <strong>取消已经提交但还没有被运行的任务</strong>（即任务就不会被安排运行）；而 <code>cancel(true)</code> 会取消所有已经提交的任务，包括 <strong>正在等待的</strong> 和 <strong>正在运行的</strong> 任务。</p>
+<h2 id="停止基于线程的服务"><a href="#停止基于线程的服务" class="headerlink" title="停止基于线程的服务"></a>停止基于线程的服务</h2><h3 id="日志服务"><a href="#日志服务" class="headerlink" title="日志服务"></a>日志服务</h3><blockquote>
+<p>不支持关闭的生产者-消费者日志服务</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogWriter</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;String&gt; queue;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LoggerThread logger;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogWriter</span><span class="params">(PrintWriter writer)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.queue = <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(<span class="number">100</span>);</div><div class="line">        <span class="keyword">this</span>.logger = <span class="keyword">new</span> LoggerThread(writer);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">        logger.start();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">(String msg)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        queue.put(msg);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">        </div><div class="line">        <span class="keyword">private</span> <span class="keyword">final</span> PrintWriter writer;</div><div class="line">    </div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="title">LoggerThread</span><span class="params">(PrintWriter writer)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.writer = writer;</div><div class="line">        &#125;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">                    writer.println(queue.take());</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                writer.close();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当取消一个生产者-消费者操作时，需要同时取消生产者和消费者。</p>
+<blockquote>
+<p>添加可靠的取消操作</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogService</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> BlockingQueue&lt;String&gt; queue;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> LoggerThread logger;</div><div class="line">    <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>)</div><div class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> isShutDown;</div><div class="line">    <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>)</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> reservations;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            isShutDown = <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">        logger.interrupt();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogService</span><span class="params">(PrintWriter writer)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.queue = <span class="keyword">new</span> LinkedBlockingDeque&lt;&gt;(<span class="number">100</span>);</div><div class="line">        <span class="keyword">this</span>.logger = <span class="keyword">new</span> LoggerThread(writer);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">        logger.start();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">(String msg)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">            <span class="comment">// stop后不再写入</span></div><div class="line">            <span class="keyword">if</span> (isShutDown) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">"已关闭"</span>);</div><div class="line">            &#125;</div><div class="line">            ++reservations;</div><div class="line">        &#125;</div><div class="line">        queue.put(msg);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">LoggerThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">        </div><div class="line">        <span class="keyword">private</span> <span class="keyword">final</span> PrintWriter writer;</div><div class="line">    </div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="title">LoggerThread</span><span class="params">(PrintWriter writer)</span> </span>&#123;</div><div class="line">            <span class="keyword">this</span>.writer = writer;</div><div class="line">        &#125;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">                    <span class="keyword">synchronized</span> (LogService.<span class="keyword">this</span>) &#123;</div><div class="line">                        <span class="comment">// 即使stop必须消费完才退出</span></div><div class="line">                        <span class="keyword">if</span> (isShutDown &amp;&amp; reservations == <span class="number">0</span>) &#123;</div><div class="line">                            <span class="keyword">break</span>;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                    writer.println(queue.take());</div><div class="line">                    <span class="keyword">synchronized</span> (LogService.<span class="keyword">this</span>) &#123;</div><div class="line">                        <span class="comment">// 消费一个计数器-1</span></div><div class="line">                        --reservations;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                <span class="comment">// retry</span></div><div class="line">                e.printStackTrace();</div><div class="line">            &#125; <span class="keyword">finally</span> &#123;</div><div class="line">                writer.close();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="关闭ExecutorService"><a href="#关闭ExecutorService" class="headerlink" title="关闭ExecutorService"></a>关闭ExecutorService</h3><p>可以将管理线程的工作委托给一个<code>ExecutorService</code>，而不是由其自行管理。当执行<code>shutdown</code>方法时会先停止接收新的任务，将正在执行和队列中的待执行任务执行完成之后关闭线程池。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogService2</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> PrintWriter writer;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ExecutorService exec = Executors.newSingleThreadExecutor();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            exec.shutdown();</div><div class="line">            exec.awaitTermination(<span class="number">60</span>, TimeUnit.SECONDS);</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogService2</span><span class="params">(PrintWriter writer)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.writer = writer;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        exec.execute(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                writer.println(msg);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="毒丸对象"><a href="#毒丸对象" class="headerlink" title="毒丸对象"></a>毒丸对象</h3><p>毒丸是指一个放在队列上的对象，其含义是：当得到空上对象时，立即停止。在<code>FIFO</code>队列中，毒丸对象将确保消费者在关闭之前首先完成队列中的所有工作，在提交毒丸对象之前提交的所有工作都会被处理，而生产者在提交了毒丸对象之后，将不会再提交任何工作。</p>
+<p>此方法可以扩展到多个生产者，当各个生产者都放入一个毒丸对象，一个消费者接收到<code>N</code>个毒丸对象时才停止。同时可以扩展到多个消费的情况，当多个消费者总共接收到<code>N</code>个毒丸对象时才停止。只有在无界队列中，毒丸对象才能可靠的工作。</p>
+<h3 id="只执行一次的服务"><a href="#只执行一次的服务" class="headerlink" title="只执行一次的服务"></a>只执行一次的服务</h3><p>某个方法需要处理一批任务，当所有的任务都处理完成之后才返回。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">checkMail</span><span class="params">(Set&lt;String&gt; hosts, <span class="keyword">long</span> timeout, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">    ExecutorService exec = Executors.newCachedThreadPool();</div><div class="line">    <span class="keyword">final</span> AtomicBoolean hasNewMail = <span class="keyword">new</span> AtomicBoolean(<span class="keyword">false</span>);</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">for</span> (String host : hosts) &#123;</div><div class="line">            exec.execute(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">if</span> (checkMail(host)) &#123;</div><div class="line">                        hasNewMail.set(<span class="keyword">true</span>);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;);</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        exec.shutdown();</div><div class="line">        exec.awaitTermination(timeout, unit);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> hasNewMail.get();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">checkMail</span><span class="params">(String host)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="shutdownNow的局限性"><a href="#shutdownNow的局限性" class="headerlink" title="shutdownNow的局限性"></a>shutdownNow的局限性</h3><p>当通过<code>shutdownNow</code>来强行关闭<code>ExecutorService</code>时，它会尝试取消正在执行的任务，并返回已提交但未开始的任务，从而将这些任务写入日志或者保存起来以便之后进行处理。</p>
+<p>可以通过在任务执行过程中监控线程的中断状态来判断任务是否是在关闭后取消的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    runnable.run();</div><div class="line">&#125; <span class="keyword">finally</span> &#123;</div><div class="line">    <span class="keyword">if</span>(isShutdown() &amp;&amp; Thread.currentThread.isInterrupted()) &#123;</div><div class="line">        taskCancelledAtShutdown.add(runnable); <span class="comment">// 添加到取消列表</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>需要注意误报的问题：一些被认为已取消的任务实际上已经执行完成。这个问题的原因在于，在任务执行最后一条指令以及线程池将任务记录为结束的两个时刻之间，线程池可能已经被关闭。如果任务是幂等的，那么不存在问题。否则需要注意这种风险。</p>
+<h2 id="JVM关闭"><a href="#JVM关闭" class="headerlink" title="JVM关闭"></a>JVM关闭</h2><h3 id="关闭钩子"><a href="#关闭钩子" class="headerlink" title="关闭钩子"></a>关闭钩子</h3><p><strong>关闭钩子是指通过Runtime.addShutdownHook注册的但尚未开始的线程</strong>。这些钩子可以用于实现服务或者应用程序的清理工作，例如删除临时文件，或者清除无法由操作系统自动清除的资源。</p>
+<p><code>JVM</code>既可以正常关闭，也可以强行关闭。正常关闭的触发方式有多种，包括：当最后一个“正常（非守护）”线程结束时，或者当调用了System.exit时，或者通过其他特定于平台的方法关闭时（例如发送了<code>SIGINT</code>信号或者键入<code>Ctrl-C</code>）。</p>
+<p>在正常关闭中，<strong>JVM首先调用所有已注册的关闭钩子</strong>。<strong>JVM并不能保证关闭钩子的调用顺序</strong>。在关闭应用程序线程时，如果有（守护或者非守护）线程仍然在执行，那么这些线程接下来将与关闭进程<strong>并发</strong>执行。当所有的关闭钩子都执行结束时，如果<code>runFinalizersOnExit</code>为<code>true</code>【通过<code>Runtime.runFinalizersOnExit(true)</code>设置】，那么JVM将运行这些<code>Finalizer</code>（对象重写的<code>finalize</code>方法），然后再停止。<strong>JVM不会停止或中断任何在关闭时仍然运行的应用程序线程</strong>。当<code>JVM</code>最终结束时，这些线程将被强行结束。如果关闭钩子或者<code>Finalizer</code>没有执行完成，那么正常关闭进程“挂起”并且<code>JVM</code>必须被强行关闭。<strong>当JVM被强行关闭时，只是关闭JVM，并不会运行关闭钩子</strong>。</p>
+<p>在编写关闭钩子时，需要注意以下几点：</p>
+<ul>
+<li>关闭钩子应该<strong>是线程安全</strong>的：它们在访问共享数据时，必须使用同步机制，并且小心地避免发生死锁，这与其他并发代码的要求相同。</li>
+<li>关闭钩子不应该对应用程序的状态（例如，其他服务是否已经关闭，或者所有的正常线程是否已经执行完成）或者JVM的关闭原因做出任何假设，因此在编写关闭钩子的代码时，必须考虑周全。</li>
+<li>关闭钩子<strong>必须尽快退出</strong>，因为 他们会延迟<code>JVM</code>的结束时间，而用户可能希望<code>JVM</code>尽快 终止</li>
+</ul>
+<blockquote>
+<p>通过注册一个关闭钩子来停止日志服务</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</div><div class="line">    Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> Thread() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                LogService.<span class="keyword">this</span>.stop();</div><div class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/09/20/java/并发编程/06取消与关闭/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/09/18/java/并发编程/05任务执行/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    并发编程实战-05任务执行
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/20/java/并发编程/06取消与关闭/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-06取消与关闭" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/20/java/并发编程/06取消与关闭/" class="title">并发编程实战-06取消与关闭</a></p>
+                            <p class="item-date"><time datetime="2018-09-19T16:00:00.000Z" itemprop="datePublished">2018-09-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/18/java/并发编程/05任务执行/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-05任务执行" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/18/java/并发编程/05任务执行/" class="title">并发编程实战-05任务执行</a></p>
+                            <p class="item-date"><time datetime="2018-09-17T16:00:00.000Z" itemprop="datePublished">2018-09-18</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/13/java/并发编程/Queue队列接口/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Queue队列接口" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/13/java/并发编程/Queue队列接口/" class="title">Queue队列接口</a></p>
+                            <p class="item-date"><time datetime="2018-09-12T16:00:00.000Z" itemprop="datePublished">2018-09-13</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/10/java/并发编程/04基础构建模块/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-04基础构建模块" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/10/java/并发编程/04基础构建模块/" class="title">并发编程实战-04基础构建模块</a></p>
+                            <p class="item-date"><time datetime="2018-09-09T16:00:00.000Z" itemprop="datePublished">2018-09-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/07/java/并发编程/03对象的组合/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-03对象的组合" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/07/java/并发编程/03对象的组合/" class="title">并发编程实战-03对象的组合</a></p>
+                            <p class="item-date"><time datetime="2018-09-06T16:00:00.000Z" itemprop="datePublished">2018-09-07</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.43px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12.86px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.57px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.57px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.43px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 15.71px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 12.86px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 15.71px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 12.86px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14.29px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.43px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 12.86px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 15.71px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12.86px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 17.14px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

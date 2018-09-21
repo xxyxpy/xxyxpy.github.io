@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="在线程中执行任务串行地执行任务 串行的web服务器  123456789101112public class SingleThreadWebServer &amp;#123;    public static void main(String[] args) throws IOException &amp;#123;        ServerSocket socket = new ServerSocket(80">
 <meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
-<meta property="og:updated_time" content="2018-09-18T05:47:26.166Z">
+<meta property="og:updated_time" content="2018-09-18T06:50:23.047Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并发编程实战-05任务执行">
 <meta name="twitter:description" content="在线程中执行任务串行地执行任务 串行的web服务器  123456789101112public class SingleThreadWebServer &amp;#123;    public static void main(String[] args) throws IOException &amp;#123;        ServerSocket socket = new ServerSocket(80">
@@ -175,7 +175,7 @@ var _hmt = _hmt || [];
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                84
+                85
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -272,7 +272,7 @@ var _hmt = _hmt || [];
             
                 <div id="toc" class="toc-article">
                 <strong class="toc-title">文章目录</strong>
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在线程中执行任务"><span class="toc-number">1.</span> <span class="toc-text">在线程中执行任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#串行地执行任务"><span class="toc-number">1.1.</span> <span class="toc-text">串行地执行任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#显示地为任务创建线程"><span class="toc-number">1.2.</span> <span class="toc-text">显示地为任务创建线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无限制创建线程的不足"><span class="toc-number">1.3.</span> <span class="toc-text">无限制创建线程的不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Executor框架"><span class="toc-number">2.</span> <span class="toc-text">Executor框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Executor的Web服务器"><span class="toc-number">2.1.</span> <span class="toc-text">基于Executor的Web服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程池"><span class="toc-number">2.2.</span> <span class="toc-text">线程池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Executor的生命周期"><span class="toc-number">2.3.</span> <span class="toc-text">Executor的生命周期</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#找出可利用的并行任务"><span class="toc-number">3.</span> <span class="toc-text">找出可利用的并行任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#串行的页面渲染器"><span class="toc-number">3.1.</span> <span class="toc-text">串行的页面渲染器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#携带结果的任务Callable与Future"><span class="toc-number">3.2.</span> <span class="toc-text">携带结果的任务Callable与Future</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Future实现页面渲染器"><span class="toc-number">3.3.</span> <span class="toc-text">使用Future实现页面渲染器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在异构任务并行化中存在的局限"><span class="toc-number">3.4.</span> <span class="toc-text">在异构任务并行化中存在的局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CompletionService-Executor与BlockingQueue"><span class="toc-number">3.5.</span> <span class="toc-text">CompletionService:Executor与BlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用CompletionService实现页面渲染器"><span class="toc-number">3.6.</span> <span class="toc-text">使用CompletionService实现页面渲染器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为任务设置时限"><span class="toc-number">3.7.</span> <span class="toc-text">为任务设置时限</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在线程中执行任务"><span class="toc-number">1.</span> <span class="toc-text">在线程中执行任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#串行地执行任务"><span class="toc-number">1.1.</span> <span class="toc-text">串行地执行任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#显式地为任务创建线程"><span class="toc-number">1.2.</span> <span class="toc-text">显式地为任务创建线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#无限制创建线程的不足"><span class="toc-number">1.3.</span> <span class="toc-text">无限制创建线程的不足</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Executor框架"><span class="toc-number">2.</span> <span class="toc-text">Executor框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基于Executor的Web服务器"><span class="toc-number">2.1.</span> <span class="toc-text">基于Executor的Web服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线程池"><span class="toc-number">2.2.</span> <span class="toc-text">线程池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Executor的生命周期"><span class="toc-number">2.3.</span> <span class="toc-text">Executor的生命周期</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#找出可利用的并行任务"><span class="toc-number">3.</span> <span class="toc-text">找出可利用的并行任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#串行的页面渲染器"><span class="toc-number">3.1.</span> <span class="toc-text">串行的页面渲染器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#携带结果的任务Callable与Future"><span class="toc-number">3.2.</span> <span class="toc-text">携带结果的任务Callable与Future</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Future实现页面渲染器"><span class="toc-number">3.3.</span> <span class="toc-text">使用Future实现页面渲染器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在异构任务并行化中存在的局限"><span class="toc-number">3.4.</span> <span class="toc-text">在异构任务并行化中存在的局限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CompletionService-Executor与BlockingQueue"><span class="toc-number">3.5.</span> <span class="toc-text">CompletionService:Executor与BlockingQueue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用CompletionService实现页面渲染器"><span class="toc-number">3.6.</span> <span class="toc-text">使用CompletionService实现页面渲染器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#为任务设置时限"><span class="toc-number">3.7.</span> <span class="toc-text">为任务设置时限</span></a></li></ol></li></ol>
                 </div>
             
             <h2 id="在线程中执行任务"><a href="#在线程中执行任务" class="headerlink" title="在线程中执行任务"></a>在线程中执行任务</h2><h3 id="串行地执行任务"><a href="#串行地执行任务" class="headerlink" title="串行地执行任务"></a>串行地执行任务</h3><blockquote>
@@ -281,7 +281,7 @@ var _hmt = _hmt || [];
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleThreadWebServer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        ServerSocket socket = <span class="keyword">new</span> ServerSocket(<span class="number">80</span>);</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            Socket connection = socket.accept();</div><div class="line">            handleRequest(connection);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Socket connection)</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>每次只能处理一个请求，第二个请求过来时被阻塞。执行效率低。</p>
 <a id="more"></a>
-<h3 id="显示地为任务创建线程"><a href="#显示地为任务创建线程" class="headerlink" title="显示地为任务创建线程"></a>显示地为任务创建线程</h3><blockquote>
+<h3 id="显式地为任务创建线程"><a href="#显式地为任务创建线程" class="headerlink" title="显式地为任务创建线程"></a>显式地为任务创建线程</h3><blockquote>
 <p>在Web服务器中为每个请求启动一个新的线程</p>
 </blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPerTaskWebServer</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        ServerSocket socket = <span class="keyword">new</span> ServerSocket(<span class="number">80</span>);</div><div class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</div><div class="line">            Socket connection = socket.accept();</div><div class="line">            Runnable runnable = <span class="keyword">new</span> Runnable() &#123;</div><div class="line">                <span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    handleRequest(connection);</div><div class="line">                &#125;</div><div class="line">            &#125;;</div><div class="line">            <span class="keyword">new</span> Thread(runnable).start();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Socket connection)</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -423,6 +423,11 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         </a>
     
     
+        <a href="/2018/09/20/java/并发编程/06取消与关闭/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">并发编程实战-06取消与关闭</div>
+        </a>
+    
 </nav>
 
 
@@ -447,6 +452,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <h3 class="widget-title">最新文章</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/20/java/并发编程/06取消与关闭/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-06取消与关闭" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/20/java/并发编程/06取消与关闭/" class="title">并发编程实战-06取消与关闭</a></p>
+                            <p class="item-date"><time datetime="2018-09-19T16:00:00.000Z" itemprop="datePublished">2018-09-20</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -524,25 +548,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/09/06/java/并发编程/02对象的共享/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-02对象的共享" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-                            <p class="item-title"><a href="/2018/09/06/java/并发编程/02对象的共享/" class="title">并发编程实战-02对象的共享</a></p>
-                            <p class="item-date"><time datetime="2018-09-05T16:00:00.000Z" itemprop="datePublished">2018-09-06</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -552,7 +557,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.67px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.33px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.33px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 16.67px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 13.33px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 16.67px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 13.33px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 15px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.67px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 13.33px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 13.33px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 16.67px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.43px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12.86px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 18.57px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 18.57px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.43px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 15.71px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 12.86px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 15.71px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 12.86px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14.29px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.43px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 12.86px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 15.71px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12.86px;">套路</a> <a href="/tags/小知识/" style="font-size: 10px;">小知识</a> <a href="/tags/并发/" style="font-size: 17.14px;">并发</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a>
         </div>
     </div>
 
