@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="code dog">
 <meta property="og:description" content="业务场景假设有从数据库中读取数据，为了缓解数据库的压力，使用分布式缓存来对数据进行缓存操作。当下次读取时发现缓存中有直接从缓存中输出，从而降低数据库的压力。 普通Hash算法为了让实现缓存的负载均衡最常见的方法是根据机器的数量进行取模（Mod）实现平均分配。  hash(对象) mode n = 存放的机器m  在正常情况下此方式不会存在问题，但考虑如果原来是3台机器，业务量上升需要增加机器或者其">
 <meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
-<meta property="og:updated_time" content="2018-09-25T07:32:10.092Z">
+<meta property="og:updated_time" content="2018-09-25T07:36:37.462Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一致性Hash算法">
 <meta name="twitter:description" content="业务场景假设有从数据库中读取数据，为了缓解数据库的压力，使用分布式缓存来对数据进行缓存操作。当下次读取时发现缓存中有直接从缓存中输出，从而降低数据库的压力。 普通Hash算法为了让实现缓存的负载均衡最常见的方法是根据机器的数量进行取模（Mod）实现平均分配。  hash(对象) mode n = 存放的机器m  在正常情况下此方式不会存在问题，但考虑如果原来是3台机器，业务量上升需要增加机器或者其">
@@ -281,6 +281,7 @@ var _hmt = _hmt || [];
 <p>hash(对象) mode n = 存放的机器m</p>
 </blockquote>
 <p>在正常情况下此方式不会存在问题，但考虑如果原来是3台机器，业务量上升需要增加机器或者其中一台宕机减少机器。使用取模算法最大的问题是缓存命中的概率会急剧的降低，此时产生的问题类似于HashMap的扩容，需要重排。那对于db的压力也可想而知，db穿透的后果简单的是业务响应延迟，严重的可能是应用宕机。</p>
+<a id="more"></a>
 <h4 id="一致性Hash算法"><a href="#一致性Hash算法" class="headerlink" title="一致性Hash算法"></a>一致性Hash算法</h4><p>一致性<code>Hash</code>算法是为了解决上面问题的方法，它可以保证机器增加或减少时，对缓存访问命中的概率影响减至最小。</p>
 <h4 id="一致性Hash环"><a href="#一致性Hash环" class="headerlink" title="一致性Hash环"></a>一致性Hash环</h4><p>这个环的起点是0，终点是<code>2^32-1</code>，起点和终点连接，环的中间整数按逆时针分布。</p>
 <h4 id="放置对象"><a href="#放置对象" class="headerlink" title="放置对象"></a>放置对象</h4><p>将对象通过<code>hash</code>算法得到它的<code>hash</code>值（范围为<code>0~2^32-1</code>），根据hash后的结果放置到环上相应的点。</p>

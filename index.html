@@ -266,28 +266,15 @@ var _hmt = _hmt || [];
         
         <div class="article-entry" itemprop="articleBody">
         
-            
-            <h4 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h4><p>假设有从数据库中读取数据，为了缓解数据库的压力，使用分布式缓存来对数据进行缓存操作。当下次读取时发现缓存中有直接从缓存中输出，从而降低数据库的压力。</p>
+            <p><h4 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h4><p>假设有从数据库中读取数据，为了缓解数据库的压力，使用分布式缓存来对数据进行缓存操作。当下次读取时发现缓存中有直接从缓存中输出，从而降低数据库的压力。</p>
 <h4 id="普通Hash算法"><a href="#普通Hash算法" class="headerlink" title="普通Hash算法"></a>普通Hash算法</h4><p>为了让实现缓存的负载均衡最常见的方法是根据机器的数量进行取模（<code>Mod</code>）实现平均分配。</p>
 <blockquote>
 <p>hash(对象) mode n = 存放的机器m</p>
 </blockquote>
-<p>在正常情况下此方式不会存在问题，但考虑如果原来是3台机器，业务量上升需要增加机器或者其中一台宕机减少机器。使用取模算法最大的问题是缓存命中的概率会急剧的降低，此时产生的问题类似于HashMap的扩容，需要重排。那对于db的压力也可想而知，db穿透的后果简单的是业务响应延迟，严重的可能是应用宕机。</p>
-<h4 id="一致性Hash算法"><a href="#一致性Hash算法" class="headerlink" title="一致性Hash算法"></a>一致性Hash算法</h4><p>一致性<code>Hash</code>算法是为了解决上面问题的方法，它可以保证机器增加或减少时，对缓存访问命中的概率影响减至最小。</p>
-<h4 id="一致性Hash环"><a href="#一致性Hash环" class="headerlink" title="一致性Hash环"></a>一致性Hash环</h4><p>这个环的起点是0，终点是<code>2^32-1</code>，起点和终点连接，环的中间整数按逆时针分布。</p>
-<h4 id="放置对象"><a href="#放置对象" class="headerlink" title="放置对象"></a>放置对象</h4><p>将对象通过<code>hash</code>算法得到它的<code>hash</code>值（范围为<code>0~2^32-1</code>），根据hash后的结果放置到环上相应的点。</p>
-<h4 id="放置机器"><a href="#放置机器" class="headerlink" title="放置机器"></a>放置机器</h4><p>同样使用<code>hash</code>算法得到机器的hash值（可以<code>hash</code>机器的<code>ip地址</code>，范围为<code>0~2^32-1</code>），根据<code>hash</code>后的结果放置到环上相应的点。</p>
-<h4 id="为对象选择机器"><a href="#为对象选择机器" class="headerlink" title="为对象选择机器"></a>为对象选择机器</h4><p>将对象和机器都放置到<code>hash</code>环上，沿顺时针方向查找距离某个对象<code>hash</code>值最近的机器，即是这个对象的所属机器。</p>
-<h4 id="机器增减情况"><a href="#机器增减情况" class="headerlink" title="机器增减情况"></a>机器增减情况</h4><p>假如此时有机器的增减，只需要重新分配部分对象到新的机器上。若有C1,C2,C3三台机器：</p>
-<ul>
-<li>增加C4到C2和C3之间，只有C2和C4之间的对象需要重新分配到机器C4，其它对象仍在原来机器上；</li>
-<li>减少C2节点，只需要将原来C1到C2之间的对象重新分配到C3。</li>
-</ul>
-<h4 id="虚拟节点"><a href="#虚拟节点" class="headerlink" title="虚拟节点"></a>虚拟节点</h4><p>一致性hash在使用过程中有可能会存在<code>hash</code>值不合理，负载分配不均匀的问题。为此可以引入虚拟节点来解决负载不均衡的问题。将每台物理机器虚拟为一组虚拟机器，将虚拟机器放置到<code>hash</code>环上，如果需要确定对象的机器需要先确定对象的虚拟机器，再由虚拟机器确定物理机器。</p>
-<p>参考：</p>
-<p><a href="https://crossoverjie.top/2018/01/08/Consistent-Hash/" target="_blank" rel="external">一致 Hash 算法分析</a></p>
-<p><a href="https://blog.csdn.net/lihao21/article/details/54193868" target="_blank" rel="external">一致性Hash原理解剖</a></p>
-
+<p>在正常情况下此方式不会存在问题，但考虑如果原来是3台机器，业务量上升需要增加机器或者其中一台宕机减少机器。使用取模算法最大的问题是缓存命中的概率会急剧的降低，此时产生的问题类似于HashMap的扩容，需要重排。那对于db的压力也可想而知，db穿透的后果简单的是业务响应延迟，严重的可能是应用宕机。</p></p>
+            <p class="article-more-link">
+                <a href="/2018/09/25/java/tool/一致性Hash算法/#more">查看更多</a>
+            </p>
         
         </div>
         <footer class="article-footer">
