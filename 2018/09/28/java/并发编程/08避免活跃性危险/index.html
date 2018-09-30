@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>并发编程实战-09避免活跃性危险 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="死锁当一个线程永远地持有一个锁，并且其他线程都尝试获得这个锁时，那么它们将永远被阻塞。在线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试获得锁L，那么这两个线程将永远地等待下去。 在数据库系统中，对于死锁会自动的选择一个牺牲者并放弃这个事务，牺牲者将放弃它持有的资源，从而使事务执行完成，应用程序可以重新执行被强行中止的事务，现在这个事务可以成功完成。">
+<meta name="keywords" content="并发,并发编程实战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发编程实战-09避免活跃性危险">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/09/28/java/并发编程/08避免活跃性危险/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="死锁当一个线程永远地持有一个锁，并且其他线程都尝试获得这个锁时，那么它们将永远被阻塞。在线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试获得锁L，那么这两个线程将永远地等待下去。 在数据库系统中，对于死锁会自动的选择一个牺牲者并放弃这个事务，牺牲者将放弃它持有的资源，从而使事务执行完成，应用程序可以重新执行被强行中止的事务，现在这个事务可以成功完成。">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2018-09-30T06:54:54.040Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="并发编程实战-09避免活跃性危险">
+<meta name="twitter:description" content="死锁当一个线程永远地持有一个锁，并且其他线程都尝试获得这个锁时，那么它们将永远被阻塞。在线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试获得锁L，那么这两个线程将永远地等待下去。 在数据库系统中，对于死锁会自动的选择一个牺牲者并放弃这个事务，牺牲者将放弃它持有的资源，从而使事务执行完成，应用程序可以重新执行被强行中止的事务，现在这个事务可以成功完成。">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                89
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                60
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/并发编程/08避免活跃性危险" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            并发编程实战-09避免活跃性危险
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/09/28/java/并发编程/08避免活跃性危险/">
+            <time datetime="2018-09-27T16:00:00.000Z" itemprop="datePublished">2018-09-28</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/并发/">并发</a>, <a class="tag-link" href="/tags/并发编程实战/">并发编程实战</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#死锁"><span class="toc-number">1.</span> <span class="toc-text">死锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#锁顺序死锁"><span class="toc-number">1.1.</span> <span class="toc-text">锁顺序死锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态的锁顺序死锁"><span class="toc-number">1.2.</span> <span class="toc-text">动态的锁顺序死锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在协作对象之间发生的死锁"><span class="toc-number">1.3.</span> <span class="toc-text">在协作对象之间发生的死锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开放调用"><span class="toc-number">1.4.</span> <span class="toc-text">开放调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#死锁的避免与诊断"><span class="toc-number">2.</span> <span class="toc-text">死锁的避免与诊断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#支持定时的锁"><span class="toc-number">2.1.</span> <span class="toc-text">支持定时的锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通过线程转储信息来分析死锁"><span class="toc-number">2.2.</span> <span class="toc-text">通过线程转储信息来分析死锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他活跃性危险"><span class="toc-number">3.</span> <span class="toc-text">其他活跃性危险</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#饥饿"><span class="toc-number">3.1.</span> <span class="toc-text">饥饿</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#糟糕的响应性"><span class="toc-number">3.2.</span> <span class="toc-text">糟糕的响应性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#活锁"><span class="toc-number">3.3.</span> <span class="toc-text">活锁</span></a></li></ol></li></ol>
+                </div>
+            
+            <h2 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h2><p>当一个线程永远地持有一个锁，并且其他线程都尝试获得这个锁时，那么它们将永远被阻塞。在线程A持有锁L并想获得锁M的同时，线程B持有锁M并尝试获得锁L，那么这两个线程将永远地等待下去。</p>
+<p>在数据库系统中，对于死锁会自动的选择一个牺牲者并放弃这个事务，牺牲者将放弃它持有的资源，从而使事务执行完成，应用程序可以重新执行被强行中止的事务，现在这个事务可以成功完成。</p>
+<a id="more"></a>
+<h3 id="锁顺序死锁"><a href="#锁顺序死锁" class="headerlink" title="锁顺序死锁"></a>锁顺序死锁</h3><p>两个线程试图以不同的顺序来获得相同的锁。</p>
+<blockquote>
+<p>如果所有线程都以固定的顺序来获得锁，那么在程序中就不会出现锁顺序死锁问题</p>
+<p>简单的锁顺序死锁</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LeftRightDeadlock</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object left = <span class="keyword">new</span> Object();</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Object right = <span class="keyword">new</span> Object();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">leftRight</span> <span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (left) &#123;</div><div class="line">            Thread.sleep(<span class="number">100</span>);</div><div class="line">            <span class="keyword">synchronized</span> (right) &#123;</div><div class="line">                System.out.println(<span class="string">"leftRight..."</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rightLeft</span> <span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (right) &#123;</div><div class="line">            <span class="comment">//Thread.sleep(100);</span></div><div class="line">            <span class="keyword">synchronized</span> (left) &#123;</div><div class="line">                System.out.println(<span class="string">"rightLeft..."</span>);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        LeftRightDeadlock deadlock = <span class="keyword">new</span> LeftRightDeadlock();</div><div class="line">        Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    deadlock.leftRight();</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    deadlock.rightLeft();</div><div class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        </div><div class="line">        t1.start();</div><div class="line">        t2.start();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="动态的锁顺序死锁"><a href="#动态的锁顺序死锁" class="headerlink" title="动态的锁顺序死锁"></a>动态的锁顺序死锁</h3><p>考虑如下的代码，将资金从一个帐户转移到另一个帐户。</p>
+<blockquote>
+<p>动态的锁顺序死锁（容易发生死锁）</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AccountDeadlock</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transferMoney</span><span class="params">(Account fromAccount, Account toAccount, <span class="keyword">int</span> amount)</span> <span class="keyword">throws</span> InsufficientResourcesException </span>&#123;</div><div class="line">        <span class="keyword">synchronized</span> (fromAccount) &#123;</div><div class="line">            <span class="keyword">if</span> (fromAccount.getBalance() &lt; amount) &#123;</div><div class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> InsufficientResourcesException();</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">synchronized</span> (toAccount) &#123;</div><div class="line">                    fromAccount.debit(amount);</div><div class="line">                    toAccount.credit(amount);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> balance;</div><div class="line">    </div><div class="line">    Account(<span class="keyword">int</span> balance) &#123;</div><div class="line">        <span class="keyword">this</span>.balance = balance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">debit</span><span class="params">(<span class="keyword">int</span> amount)</span> </span>&#123;</div><div class="line">        balance -= amount;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">credit</span><span class="params">(<span class="keyword">int</span> amount)</span> </span>&#123;</div><div class="line">        balance += amount;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getBalance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> balance;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBalance</span><span class="params">(<span class="keyword">int</span> balance)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.balance = balance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>transferMoney</code>方法中看似不太可能发生死锁。但实际上由于参数传入的顺序依赖外部的输入。如果有两个线程同时调用此方法，并且交易双方为X转帐给Y，Y转帐给X，那么就会发生死锁。</p>
+<blockquote>
+<p>Thread A: transferMoney(XAccount, YAccount, 10)</p>
+<p>Thread B: transferMoney(YAccount, XAccount, 20)</p>
+</blockquote>
+<p>此时发生死锁的原因和上面讲到的锁顺序死锁相同。要想解决这个问题必须定义锁的顺序，使两个线程以相同的顺序来获得锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AccountDeadlock2</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Object tieLock = <span class="keyword">new</span> Object();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transferMoney</span><span class="params">(Account fromAccount, Account toAccount, <span class="keyword">int</span> amount)</span></span></div><div class="line">            <span class="keyword">throws</span> InsufficientResourcesException &#123;</div><div class="line">        <span class="class"><span class="keyword">class</span> <span class="title">Helper</span> </span>&#123;</div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transfer</span><span class="params">()</span> <span class="keyword">throws</span> InsufficientResourcesException </span>&#123;</div><div class="line">                <span class="keyword">if</span> (fromAccount.getBalance() &lt; amount) &#123;</div><div class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> InsufficientResourcesException();</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    fromAccount.debit(amount);</div><div class="line">                    toAccount.credit(amount);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">int</span> fromHash = System.identityHashCode(fromAccount);</div><div class="line">        <span class="keyword">int</span> toHash = System.identityHashCode(toAccount);</div><div class="line">        <span class="keyword">if</span> (fromHash &lt; toHash) &#123;</div><div class="line">            <span class="keyword">synchronized</span> (fromAccount) &#123;</div><div class="line">                <span class="keyword">synchronized</span> (toAccount) &#123;</div><div class="line">                    <span class="keyword">new</span> Helper().transfer();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (fromHash &gt; toHash) &#123;</div><div class="line">            <span class="keyword">synchronized</span> (toAccount) &#123;</div><div class="line">                <span class="keyword">synchronized</span> (fromAccount) &#123;</div><div class="line">                    <span class="keyword">new</span> Helper().transfer();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">synchronized</span> (tieLock) &#123;</div><div class="line">                <span class="keyword">synchronized</span> (fromAccount) &#123;</div><div class="line">                    <span class="keyword">synchronized</span> (toAccount) &#123;</div><div class="line">                        <span class="keyword">new</span> Helper().transfer();</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="在协作对象之间发生的死锁"><a href="#在协作对象之间发生的死锁" class="headerlink" title="在协作对象之间发生的死锁"></a>在协作对象之间发生的死锁</h3><p>下面的程序中有两个相互协作的类，<code>Taxi</code>代表一个出租车对象，包含位置和目的地两个属性，<code>Dispatcher</code>代表一个出租车车队。</p>
+<blockquote>
+<p>在相互协作对象之间的锁顺序死锁</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Taxi</span> </span>&#123;</div><div class="line">    <span class="meta">@GuardedBy</span>(<span class="string">"this"</span>)</div><div class="line">    <span class="keyword">private</span> Point location, destination;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Dispatcher dispatcher;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Taxi</span><span class="params">(Dispatcher dispatcher)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.dispatcher = dispatcher;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Point <span class="title">getLocation</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> location;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setLocation</span><span class="params">(Point location)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.location = location;</div><div class="line">        <span class="keyword">if</span> (location.equals(destination)) &#123;</div><div class="line">            dispatcher.notifyAvailable(<span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dispatcher</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;Taxi&gt; taxis;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Set&lt;Taxi&gt; availableTaxis;</div><div class="line">    </div><div class="line">    Dispatcher() &#123;</div><div class="line">        taxis = <span class="keyword">new</span> HashSet&lt;&gt;();</div><div class="line">        availableTaxis = <span class="keyword">new</span> HashSet&lt;&gt;();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">notifyAvailable</span><span class="params">(Taxi taxi)</span> </span>&#123;</div><div class="line">        availableTaxis.add(taxi);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> Image <span class="title">getImage</span><span class="params">()</span> </span>&#123;</div><div class="line">        Image image = <span class="keyword">new</span> BufferedImage(<span class="number">100</span>, <span class="number">100</span>, ColorSpace.TYPE_2CLR);</div><div class="line">        <span class="keyword">for</span> (Taxi taxi : taxis) &#123;</div><div class="line">            <span class="comment">//image.drawMarker(taxi.getLocation()); // 将taxi绘制在image上</span></div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> image;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>尽管没有任何方法显示地获取两个锁，但<code>setLocation</code>和<code>getImage</code>等方法的调用者都会获得两个锁。两个方法以先不同的顺序分别获得两个锁，当两线程同时调用两个方法时可能会产生死锁。</p>
+<p>在<code>LeftRightDeadlock</code>或<code>transferMoney</code>中要查找到死锁是比较简单的，只需要找出那些需要获取两个锁的方法。然而要在上面的代码清单中查找死锁则比较困难：如果在持有锁的情况下调用某个外部方法，那么就需要警惕死锁。</p>
+<blockquote>
+<p>如果持有锁时调用某个外部方法，那么将出现活跃性问题。在这个外部方法中可能会获取其他锁（这可能会产生死锁），或者阻塞时间过长，导致其他线程无法及时获得当前被持有的锁。</p>
+</blockquote>
+<h3 id="开放调用"><a href="#开放调用" class="headerlink" title="开放调用"></a>开放调用</h3><p>如果在调用个方法时不需要持有锁，那么这种调用被称为开放调用。依赖于开用手类通常能表现出更好的行为，并且与那些在调用方法时需要持有锁的类相比，也更易于编写。</p>
+<blockquote>
+<p>通过开放调用来避免在相互协作的对象之间产生死锁</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLocation2</span><span class="params">(Point location)</span> </span>&#123;</div><div class="line">    <span class="keyword">boolean</span> reachedDestination;</div><div class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">        <span class="keyword">this</span>.location = location;</div><div class="line">        reachedDestination = location.equals(destination);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (reachedDestination) &#123;</div><div class="line">        dispatcher.notifyAvailable(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">public</span> Image <span class="title">getImage2</span><span class="params">()</span> </span>&#123;</div><div class="line">    Set&lt;Taxi&gt; copy;</div><div class="line">    <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</div><div class="line">        copy = <span class="keyword">new</span> HashSet&lt;&gt;(taxis);</div><div class="line">    &#125;</div><div class="line">    Image image = <span class="keyword">new</span> BufferedImage(<span class="number">100</span>, <span class="number">100</span>, ColorSpace.TYPE_2CLR);</div><div class="line">    <span class="keyword">for</span> (Taxi taxi : copy) &#123;</div><div class="line">        <span class="comment">//image.drawMarker(taxi.getLocation()); // 将taxi绘制在image上</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> image;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="死锁的避免与诊断"><a href="#死锁的避免与诊断" class="headerlink" title="死锁的避免与诊断"></a>死锁的避免与诊断</h2><p>在使用细粒度锁的程序中，可以通过使用一种两阶段策略来检查代码中的死锁：首先，找出在什么地方将获取多个锁，然后对所有这些实例进行全局分析，从而确保它们在整个过程中获取锁的顺序都保持一致。尽可能地使用开放调用，这能极大地简化分析过程。</p>
+<h3 id="支持定时的锁"><a href="#支持定时的锁" class="headerlink" title="支持定时的锁"></a>支持定时的锁</h3><p>显式的使用<code>Lock</code>类中的<code>tryLock</code>功能来代替内置锁机制。显式锁相比内置锁可以指定一个超时时限，在等待超过这个时间后<code>tryLock</code>会返回一个失败信息。</p>
+<h3 id="通过线程转储信息来分析死锁"><a href="#通过线程转储信息来分析死锁" class="headerlink" title="通过线程转储信息来分析死锁"></a>通过线程转储信息来分析死锁</h3><h2 id="其他活跃性危险"><a href="#其他活跃性危险" class="headerlink" title="其他活跃性危险"></a>其他活跃性危险</h2><p>除了死锁外的其他活跃性危险，包括：饥饿、丢失信号和活锁等。</p>
+<h3 id="饥饿"><a href="#饥饿" class="headerlink" title="饥饿"></a>饥饿</h3><p>当线程由于无法访问它所需要的资源而不能继续执行时，就发生了饥饿。如果在Java中对线程的优先级使用不当，或者在持有锁时执行一些无法结束的结构（无限循环，或无限等待），那么也可能导致饥饿，因为其他需要这个锁的线程将无法得到它。</p>
+<blockquote>
+<p>要避免使用线程优先级，因为这会增加平台依赖性，并可能导致活跃性问题。在大多数并发应用程度中，都可以使用默认的线程优先级。</p>
+</blockquote>
+<h3 id="糟糕的响应性"><a href="#糟糕的响应性" class="headerlink" title="糟糕的响应性"></a>糟糕的响应性</h3><p>不良的锁管理也可能导致糟糕的响应性，如果某个线程长时间占有一个锁，而其他想要访问这个容器的线程就必须等待很长时间。</p>
+<h3 id="活锁"><a href="#活锁" class="headerlink" title="活锁"></a>活锁</h3><p>活锁是另一种形式的活跃性问题，该问题尽管不会阻塞线程，但也不能继续执行，因为线程将不断重复执行相同的操作，而且总会失败。比如在处理事务时，由于异常处理失败发生回滚，并将它重新放到队列的开头。如果再次失败又回滚再放入队列重新处理。</p>
+<p>当多个相互协作的线程都对彼此进行响应从而修改各自的状态，并使得任何一个线程都无法继续执行时，就发生了活锁。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/09/28/java/并发编程/08避免活跃性危险/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/09/27/java/网络编程/Http,Tcp.Ip,Socket,Udp/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Http,Tcp/Ip,Socket,Udp
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/28/java/并发编程/08避免活跃性危险/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-09避免活跃性危险" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/28/java/并发编程/08避免活跃性危险/" class="title">并发编程实战-09避免活跃性危险</a></p>
+                            <p class="item-date"><time datetime="2018-09-27T16:00:00.000Z" itemprop="datePublished">2018-09-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/27/java/网络编程/Http,Tcp.Ip,Socket,Udp/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Http,Tcp/Ip,Socket,Udp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/27/java/网络编程/Http,Tcp.Ip,Socket,Udp/" class="title">Http,Tcp/Ip,Socket,Udp</a></p>
+                            <p class="item-date"><time datetime="2018-09-26T16:00:00.000Z" itemprop="datePublished">2018-09-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/25/java/并发编程/07线程池的使用/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-07线程池的使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/25/java/并发编程/07线程池的使用/" class="title">并发编程实战-07线程池的使用</a></p>
+                            <p class="item-date"><time datetime="2018-09-24T16:00:00.000Z" itemprop="datePublished">2018-09-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/25/java/tool/一致性Hash算法/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="一致性Hash算法" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/25/java/tool/一致性Hash算法/" class="title">一致性Hash算法</a></p>
+                            <p class="item-date"><time datetime="2018-09-24T16:00:00.000Z" itemprop="datePublished">2018-09-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/20/java/并发编程/06取消与关闭/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-06取消与关闭" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/20/java/并发编程/06取消与关闭/" class="title">并发编程实战-06取消与关闭</a></p>
+                            <p class="item-date"><time datetime="2018-09-19T16:00:00.000Z" itemprop="datePublished">2018-09-20</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.25px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12.5px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 17.5px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 17.5px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.25px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 15px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 12.5px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 15px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 12.5px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 13.75px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.25px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 12.5px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 15px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12.5px;">套路</a> <a href="/tags/小知识/" style="font-size: 11.25px;">小知识</a> <a href="/tags/并发/" style="font-size: 18.75px;">并发</a> <a href="/tags/并发编程实战/" style="font-size: 16.25px;">并发编程实战</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/网络编程/" style="font-size: 10px;">网络编程</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
