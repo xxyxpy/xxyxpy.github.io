@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>并发编程实战-09性能与可伸缩性 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="线程的最主要目的是提高程序的运行性能。  对性能的思考尽管使用多个线程的目标是提升整体性能，但与单线程的方法相比，使用多个线程总传统引入一些额外的性能开销。造成这些开销的操作包括：线程之间的协调（比如加锁、触发信号以及内存同步等），增加的上下文切换，线程的创建和销毁，以及线程的调度等。如果过度的使用线程，那么这些开销甚至超过由于提高吞吐量、响应性或者计算能力所带来的性能提升。另一方面，一个并发设计">
+<meta name="keywords" content="并发,并发编程实战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发编程实战-09性能与可伸缩性">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/10/08/java/并发编程/09性能与可伸缩性/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="线程的最主要目的是提高程序的运行性能。  对性能的思考尽管使用多个线程的目标是提升整体性能，但与单线程的方法相比，使用多个线程总传统引入一些额外的性能开销。造成这些开销的操作包括：线程之间的协调（比如加锁、触发信号以及内存同步等），增加的上下文切换，线程的创建和销毁，以及线程的调度等。如果过度的使用线程，那么这些开销甚至超过由于提高吞吐量、响应性或者计算能力所带来的性能提升。另一方面，一个并发设计">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2018-10-09T09:09:39.966Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="并发编程实战-09性能与可伸缩性">
+<meta name="twitter:description" content="线程的最主要目的是提高程序的运行性能。  对性能的思考尽管使用多个线程的目标是提升整体性能，但与单线程的方法相比，使用多个线程总传统引入一些额外的性能开销。造成这些开销的操作包括：线程之间的协调（比如加锁、触发信号以及内存同步等），增加的上下文切换，线程的创建和销毁，以及线程的调度等。如果过度的使用线程，那么这些开销甚至超过由于提高吞吐量、响应性或者计算能力所带来的性能提升。另一方面，一个并发设计">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                90
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                60
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/并发编程/09性能与可伸缩性" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            并发编程实战-09性能与可伸缩性
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/10/08/java/并发编程/09性能与可伸缩性/">
+            <time datetime="2018-10-07T16:00:00.000Z" itemprop="datePublished">2018-10-08</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/并发/">并发</a>, <a class="tag-link" href="/tags/并发编程实战/">并发编程实战</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#对性能的思考"><span class="toc-number">1.</span> <span class="toc-text">对性能的思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#性能与可伸缩性"><span class="toc-number">1.1.</span> <span class="toc-text">性能与可伸缩性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#评估各种性能权衡因素"><span class="toc-number">1.2.</span> <span class="toc-text">评估各种性能权衡因素</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#线程引入的开销"><span class="toc-number">2.</span> <span class="toc-text">线程引入的开销</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#上下文切换"><span class="toc-number">2.1.</span> <span class="toc-text">上下文切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存同步"><span class="toc-number">2.2.</span> <span class="toc-text">内存同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阻塞"><span class="toc-number">2.3.</span> <span class="toc-text">阻塞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#减少锁的竞争"><span class="toc-number">3.</span> <span class="toc-text">减少锁的竞争</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#缩小锁的范围（快进快出）"><span class="toc-number">3.1.</span> <span class="toc-text">缩小锁的范围（快进快出）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#减小锁的粒度"><span class="toc-number">3.2.</span> <span class="toc-text">减小锁的粒度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#锁分段"><span class="toc-number">3.3.</span> <span class="toc-text">锁分段</span></a></li></ol></li></ol>
+                </div>
+            
+            <p>线程的最主要目的是提高程序的运行性能。 </p>
+<h2 id="对性能的思考"><a href="#对性能的思考" class="headerlink" title="对性能的思考"></a>对性能的思考</h2><p>尽管使用多个线程的目标是提升整体性能，但与单线程的方法相比，使用多个线程总传统引入一些额外的性能开销。造成这些开销的操作包括：线程之间的协调（比如加锁、触发信号以及内存同步等），增加的上下文切换，线程的创建和销毁，以及线程的调度等。如果过度的使用线程，那么这些开销甚至超过由于提高吞吐量、响应性或者计算能力所带来的性能提升。另一方面，一个并发设计很糟糕的应用程序，其性能甚至比实现相同功能的串行程序的性能还要差。</p>
+<a id="more"></a>
+<h3 id="性能与可伸缩性"><a href="#性能与可伸缩性" class="headerlink" title="性能与可伸缩性"></a>性能与可伸缩性</h3><blockquote>
+<p>可伸缩性指的是：当增加计算资源时（CPU、内存、存储容量或io带宽），程序的吞吐量或者处理能力能相应地增加。</p>
+</blockquote>
+<h3 id="评估各种性能权衡因素"><a href="#评估各种性能权衡因素" class="headerlink" title="评估各种性能权衡因素"></a>评估各种性能权衡因素</h3><blockquote>
+<p>避免不成熟的优化，首先使程序正确，然后再提高运行速度——如果它还运行得不够快。</p>
+</blockquote>
+<h2 id="线程引入的开销"><a href="#线程引入的开销" class="headerlink" title="线程引入的开销"></a>线程引入的开销</h2><h3 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h3><p>如果可运行的线程数大于<code>CPU</code>数量，那么操作系统最终会将某个正在运行的线程调度出来，从而使其他线程能够使用<code>CPU</code>。这将导致一次上下文切换，在这个过程中将保存当前运行线程的执行上下文，并将新调试进来的线程的执行上下文设置为当前上下文。</p>
+<h3 id="内存同步"><a href="#内存同步" class="headerlink" title="内存同步"></a>内存同步</h3><p>同步操作的性能开销包括多个方面。在<code>synchronized</code>和<code>volatile</code>提供的可见性保证中可能会使用一些特殊指令，即内存栅栏。内存栅栏可以刷新缓存，使缓存无效，刷新硬件的写缓冲，以及停止执行检查。内存栅栏可能同样会对性能带来间接的影响，因为它们将抑制一些编译器优化操作。在内存栅栏中，大多数操作都是不能被重排序的。</p>
+<h3 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h3><p>当在锁上发生竞争时，竞争失败的线程肯定会阻塞。<code>Jvm</code>在实现阻塞行为时，可以采用自旋等待（指通过循环不断尝试获取锁，直到成功）或者通过操作系统挂起被阻塞的线程。这两种方式的效率高低，要取决于上下文切换的开销以及在成功获取锁之前需要等待的时间。如果等待时间短，则适合采用自旋等待方式，而如果等待时间较长，则适合采用线程挂起方式。大多数<code>Jvm</code>在等待锁时都只是将线程挂起。</p>
+<p>当线程无法获取某个锁或者由于在某个条件等待或在<code>I/O</code>操作上阻塞时，需要被挂起，在这个过程中将包含两次额外的上下文切换，以及所有必要的操作系统操作和缓存操作：被阻塞的线程在其执行时间片还未用完之前就被交换出去，而在随后当要获取的锁或者其他资源可用时，又再次被切换回来。（由于锁竞争而导致阻塞时，线程在持有锁时将存在一定的开销：当它释放锁时，必须告诉操作系统恢复运行阻塞的线程。）</p>
+<h2 id="减少锁的竞争"><a href="#减少锁的竞争" class="headerlink" title="减少锁的竞争"></a>减少锁的竞争</h2><p>如果在锁上持续发生竞争，那么将限制代码的可伸缩性。</p>
+<blockquote>
+<p>在并发程序中，对可伸缩性的最主要威胁就是独占方式的资源锁。</p>
+</blockquote>
+<p>有两个因素将影响在锁上发生竞争的可能性：锁的请求频度以及每次持有锁的时间。如果二者的乘积很小，那么大多数获取锁的操作都不会发生竞争，因此在该锁上的竞争不会对可伸缩性造成严重影响。</p>
+<blockquote>
+<p>有3种方式可以降低锁的竞争程度：</p>
+<ul>
+<li>减少锁的持有时间</li>
+<li>降低锁的请求频率</li>
+<li>用带有协调机制的独占锁，这些机制允许更高的并发性。</li>
+</ul>
+</blockquote>
+<h3 id="缩小锁的范围（快进快出）"><a href="#缩小锁的范围（快进快出）" class="headerlink" title="缩小锁的范围（快进快出）"></a>缩小锁的范围（快进快出）</h3><p>降低发生竞争可能性的一种有效方式就是尽可能缩短锁的持有时间。例如，可以将一些与锁无关的代码移出同步代码块，尤其是那些开销较大的操作，以及可能被阻塞的操作，例如<code>I/O</code>操作。</p>
+<p>如果将一个高度竞争的锁持有过长的时间，那么会限制可伸缩性，如果某个操作持有锁的时间超过<code>2ms</code>并且所有操作都需要这个锁，那么无论拥有多少个空闲处理器，吞吐量也不会超过每秒<code>500</code>个操作。如果将这个锁的持有时间降为<code>1ms</code>，那么能够将这个锁对应的吞吐量提高到每秒<code>1000</code>个操作。</p>
+<p>尽管缩小同步代码块能提高可伸缩性，但同步代码块也不能过小——一些需要采用原子方式执行的操作（例如对某个不变性条件中的多个变量进行更新）必须包含在一个同步块中。此外，同步需要一定的开销，当把一个同步代码块分解为多个同步代码块时（在确保正确性的情况下），反而会对性能提升产生负面影响 。在分解同步代码块时，理想的平衡点将与平台相关，但在实际情况中，仅当可以将一些大量的计算或阻塞操作从同步代码块中移出时才应该考虑同步代码块的大小。</p>
+<h3 id="减小锁的粒度"><a href="#减小锁的粒度" class="headerlink" title="减小锁的粒度"></a>减小锁的粒度</h3><p>另一种减小锁的持有时间的方式是降低线程请求锁的频率（从而减小发生竞争的可能性）。这可以通过锁分解和锁分段等技术来实现，在这些技术中将采用多个相互独立的锁来保护独立的状态变量，从而改变这些变量在之前由单个锁来保护的情况。这些技术能减小锁操作的粒度，并能实现更高的可伸缩性，然而，使用的锁越多，那么发生死锁的风险也就越高。</p>
+<p>如果一个锁需要保护多个相互独立的状态变量，那么可以将这个锁分解为多个锁，并且每个锁只保护一个变量，从而提高可伸缩性，并最终降低每个锁被请求的频率。</p>
+<h3 id="锁分段"><a href="#锁分段" class="headerlink" title="锁分段"></a>锁分段</h3><p>在某些情况下可以将锁分解技术进一步扩展为对一组独立对象上的锁进行分解，这种情况被称为锁分段。例如在<code>ConcurrentHashMap</code>的实现中使用了一个包含<code>16</code>个锁的数组，每个锁保护所有散列桶的<code>1/16</code>。</p>
+<p>锁分段的一个劣势在于：与采用单个锁来实现独占访问相比，要获取多个锁来实现独占访问将更加困难并且开销更高。通常，在执行一个操作时最多只需要获取一个锁，但在某些情况下需要加锁整个容器，例如当<code>ConcurrentHashMap</code>需要扩展映射范围，以及重新计算键值的散列值要分布到更大的桶集合中时，就需要获取分段锁集合中所有的锁。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/10/08/java/并发编程/09性能与可伸缩性/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/09/28/java/并发编程/08避免活跃性危险/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    并发编程实战-08避免活跃性危险
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/10/08/java/并发编程/09性能与可伸缩性/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-09性能与可伸缩性" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/10/08/java/并发编程/09性能与可伸缩性/" class="title">并发编程实战-09性能与可伸缩性</a></p>
+                            <p class="item-date"><time datetime="2018-10-07T16:00:00.000Z" itemprop="datePublished">2018-10-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/28/java/并发编程/08避免活跃性危险/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-08避免活跃性危险" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/28/java/并发编程/08避免活跃性危险/" class="title">并发编程实战-08避免活跃性危险</a></p>
+                            <p class="item-date"><time datetime="2018-09-27T16:00:00.000Z" itemprop="datePublished">2018-09-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/27/java/网络编程/Http,Tcp.Ip,Socket,Udp/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Http,Tcp/Ip,Socket,Udp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/27/java/网络编程/Http,Tcp.Ip,Socket,Udp/" class="title">Http,Tcp/Ip,Socket,Udp</a></p>
+                            <p class="item-date"><time datetime="2018-09-26T16:00:00.000Z" itemprop="datePublished">2018-09-27</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/25/java/并发编程/07线程池的使用/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-07线程池的使用" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/25/java/并发编程/07线程池的使用/" class="title">并发编程实战-07线程池的使用</a></p>
+                            <p class="item-date"><time datetime="2018-09-24T16:00:00.000Z" itemprop="datePublished">2018-09-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/09/25/java/tool/一致性Hash算法/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="一致性Hash算法" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/09/25/java/tool/一致性Hash算法/" class="title">一致性Hash算法</a></p>
+                            <p class="item-date"><time datetime="2018-09-24T16:00:00.000Z" itemprop="datePublished">2018-09-25</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.43px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/Java/" style="font-size: 12.86px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 17.14px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 17.14px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.43px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 15.71px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 12.86px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 15.71px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 12.86px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14.29px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.43px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 12.86px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 15.71px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12.86px;">套路</a> <a href="/tags/小知识/" style="font-size: 11.43px;">小知识</a> <a href="/tags/并发/" style="font-size: 18.57px;">并发</a> <a href="/tags/并发编程实战/" style="font-size: 17.14px;">并发编程实战</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/网络编程/" style="font-size: 10px;">网络编程</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
