@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Java虚拟机内存模型 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="内存数据主要分为程序计数器、虚拟机栈、本地方法栈、Java堆和方法区 程序计数器一块很小的内存空间。每一个线程一个独立的计数器用于记录下一条要运行的指令。如果当前线程正在执行一个Java方法则记录正在执行的Java字节码地址，如果是一个Native方法则计数器为空。 Java虚拟机栈线程私有的内存空间，和线程同时创建，保存方法的局部变量、部分结果，并参与方法的调用和返回。  Hot Spot虚拟">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机内存模型">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/12/15/java/jvm/Java虚拟机内存模型/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="内存数据主要分为程序计数器、虚拟机栈、本地方法栈、Java堆和方法区 程序计数器一块很小的内存空间。每一个线程一个独立的计数器用于记录下一条要运行的指令。如果当前线程正在执行一个Java方法则记录正在执行的Java字节码地址，如果是一个Native方法则计数器为空。 Java虚拟机栈线程私有的内存空间，和线程同时创建，保存方法的局部变量、部分结果，并参与方法的调用和返回。  Hot Spot虚拟">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2018-12-22T08:22:20.856Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java虚拟机内存模型">
+<meta name="twitter:description" content="内存数据主要分为程序计数器、虚拟机栈、本地方法栈、Java堆和方法区 程序计数器一块很小的内存空间。每一个线程一个独立的计数器用于记录下一条要运行的指令。如果当前线程正在执行一个Java方法则记录正在执行的Java字节码地址，如果是一个Native方法则计数器为空。 Java虚拟机栈线程私有的内存空间，和线程同时创建，保存方法的局部变量、部分结果，并参与方法的调用和返回。  Hot Spot虚拟">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                94
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                63
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/jvm/Java虚拟机内存模型" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java虚拟机内存模型
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/12/15/java/jvm/Java虚拟机内存模型/">
+            <time datetime="2018-12-15T07:01:16.000Z" itemprop="datePublished">2018-12-15</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/JVM/">JVM</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#程序计数器"><span class="toc-number">1.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java虚拟机栈"><span class="toc-number">2.</span> <span class="toc-text">Java虚拟机栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#本地方法栈"><span class="toc-number">3.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java堆"><span class="toc-number">4.</span> <span class="toc-text">Java堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法区"><span class="toc-number">5.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存分配参数"><span class="toc-number">6.</span> <span class="toc-text">内存分配参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾回收"><span class="toc-number">7.</span> <span class="toc-text">垃圾回收</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#垃圾回收算法"><span class="toc-number">7.1.</span> <span class="toc-text">垃圾回收算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#引用计数法"><span class="toc-number">7.1.1.</span> <span class="toc-text">引用计数法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#标记-清除算法"><span class="toc-number">7.1.2.</span> <span class="toc-text">标记-清除算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#复制算法"><span class="toc-number">7.1.3.</span> <span class="toc-text">复制算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#标记-压缩算法"><span class="toc-number">7.1.4.</span> <span class="toc-text">标记-压缩算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#增量算法"><span class="toc-number">7.1.5.</span> <span class="toc-text">增量算法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#分代"><span class="toc-number">7.1.6.</span> <span class="toc-text">分代</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#垃圾收集器类型"><span class="toc-number">7.2.</span> <span class="toc-text">垃圾收集器类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#新生代串行收集器"><span class="toc-number">7.2.1.</span> <span class="toc-text">新生代串行收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#老年代串行收集器"><span class="toc-number">7.2.2.</span> <span class="toc-text">老年代串行收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#并行收集器"><span class="toc-number">7.2.3.</span> <span class="toc-text">并行收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#新生代并行回收收集器"><span class="toc-number">7.2.4.</span> <span class="toc-text">新生代并行回收收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#老年代并行回收收集器"><span class="toc-number">7.2.5.</span> <span class="toc-text">老年代并行回收收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CMS收集器"><span class="toc-number">7.2.6.</span> <span class="toc-text">CMS收集器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#G1收集器"><span class="toc-number">7.2.7.</span> <span class="toc-text">G1收集器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#常用调优案例和方法"><span class="toc-number">7.3.</span> <span class="toc-text">常用调优案例和方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实用Jvm参数"><span class="toc-number">7.4.</span> <span class="toc-text">实用Jvm参数</span></a></li></ol></li></ol>
+                </div>
+            
+            <p> 内存数据主要分为程序计数器、虚拟机栈、本地方法栈、Java堆和方法区</p>
+<h3 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h3><p>一块很小的内存空间。每一个线程一个独立的计数器用于记录下一条要运行的指令。如果当前线程正在执行一个Java方法则记录正在执行的Java字节码地址，如果是一个Native方法则计数器为空。</p>
+<h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><p>线程私有的内存空间，和线程同时创建，保存方法的局部变量、部分结果，并参与方法的调用和返回。</p>
+<blockquote>
+<p>Hot Spot虚拟机中使用-Xss参数来设置栈的大小。栈的大小决定了函数调用的可达深度</p>
+</blockquote>
+<p>虚拟机栈在运行时使用栈帧的数据结构保存上下文数据。栈帧中存放了方法的局部变量表、操作数栈、动态连接方法和返回地址等信息。</p>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>用于管理本地方法的调用。Hot Spot虚拟机中，不区分本地方法栈和虚拟机栈。</p>
+<a id="more"></a>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><p>几乎所有的对象和数组都是在堆中分配空间的。Java堆分为新生代和老年代两个部分，新生代用于存放刚刚产生的对象和年轻的对象，如果对象一直没有被回收，生存的足够长，老年对象就会被移入老年代。</p>
+<p>新生代又可进一步细分为eden、survivor space0（s0或者from space)和survivor space1(s1或者to space)。eden意义为伊甸园，即对象的出生地，大部分对象刚刚建立时就存放在这里。s0和s1为survivor空间，直译为幸存者，也就是说存放的对象至少经过一次垃圾回收，得以幸存。如果幸存区的对象到了指定年龄仍未被回收，则有机会进入老年代。</p>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>与堆空间类似，方法区也是被JVM中所有的线程共享的。主要保存的信息是类的元数据。</p>
+<p>元数据包括类的类型信息、常量池、域信息、方法信息。</p>
+<ul>
+<li><p>类型信息包括类的完整名称、类型修改符和类型的直接接口类型表；</p>
+</li>
+<li><p>常量池包括这个类方法、域等信息所引用的常量信息；</p>
+</li>
+<li><p>域信息包括域名称、域类型和域修饰符；</p>
+</li>
+<li><p>方法信息包括方法名称、返回类型、方法参数、方法修饰符、方法字节码、操作数栈和方法帧栈的局部变量区大小以及异常表。</p>
+</li>
+</ul>
+<p>综上，方法区中保存的信息大部分来自于class文件。</p>
+<p>Hot Spot虚拟机同样会对方法区进行回收操作，通常涉及常量池回收和类元数据回收。</p>
+<ul>
+<li>对于常量池，只要常量池中的常量没有被任何地方引用，就可以被回收；</li>
+<li>该类的所有实例已经被回收，并且加载该类的ClassLoader已经被回收，GC就有可能回收该类型</li>
+</ul>
+<h3 id="内存分配参数"><a href="#内存分配参数" class="headerlink" title="内存分配参数"></a>内存分配参数</h3><p><strong>显示GC详情</strong></p>
+<blockquote>
+<p>-XX:+PrintGCDetails</p>
+</blockquote>
+<p><strong>设置最大堆内存</strong></p>
+<blockquote>
+<p>-Xmx5M</p>
+</blockquote>
+<p><strong>设置最小堆内存</strong></p>
+<p>此值越小回收的GC操作越频繁</p>
+<blockquote>
+<p>-Xms3M</p>
+</blockquote>
+<p><strong>设置新生代</strong></p>
+<p>较大的新生代会减小老年代的大小，新生代的大小一般设置为整个堆空间的1/4~1/3</p>
+<blockquote>
+<p>-Xmn2M 新生代大小</p>
+<p>-XX:NewSize 新生代初始大小</p>
+<p>-XX:MaxNewSize 新生代最大值</p>
+</blockquote>
+<p><strong>设置持久代</strong></p>
+<blockquote>
+<p>-XX:MaxPermSize 设置持久代的最大值</p>
+<p>-XX:PermSize 设置持久代的初始值</p>
+</blockquote>
+<p><strong>设置线程栈</strong></p>
+<blockquote>
+<p>-Xss1M</p>
+</blockquote>
+<p><strong>堆的比例分配</strong></p>
+<p>eden空间和from空间的比例</p>
+<blockquote>
+<p>-XX:SurvivorRatio 设置新生代中eden空间和from空间的比例关系。from空间=to空间</p>
+<p>-XX:SurvivorRatio=8，eden:from:to = 8:1:1</p>
+<p>-Xmn10M -XX:SurvivorRatio=2,eden 5M from 2.5M to 2.5M</p>
+</blockquote>
+<p>新生代和老年代比例</p>
+<blockquote>
+<p>-XX:NewRatio=老年代/新生代</p>
+</blockquote>
+<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><h4 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h4><h5 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h5><p>每个对象分配计数器，有引用就+1，引用失效就-1.当引用计数器的值为0时清除。</p>
+<p>无法处理循环引用的问题，Java中的GC没有使用这种算法</p>
+<h5 id="标记-清除算法"><a href="#标记-清除算法" class="headerlink" title="标记-清除算法"></a>标记-清除算法</h5><p>标记阶段通过根节点标记所有从根节点开始的可达对象。未被标记的对像就是未被引用的垃圾对象，在清除阶段清除掉未被标记的对象。</p>
+<p>此算法最大的问题是会产生较多的空间碎片，回收后空间不是连续的。</p>
+<h5 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h5><p>将原有的内存空间分为两块，每次只使用其中一块，在垃圾回收时，将正在使用的内存中的存活对象复制到未使用的内存块中，然后清除正在使用内存块中的所有对象，交换两个内存的角色完成回收。</p>
+<p>当垃圾对象多存活对象少（适用于新生代）时复制算法的效率高，并且不会产生内存碎片。缺点是需要的内存空间大，资源多。</p>
+<p>新生代的from和to空间就使用了复制算法，两者地位相同。</p>
+<h5 id="标记-压缩算法"><a href="#标记-压缩算法" class="headerlink" title="标记-压缩算法"></a>标记-压缩算法</h5><p>适用于老年代的回收算法。先从根节点开始做可达标记，然后将标记对象压缩到内存的一端。之后，清理边界之外所有的空间。</p>
+<p>这样既避免了碎片的产生，又不需要两块相同的内存空间。</p>
+<h5 id="增量算法"><a href="#增量算法" class="headerlink" title="增量算法"></a>增量算法</h5><p>大部分回收算法在执行垃圾回收时需要Stop the World，此时所有的线程都需要挂起等待回收完成。如果回收时间长则会影响系统运行。</p>
+<p>增量算法的思想是将垃圾收集线程和应用程序线程交替执行。每次垃圾收集线程只回收一小片区域的内存空间，接着切换到应用程序线程。这样可以减少系统的停顿。但是因为线程切换和上下文转换的消耗，会使得回收的总体成本上升造成吞吐量下降</p>
+<h5 id="分代"><a href="#分代" class="headerlink" title="分代"></a>分代</h5><p>将内存区域分为不同的代以根据不同代的特点来使用不同的垃圾回收算法。</p>
+<p>如Hot Spot虚拟机，将新建对象放入新生代，大约90%的新建对象会被很快回收，因此新生代使用效率高的复制算法。当一个对象经过几次回收后仍然存活，就会被移动到老年代。老年代对象存活周期长，可能经过N次回收仍然存活，如果使用复制算法则需要复制大量对象，成本比较高。所以此时可以使用标记-压缩算法来提高垃圾回收效率。</p>
+<h4 id="垃圾收集器类型"><a href="#垃圾收集器类型" class="headerlink" title="垃圾收集器类型"></a>垃圾收集器类型</h4><ul>
+<li>按线程数：串行和并行垃圾回收器</li>
+<li>按工作模式：并发和独占垃圾回收器</li>
+<li>碎片处理：压缩和非压缩垃圾回收器</li>
+<li>分代：新生代和老年代垃圾处理器</li>
+</ul>
+<h5 id="新生代串行收集器"><a href="#新生代串行收集器" class="headerlink" title="新生代串行收集器"></a>新生代串行收集器</h5><p>使用单线程进行回收，独占式的垃圾收集机制，使用复制算法</p>
+<blockquote>
+<p>Hot Spot中使用-XX:UseSerialGC指定新生代串行收集器和老年代串行收集器</p>
+</blockquote>
+<h5 id="老年代串行收集器"><a href="#老年代串行收集器" class="headerlink" title="老年代串行收集器"></a>老年代串行收集器</h5><p>使用单线程进行回收，独占式的垃圾收集机制，使用标记-压缩算法</p>
+<h5 id="并行收集器"><a href="#并行收集器" class="headerlink" title="并行收集器"></a>并行收集器</h5><p>工作在新生代的收集器，将串行回收器多线程化。同时并行收集器也是独占式的。</p>
+<h5 id="新生代并行回收收集器"><a href="#新生代并行回收收集器" class="headerlink" title="新生代并行回收收集器"></a>新生代并行回收收集器</h5><p>多线程，使用复制算法的收集器</p>
+<h5 id="老年代并行回收收集器"><a href="#老年代并行回收收集器" class="headerlink" title="老年代并行回收收集器"></a>老年代并行回收收集器</h5><p>多线程，使用标记-压缩算法的收集器</p>
+<h5 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a>CMS收集器</h5><p>并发标记清除，使用标记-清除算法，同时又是一个使用多线程并行回收的垃圾收集器。</p>
+<p>工作步骤：初始标记、并发标记、重新标记、并发清除和并发重置。初始标记和重新标记是独占系统资源的，而并发标签、并发清除和并发重置是可以和用户线程一起执行的。</p>
+<h5 id="G1收集器"><a href="#G1收集器" class="headerlink" title="G1收集器"></a>G1收集器</h5><p>基于标记-压缩算法。不会产生空间碎片，也没有必要在收集完成后，进行一次独占式的碎片整理工作。可以进行非常精确的停顿控制。可指定在长度为M的时间段中，垃圾回收时间不超N。</p>
+<h4 id="常用调优案例和方法"><a href="#常用调优案例和方法" class="headerlink" title="常用调优案例和方法"></a>常用调优案例和方法</h4><ul>
+<li><p>将新对象预留在新生代</p>
+<blockquote>
+<p>增加新生代的大小</p>
+</blockquote>
+</li>
+<li><p>大对象进入老年代</p>
+<blockquote>
+<p>新生代分配较多的大对象会导致新生代内存不足。通 -XX:PretenureSizeThreshold参数来设置大对象直接进入老年代的阈值。当对象有大小超过这个值时，将直接在老年代分配。</p>
+<p> -XX:PretenureSizeThreshold=1000000超过此值的对象直接进入老年代</p>
+</blockquote>
+</li>
+<li><p>设置对象进入老年代的年龄</p>
+<blockquote>
+<p>虚拟机为每个对象都维护一个年龄。在eden区，经过一次GC后还存活就会被移动到survivior区，对象年龄+1.以后每次GC如果对象都存活年龄再+1.当年龄达到阈值时就会移入老年代，成为老年对象。</p>
+<p>阈值可以通过参数-XX:MaxTenuringThreshold来设置，默认值是15.虽然此值可以是15或更大，但这并不表示新对象非要达到这个年龄才能进入老年代。实际上进入老年代的年龄是虚拟机根据内存使用情况动态计算的。最终进入老年代的年龄是动态计算算得年龄与-XX:MaxTenuringThreshold设置中较小的那个</p>
+</blockquote>
+</li>
+<li><p>稳定与震荡的堆大小</p>
+<blockquote>
+<p>稳定的堆大小对垃圾回收有利。使-Xms和-Xmx大小一致即可得到稳定堆大小</p>
+<p>稳定的堆大小虽然可以减少GC的次数，但是增加了GC的执行时间。使用震荡大小的堆可以加快单次GC的速度</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="实用Jvm参数"><a href="#实用Jvm参数" class="headerlink" title="实用Jvm参数"></a>实用Jvm参数</h4><ul>
+<li><p>JIT编译参数</p>
+</li>
+<li><p>堆快照</p>
+<blockquote>
+<p>-XX:+HeapDumpOnOutOfMemoryError参数在OOM时导出应用程序的当前堆快照</p>
+<p>-XX:HeapDumpPath指定堆快照保存的位置</p>
+</blockquote>
+</li>
+<li><p>取得GC信息</p>
+<blockquote>
+<p>-XX:PrintGC</p>
+<p>-XX:PrintGCDetail</p>
+<p>如果需要在GC时打印详细的堆信息，可以打开-XX:+PrintHeapAtGC开关。一旦打开它每次GC时都将打印堆的使用情况</p>
+</blockquote>
+</li>
+<li><p>类和对象跟踪</p>
+<blockquote>
+<p>-XX:+TraceClassLoading 跟踪类加载情况</p>
+<p>-XX:TraceClassUnloading 跟踪类卸载情况</p>
+</blockquote>
+</li>
+<li><p>控制GC</p>
+<blockquote>
+<p>-XX:+DisableExplicitGC 禁止手动的System.gc()</p>
+</blockquote>
+</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/12/15/java/jvm/Java虚拟机内存模型/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/10/16/java/tool/丧心病狂的库和插件/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    丧心病狂的库和插件
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2018/12/15/java/并发编程/并行程序设计模式/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">并行程序设计模式</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/22/java/jdk/Jdk命令行和工具/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Jdk命令行和工具" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/22/java/jdk/Jdk命令行和工具/" class="title">Jdk命令行和工具</a></p>
+                            <p class="item-date"><time datetime="2018-12-22T07:01:16.000Z" itemprop="datePublished">2018-12-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/15/java/并发编程/并行程序设计模式/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并行程序设计模式" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/15/java/并发编程/并行程序设计模式/" class="title">并行程序设计模式</a></p>
+                            <p class="item-date"><time datetime="2018-12-15T07:01:16.000Z" itemprop="datePublished">2018-12-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/15/java/jvm/Java虚拟机内存模型/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Java虚拟机内存模型" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/15/java/jvm/Java虚拟机内存模型/" class="title">Java虚拟机内存模型</a></p>
+                            <p class="item-date"><time datetime="2018-12-15T07:01:16.000Z" itemprop="datePublished">2018-12-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/10/16/java/tool/丧心病狂的库和插件/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="丧心病狂的库和插件" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/10/16/java/tool/丧心病狂的库和插件/" class="title">丧心病狂的库和插件</a></p>
+                            <p class="item-date"><time datetime="2018-10-15T16:00:00.000Z" itemprop="datePublished">2018-10-16</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/10/08/java/并发编程/09性能与可伸缩性/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并发编程实战-09性能与可伸缩性" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/10/08/java/并发编程/09性能与可伸缩性/" class="title">并发编程实战-09性能与可伸缩性</a></p>
+                            <p class="item-date"><time datetime="2018-10-07T16:00:00.000Z" itemprop="datePublished">2018-10-08</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.43px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 12.86px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 17.14px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 17.14px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.43px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 15.71px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 12.86px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 15.71px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 12.86px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14.29px;">spring boot</a> <a href="/tags/sqlserver/" style="font-size: 11.43px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 12.86px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 15.71px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12.86px;">套路</a> <a href="/tags/小知识/" style="font-size: 11.43px;">小知识</a> <a href="/tags/并发/" style="font-size: 18.57px;">并发</a> <a href="/tags/并发编程实战/" style="font-size: 17.14px;">并发编程实战</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/插件/" style="font-size: 10px;">插件</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/网络编程/" style="font-size: 10px;">网络编程</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
