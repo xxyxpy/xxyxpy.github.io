@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>spring实战-03高级装配 | code dog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="环境与profile解决不同的环境存在不同的配置问题 @Profile注解 应用在整个config上面 这个配置类中的bean只有在dev profile激活时才会创建，若没有激活那么带有@Bean注解的方法都会被忽略掉。 12345678@Configuration@Profile(&quot;dev&quot;)public class CDPlayerConfig &amp;#123;    @Bean(&quot;myAAA&quot;">
+<meta name="keywords" content="springf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="spring实战-03高级装配">
+<meta property="og:url" content="http://blog.xxyxpy.pub/2018/12/29/java/spring/spring实战-03高级装配/index.html">
+<meta property="og:site_name" content="code dog">
+<meta property="og:description" content="环境与profile解决不同的环境存在不同的配置问题 @Profile注解 应用在整个config上面 这个配置类中的bean只有在dev profile激活时才会创建，若没有激活那么带有@Bean注解的方法都会被忽略掉。 12345678@Configuration@Profile(&quot;dev&quot;)public class CDPlayerConfig &amp;#123;    @Bean(&quot;myAAA&quot;">
+<meta property="og:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+<meta property="og:updated_time" content="2019-01-02T09:37:01.466Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="spring实战-03高级装配">
+<meta name="twitter:description" content="环境与profile解决不同的环境存在不同的配置问题 @Profile注解 应用在整个config上面 这个配置类中的bean只有在dev profile激活时才会创建，若没有激活那么带有@Bean注解的方法都会被忽略掉。 12345678@Configuration@Profile(&quot;dev&quot;)public class CDPlayerConfig &amp;#123;    @Bean(&quot;myAAA&quot;">
+<meta name="twitter:image" content="http://www.wailian.work/images/2018/05/09/timg.md.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="code dog" type="application/atom+xml" />
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+        <script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?280f588c4cdeeff61afc14b4a4f44814";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">code dog</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="https://github.com/xxyxpy/boot-my">Boot</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">xxyxpy</h2>
+            <h3 id="title">代码狗</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>苏州</span>
+            <a id="follow" target="_blank" href="https://github.com/xxyxpy/">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                96
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                64
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/xxyxpy/" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="twitter" class=tooltip>
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="facebook" class=tooltip>
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="dribbble" class=tooltip>
+                            <i class="fa fa-dribbble"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="/" target="_blank" title="rss" class=tooltip>
+                            <i class="fa fa-rss"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-java/spring/spring实战-03高级装配" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            spring实战-03高级装配
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/2018/12/29/java/spring/spring实战-03高级装配/">
+            <time datetime="2018-12-29T07:01:16.000Z" itemprop="datePublished">2018-12-29</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/java/">java</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/springf/">springf</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">文章目录</strong>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境与profile"><span class="toc-number">1.</span> <span class="toc-text">环境与profile</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Profile注解"><span class="toc-number">1.1.</span> <span class="toc-text">@Profile注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#激活profile"><span class="toc-number">1.2.</span> <span class="toc-text">激活profile</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条件化的bean"><span class="toc-number">2.</span> <span class="toc-text">条件化的bean</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Conditional注解"><span class="toc-number">2.1.</span> <span class="toc-text">@Conditional注解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Condition接口"><span class="toc-number">2.2.</span> <span class="toc-text">Condition接口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理自动装配的歧义性"><span class="toc-number">3.</span> <span class="toc-text">处理自动装配的歧义性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用-Primary标识首选的bean"><span class="toc-number">3.1.</span> <span class="toc-text">使用@Primary标识首选的bean</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用-Qualifier限定自动装配的bean"><span class="toc-number">3.2.</span> <span class="toc-text">使用@Qualifier限定自动装配的bean</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#为bean设置自己的限定符"><span class="toc-number">3.2.1.</span> <span class="toc-text">为bean设置自己的限定符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用自定义的限定符注解"><span class="toc-number">3.2.2.</span> <span class="toc-text">使用自定义的限定符注解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bean的作用域"><span class="toc-number">4.</span> <span class="toc-text">bean的作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#使用会话和请求作用域"><span class="toc-number">4.1.</span> <span class="toc-text">使用会话和请求作用域</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行时值注入"><span class="toc-number">5.</span> <span class="toc-text">运行时值注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#注入外部的值"><span class="toc-number">5.1.</span> <span class="toc-text">注入外部的值</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#PropertySource注解"><span class="toc-number">5.1.1.</span> <span class="toc-text">@PropertySource注解</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Environment"><span class="toc-number">5.1.2.</span> <span class="toc-text">Environment</span></a></li></ol></li></ol></li></ol>
+                </div>
+            
+            <h3 id="环境与profile"><a href="#环境与profile" class="headerlink" title="环境与profile"></a>环境与profile</h3><p>解决不同的环境存在不同的配置问题</p>
+<h4 id="Profile注解"><a href="#Profile注解" class="headerlink" title="@Profile注解"></a>@Profile注解</h4><ul>
+<li><p>应用在整个<code>config</code>上面</p>
+<p>这个配置类中的<code>bean</code>只有在<code>dev profile</code>激活时才会创建，若没有激活那么带有<code>@Bean</code>注解的方法都会被忽略掉。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@Profile</span>(<span class="string">"dev"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDPlayerConfig</span> </span>&#123;</div><div class="line">    <span class="meta">@Bean</span>(<span class="string">"myAAA"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> Logger <span class="title">getLogger</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Logger();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>应用在<code>config</code>中的单个方法上</p>
+<p>不同的方法设置不同的<code>profile</code>，一个<code>config</code>中可以兼容多个不同环境中的<code>bean</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CDPlayerConfig</span> </span>&#123;</div><div class="line">    <span class="meta">@Bean</span>(<span class="string">"myAAA"</span>)</div><div class="line">    <span class="meta">@Profile</span>(<span class="string">"dev"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> Logger <span class="title">getLogger</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Logger();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="meta">@Profile</span>(<span class="string">"prod"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> CdPlayer <span class="title">cdPlayer</span><span class="params">(Logger logger)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> CdPlayer(logger);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<a id="more"></a>
+<h4 id="激活profile"><a href="#激活profile" class="headerlink" title="激活profile"></a>激活profile</h4><p><code>Spring</code>通过两个独立的属性<code>spring.profiles.active</code>和<code>spring.profiles.default</code>来确定哪个(或哪几个，支持同时激活多个)<code>profile</code>处于激活状态。优先查找<code>spring.profiles.active</code>属性。有以下多种方式可以设置这两个属性：</p>
+<ul>
+<li>作为<code>DispatcherServlet</code>的初始化参数；</li>
+<li>作为<code>Web</code>应用的上下文参数；</li>
+<li>作为<code>JNDI</code>条目；</li>
+<li>作为环境变量；</li>
+<li>作为<code>JVM</code>的系统属性；</li>
+<li>在集成测试类上，使用<code>@ActiveProfiles</code>注解设置</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</div><div class="line"><span class="meta">@SpringBootTest</span></div><div class="line"><span class="meta">@ActiveProfiles</span>(&#123;<span class="string">"qa"</span>, <span class="string">"stage"</span>&#125;)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoApplicationTests</span> </span>&#123;</div><div class="line">   <span class="meta">@Test</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">contextLoads</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="条件化的bean"><a href="#条件化的bean" class="headerlink" title="条件化的bean"></a>条件化的bean</h3><p>如果希望一个<code>bean</code>只有在应用的类路径下包含特定的库时才创建，或者希望某个<code>bean</code>只有当另外某个特定的<code>bean</code>也声明之后才会创建。还可能要求只有某个特定的环境变量设置之后，才会创建某个<code>bean</code>.</p>
+<p>例：<code>MagicBean</code>的类只有在设置了<code>magic</code>环境属性的时候，<code>Spring</code>才实例化这个类。没有就被忽略。</p>
+<h4 id="Conditional注解"><a href="#Conditional注解" class="headerlink" title="@Conditional注解"></a>@Conditional注解</h4><p>使用<code>@Conditional</code>注解进行条件化配置，此注解要求传入<code>Condition</code>接口的实现类，当传入多个时必须同时满足条件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConditionConfig</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="meta">@Conditional</span>(MagicExistsCondition.class)</div><div class="line">    <span class="function"><span class="keyword">public</span> MagicBean <span class="title">magicBean</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> MagicBean();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Condition接口"><a href="#Condition接口" class="headerlink" title="Condition接口"></a>Condition接口</h4><p>此接口只有一个方法<code>matches()</code>需要实现，用于判断是否满足条件。返回<code>true</code>时通过。方法的参数为<code>ConditionContext</code>和<code>AnnotatedTypeMetadata</code>。前者可用于获取系统配置或类加载等信息，后者可以用来获取注解及注解的属性。可参考<code>@Profile</code>注解的实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MagicExistsCondition</span> <span class="keyword">implements</span> <span class="title">Condition</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(ConditionContext conditionContext, AnnotatedTypeMetadata annotatedTypeMetadata)</span> </span>&#123;</div><div class="line">        Environment environment = conditionContext.getEnvironment();</div><div class="line">        <span class="keyword">return</span> environment.containsProperty(<span class="string">"magic"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="处理自动装配的歧义性"><a href="#处理自动装配的歧义性" class="headerlink" title="处理自动装配的歧义性"></a>处理自动装配的歧义性</h3><p>当自动装配的<code>bean</code>不唯一时，<code>Spring</code>无法做出选择，会拋出<code>NoUniqueBeanDefinitionException</code>异常。有两种方式可以用来处理这类异常。</p>
+<ul>
+<li>将其中的一个可选<code>bean</code>设置为<code>primary</code>的</li>
+<li>使用限定符<code>qualifier</code>来帮助<code>Spring</code>将可选的<code>bean</code>的范围缩小到只有一个<code>bean</code></li>
+</ul>
+<h4 id="使用-Primary标识首选的bean"><a href="#使用-Primary标识首选的bean" class="headerlink" title="使用@Primary标识首选的bean"></a>使用@Primary标识首选的bean</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Primary</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IceCream</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是如果同时有两个首选的<code>bean</code>，同样会有歧义性的问题。此时就需要使用更高级的技巧</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Primary</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cake</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="使用-Qualifier限定自动装配的bean"><a href="#使用-Qualifier限定自动装配的bean" class="headerlink" title="使用@Qualifier限定自动装配的bean"></a>使用@Qualifier限定自动装配的bean</h4><p><code>@Qualifier</code>一般与<code>@Autowired</code>同时使用，在注入时指定想要注入进去的是哪个<code>bean</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Dessert dessert;</div><div class="line"></div><div class="line"><span class="meta">@Autowired</span></div><div class="line"><span class="meta">@Qualifier</span>(<span class="string">"iceCream"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDessert</span><span class="params">(Dessert dessert)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.dessert = dessert;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="为bean设置自己的限定符"><a href="#为bean设置自己的限定符" class="headerlink" title="为bean设置自己的限定符"></a>为bean设置自己的限定符</h5><p>解除类名与<code>@Qualifier</code>注解中参数的耦合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Qualifier</span>(<span class="string">"cold"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IceCream</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此时<code>cold</code>限定符分配给了<code>IceCream bean</code>，因为没有耦合类名，所以可以随意重构<code>IceCream</code>的类名，而不必担心会破坏自动装配。只需要在注入的地方引用<code>cold</code>限定符就可以了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Dessert dessert;</div><div class="line"></div><div class="line"><span class="meta">@Autowired</span></div><div class="line"><span class="meta">@Qualifier</span>(<span class="string">"cold"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDessert</span><span class="params">(Dessert dessert)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.dessert = dessert;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="使用自定义的限定符注解"><a href="#使用自定义的限定符注解" class="headerlink" title="使用自定义的限定符注解"></a>使用自定义的限定符注解</h5><p>当多个<code>bean</code>具有相同的限定符名称的话仍然会有歧义问题。一种简单的办法是继续添加<code>@Qualifier</code>注解。</p>
+<p>此时一个<code>bean</code>上面同时定义了两个<code>@Qualifier</code>注解，但这是不被<code>Java</code>允许的。<code>Java</code>不允许在同一个条目上重复出现相同类型的多个注解。但是我们可以创建自定义的限定符注解，在自定义的限定符注解中组合<code>@Qualifier</code>注解。</p>
+<p>在类的定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Cold</span></div><div class="line"><span class="meta">@Creamy</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IceCream</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Cold</span></div><div class="line"><span class="meta">@Fruity</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Popsicle</span> <span class="keyword">implements</span> <span class="title">Dessert</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注入时使用类上面定义的限定符</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Dessert dessert;</div><div class="line"></div><div class="line"><span class="meta">@Autowired</span></div><div class="line"><span class="meta">@Cold</span></div><div class="line"><span class="meta">@Creamy</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDessert</span><span class="params">(Dessert dessert)</span> </span>&#123;</div><div class="line">    <span class="keyword">this</span>.dessert = dessert;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="bean的作用域"><a href="#bean的作用域" class="headerlink" title="bean的作用域"></a>bean的作用域</h3><p>默认情况下，<code>Spring</code>应用上下文中所有的<code>bean</code>都是单例（<code>singleton</code>）形式创建的。<code>Spring</code>同时支持多种作用域：</p>
+<ul>
+<li>单例（<code>Singleton</code>）：整个应用中，只创建<code>bean</code>的一个实例；</li>
+<li>原型（<code>Prototype</code>）：每次注入或者通过<code>Spring</code>应用上下文获取时都会创建一个新的<code>bean</code>实例；</li>
+<li>会话（<code>Session</code>）：在<code>Web</code>应用中，为每个会话创建一个<code>bean</code>实例；</li>
+<li>请求（<code>Request</code>）：在<code>Web</code>应用中，为每个请求创建一个<code>bean</code>实例。</li>
+</ul>
+<p>例：设置原型</p>
+<p>此处使用了常量，也可以使用字符<code>@Scope(&quot;prototype&quot;)</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="meta">@Scope</span>(ConfigurableBeanFactory.SCOPE_PROTOTYPE)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Notepad</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="使用会话和请求作用域"><a href="#使用会话和请求作用域" class="headerlink" title="使用会话和请求作用域"></a>使用会话和请求作用域</h4><p>考虑购物车的业务场景，一个用户在登录之后会有自己的购物车。这种场景下购物车<code>bean</code>就是会话作用域。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Bean</span></div><div class="line"><span class="meta">@Scope</span>(value = WebApplicationContext.SCOPE_SESSION,</div><div class="line">    proxyMode = ScopedProxyMode.INTERFACES)</div><div class="line"><span class="function"><span class="keyword">public</span> ShoppingCart <span class="title">cart</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ShoppingCart();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意<code>@Scope</code>中的<code>proxyMode</code>属性，它被设置成了<code>ScopedProxyMode.INTERFACES</code>。该属性用于解决将会话或请求作用域的<code>bean</code>注入到单例<code>bean</code>中所遇到的问题。具体的业务场景是当某个单例<code>bean</code>需要<code>ShoppingCart</code>，而由于<code>ShoppingCart</code>是会话相关的被需要时还没有创建完成要如何处理。</p>
+<p>假如此时<code>StoreService bean</code>需要<code>ShoppingCart</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Component</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StoreService</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="keyword">private</span> ShoppingCart shoppingCart;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setShoppingCart</span><span class="params">(ShoppingCart shoppingCart)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.shoppingCart = shoppingCart;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于<code>StoreService bean</code>是单例的，当它创建时<code>ShoppingCart bean</code>还不存在。另外当多个用户访问时系统中会有多个<code>ShoppingCart</code>实例。我们希望的是当<code>StoreService</code>处理购物车功能时，它所使用的<code>ShoppingCart</code>实例刚好是当前会话所对应的那一个。</p>
+<p><code>Spring</code>并不会将实际的<code>ShoppingCart bean</code>注入到<code>StoreService</code>，会注入一个到<code>ShoppingCart bean</code>的代理。这个代理会暴露与<code>ShoppingCart</code>相同的方法，所以<code>StoreService</code>会认为它就是一个购物车。但是，当<code>StoreService</code>调用<code>ShoppingCart</code>的方法时，代理会对其进行懒解析并将调用委托给会话作用域内真正的<code>ShoppingCart bean</code>。</p>
+<p>当<code>proxyMode = ScopedProxyMode.INTERFACES</code>，表明代理要实现<code>ShoppingCart</code>接口，并将调用委托给实现<code>bean</code>。具体实现是用的<code>JDK</code>动态代理；</p>
+<p>当<code>proxyMode = ScopedProxyMode.TARGET_CLASS</code>，表明<code>ShoppingCart</code>是一个类，表明要以生成子类的方式创建代理。具体实现方式是使用的<code>CGLib</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">com._03.ShoppingCart@45c3f3ac // chrome</div><div class="line">com._03.ShoppingCart@45c3f3ac // chrome</div><div class="line">com._03.ShoppingCart@45c3f3ac // chrome</div><div class="line">com._03.ShoppingCart@8883797  // edge</div></pre></td></tr></table></figure>
+<h3 id="运行时值注入"><a href="#运行时值注入" class="headerlink" title="运行时值注入"></a>运行时值注入</h3><h4 id="注入外部的值"><a href="#注入外部的值" class="headerlink" title="注入外部的值"></a>注入外部的值</h4><h5 id="PropertySource注解"><a href="#PropertySource注解" class="headerlink" title="@PropertySource注解"></a>@PropertySource注解</h5><p>需要先将配置文件注入后通过<code>@Value</code>注解取值</p>
+<p><strong>app.properties</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">disc.title=disctitle</div><div class="line">disc.artist=discartist</div></pre></td></tr></table></figure>
+<p>通过<code>@PropertySource</code>注解声明，使用单独配置类或声明在<code>spring boot</code>的启动类上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@PropertySource</span>(<span class="string">"classpath:app.properties"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExpressiveConfig</span> </span>&#123;</div><div class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;disc.title&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> String title;</div><div class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;disc.artist&#125;"</span>)</div><div class="line">    <span class="keyword">private</span> String artist;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> BlankDisc <span class="title">disc</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BlankDisc(title, artist);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果依赖于组件扫描和自动装配来创建和初始化应用组件的话，可以在构造函数中使用<code>@Value</code>注解自动注入。不过配置文件<code>app.properties</code>需要在其他地方先加载完成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">BlankDisc</span><span class="params">(@Value(<span class="string">"$&#123;disc.title&#125;"</span>)</span> String title</span></div><div class="line">        , @<span class="title">Value</span><span class="params">(<span class="string">"$&#123;disc.artist&#125;"</span>)</span> String artist) &#123;</div><div class="line">    <span class="keyword">this</span>.title = title;</div><div class="line">    <span class="keyword">this</span>.artist = artist;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="Environment"><a href="#Environment" class="headerlink" title="Environment"></a>Environment</h5><p>当加载<code>app.properties</code>之后就可以通过<code>Environment</code>进行取值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Configuration</span></div><div class="line"><span class="meta">@PropertySource</span>(<span class="string">"classpath:app.properties"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExpressiveConfig</span> </span>&#123;</div><div class="line">    <span class="meta">@Autowired</span></div><div class="line">    <span class="keyword">private</span> Environment env;</div><div class="line">    </div><div class="line">    <span class="meta">@Bean</span></div><div class="line">    <span class="function"><span class="keyword">public</span> BlankDisc <span class="title">disc</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> BlankDisc(env.getProperty(<span class="string">"disc.title"</span>), env.getProperty(<span class="string">"disc.artist"</span>));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>共有以下四个重载</p>
+<ul>
+<li><p>String getProperty(String key);</p>
+<p>如上面的使用方法</p>
+</li>
+<li><p>String getProperty(String key, String defaultValue);</p>
+<p>当属性不存在时给定一个默认值</p>
+</li>
+<li><p>\<t\> T getProperty(String key, Class\<t\> targetType);</t\></t\></p>
+<p>获取定义的属性值，并将其转换为指定的类型</p>
+</li>
+<li><p>\<t\> T getProperty(String key, Class\<t\> targetType, T defaultValue);</t\></t\></p>
+<p>获取定义的属性值，并将其转换为指定的类型。不存在时设置一个默认值</p>
+</li>
+</ul>
+<p>其他的方法</p>
+<ul>
+<li><p>String getRequiredProperty(String key, Class\<t\> targetType)</t\></p>
+<p>如果要求某个属性必须要定义而不是获取到<code>null</code>，不存在时会拋出异常</p>
+</li>
+<li><p>boolean containsProperty(String key)</p>
+<p>检查某个属性是否存在</p>
+</li>
+</ul>
+<p>检查<code>profile</code>的激活状态</p>
+<ul>
+<li>String[] getActiveProfiles() 返回激活的profile名称的数组</li>
+<li>String[] getDefaultProfiles() 返回默认的profile名称的数组</li>
+<li>boolean acceptsProfiles(String… profiles) 判断给定的profile是否是激活状态</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+        <a href="http://blog.xxyxpy.pub/2018/12/29/java/spring/spring实战-03高级装配/#comments" class="article-comment-link">评论</a>
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2018/12/28/java/spring/spring实战-02装配Bean/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    spring实战-02装配Bean
+                
+            </div>
+        </a>
+    
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="lv-container" data-id="city" data-uid=MTAyMC8zMDA2NC82NjE5></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/29/java/spring/spring实战-03高级装配/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="spring实战-03高级装配" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/29/java/spring/spring实战-03高级装配/" class="title">spring实战-03高级装配</a></p>
+                            <p class="item-date"><time datetime="2018-12-29T07:01:16.000Z" itemprop="datePublished">2018-12-29</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/28/java/spring/spring实战-02装配Bean/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="spring实战-02装配Bean" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/28/java/spring/spring实战-02装配Bean/" class="title">spring实战-02装配Bean</a></p>
+                            <p class="item-date"><time datetime="2018-12-28T07:01:16.000Z" itemprop="datePublished">2018-12-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/22/java/jdk/Jdk命令行和工具/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Jdk命令行和工具" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/22/java/jdk/Jdk命令行和工具/" class="title">Jdk命令行和工具</a></p>
+                            <p class="item-date"><time datetime="2018-12-22T07:01:16.000Z" itemprop="datePublished">2018-12-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/15/java/并发编程/并行程序设计模式/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="并行程序设计模式" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/15/java/并发编程/并行程序设计模式/" class="title">并行程序设计模式</a></p>
+                            <p class="item-date"><time datetime="2018-12-15T07:01:16.000Z" itemprop="datePublished">2018-12-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2018/12/15/java/jvm/Java虚拟机内存模型/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://www.wailian.work/images/2018/05/09/timg.md.jpg)" alt="Java虚拟机内存模型" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+                            <p class="item-title"><a href="/2018/12/15/java/jvm/Java虚拟机内存模型/" class="title">Java虚拟机内存模型</a></p>
+                            <p class="item-date"><time datetime="2018-12-15T07:01:16.000Z" itemprop="datePublished">2018-12-15</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Css/" style="font-size: 10px;">Css</a> <a href="/tags/HTML/" style="font-size: 11.43px;">HTML</a> <a href="/tags/Intellij/" style="font-size: 10px;">Intellij</a> <a href="/tags/JDK/" style="font-size: 10px;">JDK</a> <a href="/tags/JVM/" style="font-size: 10px;">JVM</a> <a href="/tags/Java/" style="font-size: 12.86px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 17.14px;">JavaScript</a> <a href="/tags/JavaScript高级程序设计/" style="font-size: 17.14px;">JavaScript高级程序设计</a> <a href="/tags/activemq/" style="font-size: 10px;">activemq</a> <a href="/tags/annotaion/" style="font-size: 10px;">annotaion</a> <a href="/tags/ashx/" style="font-size: 10px;">ashx</a> <a href="/tags/cookie/" style="font-size: 10px;">cookie</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/el/" style="font-size: 10px;">el</a> <a href="/tags/filter/" style="font-size: 10px;">filter</a> <a href="/tags/hexo/" style="font-size: 11.43px;">hexo</a> <a href="/tags/hiberante/" style="font-size: 15.71px;">hiberante</a> <a href="/tags/https/" style="font-size: 10px;">https</a> <a href="/tags/io/" style="font-size: 10px;">io</a> <a href="/tags/java/" style="font-size: 20px;">java</a> <a href="/tags/jdbc/" style="font-size: 12.86px;">jdbc</a> <a href="/tags/jdk/" style="font-size: 10px;">jdk</a> <a href="/tags/jsp/" style="font-size: 10px;">jsp</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 15.71px;">linux</a> <a href="/tags/listener/" style="font-size: 10px;">listener</a> <a href="/tags/mail/" style="font-size: 10px;">mail</a> <a href="/tags/mongodb/" style="font-size: 10px;">mongodb</a> <a href="/tags/mybatis-generator/" style="font-size: 10px;">mybatis-generator</a> <a href="/tags/mysql/" style="font-size: 10px;">mysql</a> <a href="/tags/nexT/" style="font-size: 10px;">nexT</a> <a href="/tags/nginx/" style="font-size: 10px;">nginx</a> <a href="/tags/property/" style="font-size: 10px;">property</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/rabbitmq/" style="font-size: 10px;">rabbitmq</a> <a href="/tags/redis/" style="font-size: 10px;">redis</a> <a href="/tags/request/" style="font-size: 10px;">request</a> <a href="/tags/response/" style="font-size: 10px;">response</a> <a href="/tags/resttemplate/" style="font-size: 10px;">resttemplate</a> <a href="/tags/session/" style="font-size: 10px;">session</a> <a href="/tags/solr/" style="font-size: 10px;">solr</a> <a href="/tags/spring/" style="font-size: 12.86px;">spring</a> <a href="/tags/spring-boot/" style="font-size: 14.29px;">spring boot</a> <a href="/tags/springf/" style="font-size: 11.43px;">springf</a> <a href="/tags/sqlserver/" style="font-size: 11.43px;">sqlserver</a> <a href="/tags/struts2/" style="font-size: 12.86px;">struts2</a> <a href="/tags/swagger/" style="font-size: 10px;">swagger</a> <a href="/tags/validation/" style="font-size: 10px;">validation</a> <a href="/tags/vps/" style="font-size: 10px;">vps</a> <a href="/tags/web/" style="font-size: 15.71px;">web</a> <a href="/tags/事务/" style="font-size: 10px;">事务</a> <a href="/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/tags/回文数/" style="font-size: 10px;">回文数</a> <a href="/tags/套路/" style="font-size: 12.86px;">套路</a> <a href="/tags/小知识/" style="font-size: 11.43px;">小知识</a> <a href="/tags/并发/" style="font-size: 18.57px;">并发</a> <a href="/tags/并发编程实战/" style="font-size: 17.14px;">并发编程实战</a> <a href="/tags/性能优化/" style="font-size: 10px;">性能优化</a> <a href="/tags/插件/" style="font-size: 10px;">插件</a> <a href="/tags/数据结构/" style="font-size: 10px;">数据结构</a> <a href="/tags/泛型/" style="font-size: 10px;">泛型</a> <a href="/tags/激活码/" style="font-size: 10px;">激活码</a> <a href="/tags/爬虫/" style="font-size: 10px;">爬虫</a> <a href="/tags/网络编程/" style="font-size: 10px;">网络编程</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">专题内容</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io" target="_blank">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2019 xxyxpy<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    
+    <!-- 来必力City版安装代码 -->
+    <script type="text/javascript">
+     (function(d, s) {
+         var j, e = d.getElementsByTagName(s)[0];
+
+         if (typeof LivereTower === 'function') { return; }
+
+         j = d.createElement(s);
+         j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+         j.async = true;
+
+         e.parentNode.insertBefore(j, e);
+     })(document, 'script');
+    </script>
+  <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+  <!-- City版安装代码已完成 -->
+
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
